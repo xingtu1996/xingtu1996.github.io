@@ -159,7 +159,7 @@ curl -s https://rdap.nic.google/domain/xingtu.dev   # RDAP 标准接口</code></
       <div class="kv"><b>关键命令</b><span>
 <pre><code>git init && git branch -M main
 git add -A && git commit -m "feat: 行途 XingTu MVP 作品集"
-git remote add origin ***@***:xingtu1996/xingtu-site.git</code></pre></span></div>
+git remote add origin git@github.com:xingtu1996/xingtu-site.git</code></pre></span></div>
       <div class="kv"><b>设计原则</b><span>纯静态、无构建、内容数组化（改 index.html 底部 JS 数组即更新文章/视频/开源入口）</span></div>
       <div class="bb"><b>白盒点：</b>为什么零依赖？Cloudflare Pages 直接托管静态文件，无构建=零成本+零构建报错；内容数组化=非技术人也能维护。</div>
     </div>
@@ -185,7 +185,7 @@ git remote add origin ***@***:xingtu1996/xingtu-site.git</code></pre></span></di
 HTTPS_PROXY=http://127.0.0.1:7897 gh auth login -h github.com
 echo 'github_pat_...' | gh auth login --with-token -h github.com   # 备选：PAT 方式
 GH_HOST=github.com gh repo create xingtu1996/xingtu-site --private   # 建仓（强制走 github.com）
-ssh -T ***@***                                                # SSH 验证
+ssh -T git@github.com                                                # SSH 验证
 git push -u origin main                                              # 推送（SSH 走 443+代理）</code></pre></span></div>
       <div class="kv"><b>坑</b><span>gh 默认走公司主机（github.cn-pgcloud.com）→ 必须 <code>GH_HOST=github.com</code>；设备流需 POST github.com → 直连超时 → 走代理或 PAT</span></div>
       <div class="bb"><b>白盒点：</b>这台机器「直连 github.com 不通、走 127.0.0.1:7897 代理通」（curl 实测 000 vs 200）；SSH 用 443 + ProxyCommand 已配好 → 推送走 SSH 最稳。</div>
