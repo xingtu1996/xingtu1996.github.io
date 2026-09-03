@@ -2,6 +2,9 @@
 
 > 一线 AI 工程化实践者主页 · GitHub Pages 用户首页
 
+![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-brightgreen.svg)
+![Site](https://img.shields.io/badge/site-xingtu1996.github.io-blue.svg)
+
 ## 这是什么
 
 本仓库是 **行途 XingTu**（Justin Li）的 GitHub Pages 个人主页，单页名片卡片（`index.html`）。
@@ -26,4 +29,4 @@
 
 ---
 
-行途 XingTu · build in public · AI 辅助创作
+行途 XingTu · build in public

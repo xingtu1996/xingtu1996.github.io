@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>出海收款与税务实操手册 · 2026-08</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2329; --sub:#5b6470;
+    --line:#e6e9ef; --brand:#2f6df0; --brand2:#13b58a; --warn:#e8743b;
+    --gold:#e0a93b; --soft:#eef3ff; --soft2:#eafaf3; --soft3:#fff5ec;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;font-size:15px}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px}
+  header{background:linear-gradient(135deg,#2f6df0,#e8743b);color:#fff;
+    border-radius:18px;padding:34px 32px;margin-bottom:26px}
+  header h1{font-size:27px;letter-spacing:.5px;margin-bottom:10px}
+  header p{opacity:.92;font-size:14.5px;max-width:800px}
+  .tag{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;
+    padding:3px 12px;font-size:12.5px;margin:8px 8px 0 0}
+  h2{font-size:21px;margin:38px 0 14px;padding-left:12px;border-left:5px solid var(--brand)}
+  h3{font-size:17px;margin:22px 0 10px;color:#2b3340}
+  h4{font-size:15px;margin:14px 0 6px;color:var(--brand)}
+  p{margin:8px 0}
+  .lead{background:var(--soft);border-radius:12px;padding:16px 20px;margin:14px 0;
+    border:1px solid #d7e3ff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin:16px 0}
+  .pcard{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 16px;box-shadow:0 2px 10px rgba(20,40,80,.04)}
+  .pcard .ph{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .pcard h3{margin:0 0 2px;font-size:18px}
+  .ptype{font-size:12px;color:var(--sub);background:var(--soft);padding:2px 9px;border-radius:8px;white-space:nowrap}
+  .kv{font-size:13.5px;margin:4px 0}
+  .kv b{color:#33405a}
+  .mono{background:var(--soft3);border-left:3px solid var(--gold);padding:8px 12px;
+    border-radius:0 8px 8px 0;margin:8px 0;font-size:13.5px}
+  ul{margin:8px 0 8px 20px} li{margin:4px 0}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;
+    background:var(--card);border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(20,40,80,.05)}
+  th,td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+  th{background:#eef2f8;color:#2b3340;font-weight:600}
+  tr:nth-child(even) td{background:#fafbfd}
+  .pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11.5px;font-weight:600}
+  .p-hi{background:#eafaf3;color:#0f8f63} .p-mid{background:#fff5ec;color:#c4742a}
+  .p-lo{background:#fdecec;color:#c0392b} .p-must{background:#eef3ff;color:#2f6df0}
+  .band{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
+  .band.blue{background:var(--soft);border-color:#d7e3ff}
+  .band.green{background:var(--soft2);border-color:#cdeee0}
+  .band.gold{background:var(--soft3);border-color:#f3dcae}
+  .steps{counter-reset:s;list-style:none;margin:10px 0;padding:0}
+  .steps li{counter-increment:s;position:relative;padding:10px 12px 10px 44px;margin:8px 0;
+    background:#fff;border:1px solid var(--line);border-radius:10px}
+  .steps li::before{content:counter(s);position:absolute;left:12px;top:10px;width:24px;height:24px;
+    background:var(--brand);color:#fff;border-radius:50%;text-align:center;line-height:24px;font-size:13px;font-weight:700}
+  .note{background:#fbfaff;border:1px dashed #c4b8f0;color:#5a4b9c;border-radius:10px;
+    padding:12px 16px;margin:16px 0;font-size:13px}
+  .flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0;font-size:14px}
+  .flow .node{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;flex:1;min-width:180px}
+  .flow .node.b1{border-color:#d7e3ff;background:var(--soft)}
+  .flow .node.b2{border-color:#cdeee0;background:var(--soft2)}
+  .flow .node.b3{border-color:#f3dcae;background:var(--soft3)}
+  .flow .arrow{color:var(--sub);font-size:20px;font-weight:700}
+  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--sub);font-size:12.5px}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}header{padding:24px 18px}.flow .arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body><style>.xt-nav{position:sticky;top:0;z-index:99999;display:flex;gap:12px;align-items:center;padding:10px 14px;background:#056DE8;color:#fff;font:14px/1.4 -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;}.xt-nav a{color:#fff;text-decoration:none;opacity:.92}.xt-nav a:hover{opacity:1}.xt-nav .sp{flex:1}.xt-nav b{opacity:.75}</style><div class="xt-nav"><a href="index.html">← 返回作品集</a><span class="sp"></span><b>行途 · 作品集</b></div>
+<div class="wrap">
+
+<header>
+  <h1>出海收款与税务实操手册</h1>
+  <p>承接《个人IP出海与海外平台调研》的「合规专题」深挖版——把「平台怎么把钱给你 → 怎么换成人民币回国内 → 怎么合规交税」这条最容易踩坑的资金链，拆成可照做的实操手册。面向「行途 / AI harness 实战派」出海变现落地。数据截至 2026-08。</p>
+  <div>
+    <span class="tag">收款通道</span>
+    <span class="tag">结汇落地</span>
+    <span class="tag">平台预扣≠完税</span>
+    <span class="tag">银行卡/万事达定位</span>
+    <span class="tag">分阶段 SOP</span>
+  </div>
+</header>
+
+<div class="note">
+  <b>作者内部备注（发布前可删除）：</b>本文是实操底稿，不是发布稿。所有费率/政策均为 2026-08 公开聚合数据，<b>落地前务必复核各机构官方页与外管局/税务机关最新口径</b>。跨境收款与税务涉及合规红线，重大收入结构务必咨询持牌跨境税务顾问——本文不构成税务或法律建议。
+</div>
+
+<h2>一、钱流全景：先把三层搞清楚</h2>
+<div class="lead">
+  <p>出海变现最大的认知误区是「把钱收回国内」和「办张国际卡」混为一谈。实际是三条独立链路，<b>收款、落地、持卡各管一段</b>。</p>
+</div>
+<div class="flow">
+  <div class="node b1"><b>① 收款层</b><br>平台把钱给你<br>YouTube / AdSense / TikTok / Substack / Ko-fi / GitHub Sponsors</div>
+  <div class="arrow">→</div>
+  <div class="node b2"><b>② 落地层</b><br>换成人民币回国内<br>PayPal / 连连 / PingPong / Payoneer / 万里汇（机构结汇）</div>
+  <div class="arrow">→</div>
+  <div class="node b3"><b>③ 持卡层</b><br>海外消费 / 取现<br>Payoneer Mastercard / 国内银行多币种卡 / Wise 卡</div>
+</div>
+<div class="mono"><b>核心结论：</b>「国际万事达储蓄卡」处在第③层，是<b>花钱/取现卡，不是收款卡</b>。钱回国的主线是「平台收款 → 机构结汇 → 国内银联卡」，国内普通银行卡（开个外币账户）就能接，<b>不强制需要万事达卡</b>。</div>
+
+<h2>二、收款通道详解（逐个比对）</h2>
+<div class="grid">
+
+  <div class="pcard">
+    <div class="ph"><h3>Stripe</h3><span class="ptype">⚠️ 大陆个人已关</span></div>
+    <div class="kv"><b>现状：</b>2026 Q2 起 Stripe 关闭<b>中国大陆个人主体</b>开户（企业主体仍可，需合规资质）。</div>
+    <div class="kv"><b>影响：</b>Substack / Medium Partner / 很多 SaaS 默认走 Stripe——大陆个人直接被卡。</div>
+    <div class="mono"><b>解法：</b>注册海外主体（怀俄明 LLC / 爱沙尼亚 e-Residency）用其 Stripe；或改用支持 PayPal 的平台（Ko-fi）/ 海外银行（Wise 企业户）。</div>
+  </div>
+
+  <div class="pcard">
+    <div class="ph"><h3>PayPal</h3><span class="ptype">✅ 中国可用</span></div>
+    <div class="kv"><b>优势：</b>中国个人可注册，是 Ko-fi / 直捐 / 联盟分佣最稳的落地通道。</div>
+    <div class="kv"><b>费率：</b>PayPal 中国直提人民币 <b>2026 优惠期 0.5%</b>（1/15–12/31，标准 1.0%）；经连连 / PingPong 结汇 0.25%–3% 档位。</div>
+    <div class="kv"><b>注意：</b>大额频繁入账需做「服务贸易外汇」申报，保留合同/平台流水备查。</div>
+    <div class="mono"><b>对 boss：</b>小额打赏/联盟用 PayPal 最省心；大额订阅建议走海外主体对公账户更合规。</div>
+  </div>
+
+  <div class="pcard">
+    <div class="ph"><h3>Payoneer（派安盈）</h3><span class="ptype">✅ 中国个人可注册</span></div>
+    <div class="kv"><b>定位：</b>中国大陆个人能开，接收 USD / EUR / GBP，提现到国内银行卡（招行/中行/工行等）。</div>
+    <div class="kv"><b>费率：</b>提现国内卡约 <b>1.2%</b>；是 AdSense / TikTok 等平台主流收款工具。</div>
+    <div class="kv"><b>副产物：</b>自带 <b>Mastercard 预付卡</b>——可全球 ATM 取现、线下消费、付海外订阅（OpenAI / Copilot）。</div>
+    <div class="mono"><b>对 boss：</b>就是你说的「国际万事达卡」真实形态。收美元 + 付海外订阅 + 取现三合一，起步阶段最省心。</div>
+  </div>
+
+  <div class="pcard">
+    <div class="ph"><h3>Wise（原 TransferWise）</h3><span class="ptype">⚠️ 中国户功能受限</span></div>
+    <div class="kv"><b>现状：</b>中国个人户能开，支持 USD / EUR / GBP 收款，但<b>开不了美国 USD 账户</b>（需美国地址）。</div>
+    <div class="kv"><b>常用法：</b>Wise 中国户收 USD → 转 HKD / CNY 提现回国；可生成 Visa / Mastercard 虚拟卡。</div>
+    <div class="kv"><b>汇率：</b>货币转换费全球最低（0.4%–0.7%），适合做多币种中转。</div>
+    <div class="mono"><b>对 boss：</b>更适合做「多币种中转 + 消费卡」，不是首选收款户（美国 USD 账户受限）。</div>
+  </div>
+
+  <div class="pcard">
+    <div class="ph"><h3>Mercury</h3><span class="ptype">需美国 LLC</span></div>
+    <div class="kv"><b>定位：</b>只面向美国注册公司（LLC / C-Corp）开户，需 EIN + 公司文件。</div>
+    <div class="kv"><b>流程：</b>Doola / Firstbase 注册 LLC（$99–500）→ 拿 EIN（4–6 周）→ Mercury 申请（通过率 80%+），整套 6–8 周。</div>
+    <div class="mono"><b>对 boss：</b>进阶选项。月入 $500+ 要做 Stripe 时，Mercury 是海外主体的标配美国银行户。</div>
+  </div>
+
+  <div class="pcard">
+    <div class="ph"><h3>GitHub Sponsors / Ko-fi</h3><span class="ptype">✅ 零门槛</span></div>
+    <div class="kv"><b>GitHub Sponsors：</b>直接赞助到账，无中间商抽成（走 Stripe 但 Sponsors 不预扣个人税，需自行申报）。</div>
+    <div class="kv"><b>Ko-fi：</b>支持 PayPal，免费档抽 5%、Gold $6/年 0% 抽成，无粉丝门槛。</div>
+    <div class="mono"><b>对 boss：</b>起步期最轻量收口。Sponsors 养「国际信任」、Ko-fi 收小额打赏，都不碰重税务。</div>
+  </div>
+
+</div>
+
+<h2>三、结汇落地：钱怎么变成国内人民币</h2>
+<div class="band green">
+  <h3>🔑 关键红利：机构结汇不占个人 5 万美元额度</h3>
+  <p>个人每年 <b>5 万美元便利化结汇额度</b>（1/1 重置）——但走 <b>Payoneer / 万里汇 / PingPong / 连连</b> 等持牌机构的「<b>机构结汇通道，不占用这个额度</b>」（外管局 2020 指引 2026 重申：服务贸易凭交易电子信息不占额度）。对自媒体创作者，只要保留好平台流水当「交易证明」，小额收入回国基本不碰红线。</p>
+</div>
+<table>
+  <tr><th>路径</th><th>操作</th><th>费率</th><th>占 5 万额度？</th></tr>
+  <tr><td><b>连连 / PingPong 结汇</b></td><td>PayPal 后台 → Withdraw → 选连连 → USD→CNY → 国内银行卡</td><td>0.25%–3% 档位</td><td><span class="pill p-hi">不占</span>（机构通道）</td></tr>
+  <tr><td><b>PayPal 中国直提</b></td><td>USD 余额 → 人民币 → 国内银行卡</td><td>优惠期 0.5%（2026）/ 标准 1.0%</td><td><span class="pill p-hi">不占</span>（机构通道）</td></tr>
+  <tr><td><b>Payoneer 提现</b></td><td>收美元 → 提现国内银行卡</td><td>~1.2%</td><td><span class="pill p-hi">不占</span>（机构通道）</td></tr>
+  <tr><td><b>国内银行直接收 SWIFT</b></td><td>外币直汇入本人外币账户</td><td>电汇费 + 汇差</td><td><span class="pill p-lo">占</span>（个人便利化额度）</td></tr>
+</table>
+<div class="mono"><b>实操提醒：</b>① 国内银行卡去招行/中行柜台开「外币账户 / 多币种账户」即可接境外汇款；② 大额（超 5 万美元/年）或走机构结汇的认定变动，咨询持牌顾问；③ 保留平台结算单 + 银行水单至少 5 年，用于税务申报与合规审查。</div>
+
+<h2>四、税务专题：平台预扣 ≠ 完税（最大盲区）</h2>
+<div class="band gold">
+  <h3>❌ 常见误解："平台扣了税，我的税就交完了。"</h3>
+  <p>错。平台扣的是<b>付款国（主要是美国）的源头预扣税</b>；你作为<b>中国税务居民，境外所得还要在中国申报一遍</b>。两国靠「税收抵免」衔接，平台不替你包圆。</p>
+</div>
+<table>
+  <tr><th>层</th><th>谁收</th><th>性质</th><th>对 boss 的含义</th></tr>
+  <tr><td><b>① 平台源头预扣</b></td><td>美国平台</td><td>付款国联邦税，硬性自动</td><td>没填 W-8BEN 预扣 30%；填了按中美协定降到 10%（部分 0%）</td></tr>
+  <tr><td><b>② 中国境内申报</b></td><td>中国税务机关</td><td>居民全球所得，主动申报</td><td>用「境外已纳税额抵免」冲抵美国已缴（财政部 税务总局 2020 第3号公告）；超限额 5 年内结转</td></tr>
+  <tr><td><b>③ 非美通道无预扣</b></td><td>Ko-fi / 直客 / 欧盟联盟</td><td>可能无源头预扣</td><td>但中国申报义务仍在——没被美国扣 ≠ 不用在中国申报</td></tr>
+</table>
+
+<h3>4.1 W-8BEN：非美个人的必填项</h3>
+<table>
+  <tr><th>表格</th><th>适用</th><th>作用</th><th>不填代价</th></tr>
+  <tr><td><b>W-8BEN</b></td><td>非美国个人</td><td>享中美协定优惠（内容收入降至 10%，部分 0%）</td><td><span class="pill p-lo">预扣 30%</span></td></tr>
+  <tr><td><b>W-8BEN-E</b></td><td>外国公司（LLC / Pte Ltd）</td><td>公司身份享协定优惠</td><td><span class="pill p-lo">预扣 30%</span></td></tr>
+  <tr><td><b>W-9</b></td><td>美国税务居民</td><td>申报美国身份（基本用不到）</td><td>—</td></tr>
+</table>
+<div class="band blue">
+  <p><b>关键提醒：</b>无美国 ITIN 时平台通常按 <b>24%–30% 预扣</b>；填好 W-8BEN 后多数内容类收入降到 <b>10%</b>（部分 0%）。W-8BEN <b>每 3 年需更新</b>，过期自动恢复高预扣。</p>
+</div>
+
+<h3>4.2 中国境内申报与抵免</h3>
+<ul>
+  <li><b>申报义务：</b>中国税务居民需就全球所得（含境外创作者收入）申报个税。</li>
+  <li><b>抵免机制：</b>美国已缴税额可在「抵免限额」内抵免中国应纳税额；超出部分可在<b>以后 5 年内结转</b>。</li>
+  <li><b>凭证要求：</b>申报抵免需提供境外完税证明 / 纳税记录（财政部 税务总局 2020 第3号公告第十条）；无法提供时可凭申报表 + 银行缴款凭证替代。</li>
+  <li><b>小额现实：</b>月入几百到几千美元，美国源头预扣是硬动作逃不掉；中国这关是「主动申报」性质，小额阶段征管宽松——但收入做大（显著境外所得或构成经营）必须正规申报。</li>
+</ul>
+
+<h2>五、银行卡与万事达卡定位</h2>
+<div class="lead">
+  <p>「国际万事达储蓄卡 / 借记卡」到底是什么？它处在钱流第③层，作用是<b>海外消费 / ATM 取现</b>，不是收款。下面按阶段说清"要不要办、办什么"。</p>
+</div>
+<table>
+  <tr><th>阶段</th><th>收款 / 落地</th><th>办什么卡</th><th>关键费率 / 红利</th></tr>
+  <tr><td><b>0（现在）</b></td><td>PayPal + 国内银行卡（开外币账户）+ 连连 / PingPong</td><td><b>不办</b>，国内银联卡即可</td><td>PayPal 直提 0.5% 优惠期；连连 / PingPong 0.25%–3%</td></tr>
+  <tr><td><b>1（月 $100–1000）</b></td><td>办 Payoneer 收美元，提现国内卡</td><td><b>Payoneer Mastercard 预付卡</b>（自动发）</td><td>Payoneer 提现 ~1.2%；卡可付 OpenAI / Copilot、ATM 取现</td></tr>
+  <tr><td><b>2（月 $500+ 或要 Stripe）</b></td><td>海外主体 + Mercury / Wise 美国户</td><td>Wise 卡（功能受限）/ 国内银行 Mastercard 多币种卡</td><td>机构结汇不占 5 万额度</td></tr>
+</table>
+<div class="mono"><b>结论：</b>想把钱收回国内花 → 不用万事达卡，国内卡 + PayPal / 连连 / Payoneer 足够。想在海外消费 / 付 API / 出国刷 → Payoneer 卡或国内银行 Mastercard 多币种卡就够，不用单独办海外万事达储蓄卡（Wise / Revolut 实体卡是锦上添花，非收款必需）。</div>
+
+<h2>六、分阶段实操 SOP（照做版）</h2>
+<ul class="steps">
+  <li><b>阶段 0（今天，0 成本）：</b>注册 PayPal 个人户 → 去招行/中行柜台开「外币账户 / 多币种账户」→ 绑定国内银行卡。收 Ko-fi / GitHub Sponsors 小额美元，提现时走连连 / PingPong 结汇。<b>不办任何卡。</b></li>
+  <li><b>阶段 1（月稳定 $100–1000）：</b>注册 <b>Payoneer</b>（中国个人可注册）→ 收 AdSense / TikTok / 平台美元 → 提现国内卡（~1.2%）。用自带的 Payoneer Mastercard 付 OpenAI / Copilot 等海外订阅、ATM 取现。</li>
+  <li><b>阶段 2（月 $500+ 或要接 Stripe）：</b>注册海外主体（怀俄明 LLC / 爱沙尼亚 e-Residency）→ 开 Mercury / Wise 美国账户 → 开 Stripe → 把 Substack / 会员收入迁过去。始终保留 W-8BEN 有效。</li>
+  <li><b>贯穿动作（任何阶段）：</b>填好 W-8BEN（每 3 年更新）；保留平台流水 + 银行水单 ≥5 年；收入做大后主动在中国申报境外所得并做抵免。</li>
+</ul>
+
+<h2>七、风险红线与合规提醒</h2>
+<div class="band gold">
+  <ul>
+    <li><b>平台规则/美国税务条款月月变</b>：本文数据截至 2026-08，落地前复核官方页（尤其 W-8BEN 预扣率、Stripe 主体政策、TikTok 美国可用性）。</li>
+    <li><b>跨境收款与税务是合规红线</b>：重大收入结构务必咨询持牌跨境税务顾问，本文不构成建议。</li>
+    <li><b>申报凭证留存 ≥5 年</b>：平台结算单 + 银行水单 + 境外完税证明，用于税务申报与合规审查。</li>
+    <li><b>勿做单一依赖</b>：TikTok 美国等政策不确定性高，多渠道分散；收款至少备 PayPal + Payoneer 双通道。</li>
+    <li><b>来源国 + 居住地双合规</b>：既要搞定美国源头预扣（W-8BEN），也要履行中国境外所得申报义务。</li>
+  </ul>
+</div>
+
+<h2>八、平台 → 收款 → 税务 对照速查</h2>
+<table>
+  <tr><th>收入来源</th><th>推荐收款通道</th><th>源头预扣</th><th>回国落地</th></tr>
+  <tr><td>YouTube / AdSense</td><td>平台直付（需美国税号/主体或 PayPal 中转）</td><td>填 W-8BEN 后 10%</td><td>经 PayPal / Payoneer 结汇</td></tr>
+  <tr><td>TikTok Creator Rewards</td><td>平台直付 / PayPal</td><td>10%（美区）</td><td>连连 / PingPong</td></tr>
+  <tr><td>Substack</td><td>Stripe（需主体）/ PayPal 替代</td><td>10%</td><td>海外主体户 → 结汇</td></tr>
+  <tr><td>Ko-fi / GitHub Sponsors</td><td>PayPal / 直捐</td><td>通常不预扣个人税</td><td>PayPal 直提 / Payoneer</td></tr>
+  <tr><td>联盟营销 / 直客咨询</td><td>PayPal / Payoneer / 直汇</td><td>多数无源头预扣</td><td>机构结汇（不占额度）</td></tr>
+</table>
+
+<div class="foot">
+  <p>本文档由「行途 / XingTu」内容战略内部调研生成 · 配套《个人IP出海与海外平台调研》《个人IP平台全景与变现调研》《免费大模型全景》· 数据截至 2026-08，供战略参考，非发布稿，非税务/法律建议。</p>
+  <p>引用来源：PayPal 中国费率中心、Payoneer / Wise / Mercury 官网、IRS W-8BEN 指引、外管局《经常项目外汇业务指引(2020)》、财政部 税务总局 2020 第3号公告、Stripe 主体政策更新、爱沙尼亚 e-Residency / 怀俄明 LLC 公开资料。</p>
+</div>
+
+</div>
+</body>
+</html>

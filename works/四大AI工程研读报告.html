@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《四大AI工程深度解析》研读报告 · 行途对照版</title>
+<style>
+  :root{
+    --bg:#F4F3EE; --card:#FFFFFF; --border:#E4E3DD;
+    --text:#1A1B1C; --sub:#6B7280;
+    --m1:#9EACEA; --m2:#A3D5E8; --m5:#9BBBF4; --m9:#8BC8EA; --m7:#94D4D0; --m6:#A2DDAA;
+    --m4:#C9A7E8; --m3:#E1B98F; --m13:#DEBEF8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'PingFang SC','Roboto','Segoe UI',Arial,sans-serif;line-height:1.7;padding:0 0 48px;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px;}
+  header{background:linear-gradient(135deg,#1A1B2E 0%,#2a2c4a 100%);color:#fff;padding:52px 0 44px;margin-bottom:32px;}
+  header .wrap h1{font-size:30px;font-weight:700;letter-spacing:1px;}
+  header .wrap .sub{color:#cfd3f5;margin-top:10px;font-size:15px;}
+  header .wrap .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#eef;padding:4px 12px;border-radius:999px;font-size:12.5px;}
+  h2{font-size:22px;font-weight:700;margin:44px 0 16px;padding-left:12px;border-left:5px solid var(--m5);}
+  h3{font-size:17px;font-weight:600;margin:24px 0 10px;}
+  p{font-size:14.5px;color:#333;margin:8px 0;}
+  .lead{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 22px;font-size:15px;margin:18px 0;}
+  .lead b{color:#3a4a8f;}
+  .grid4{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0;}
+  .eng{flex:1 1 190px;min-width:190px;border-radius:14px;padding:16px;border:1px solid var(--border);background:var(--card);}
+  .eng .en{font-size:13px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;}
+  .eng .zh{font-size:19px;font-weight:700;margin:4px 0 8px;}
+  .eng .q{font-size:13px;color:#444;}
+  .eng .core{font-size:12px;color:var(--sub);margin-top:8px;}
+  .e1 .zh{color:#3f6ad8;} .e2 .zh{color:#2e9e7f;} .e3 .zh{color:#b06ad0;} .e4 .zh{color:#d9822b;}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:14px 0;font-size:13.5px;}
+  th{background:#f0f1fa;text-align:left;padding:10px 12px;font-weight:600;border-bottom:1px solid var(--border);}
+  td{padding:9px 12px;border-bottom:1px solid #f0f0ee;vertical-align:top;color:#333;}
+  tr:last-child td{border-bottom:none;}
+  .imgbox{margin:16px 0;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;}
+  .imgbox img{width:100%;border-radius:8px;display:block;border:1px solid #eee;}
+  .imgbox .cap{font-size:12.5px;color:var(--sub);margin-top:8px;}
+  .pill{display:inline-block;background:#eef1fb;color:#3a4a8f;font-size:12px;padding:2px 10px;border-radius:999px;margin:2px 4px 2px 0;}
+  .note{background:#fffbf0;border:1px solid #f0e2b8;border-radius:12px;padding:14px 18px;font-size:13.5px;margin:14px 0;color:#5a4a1a;}
+  .map{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0;}
+  .mapc{flex:1 1 280px;min-width:280px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;}
+  .mapc .rep{font-size:12.5px;color:#3a4a8f;font-weight:600;}
+  .mapc .xt{font-size:14px;font-weight:700;margin:4px 0;}
+  .mapc .exp{font-size:12.5px;color:var(--sub);}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--border);color:var(--sub);font-size:12.5px;}
+  .two{display:flex;flex-wrap:wrap;gap:12px;}
+  .two .col{flex:1 1 46%;min-width:300px;}
+</style>
+</head>
+<body><style>.xt-nav{position:sticky;top:0;z-index:99999;display:flex;gap:12px;align-items:center;padding:10px 14px;background:#056DE8;color:#fff;font:14px/1.4 -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;}.xt-nav a{color:#fff;text-decoration:none;opacity:.92}.xt-nav a:hover{opacity:1}.xt-nav .sp{flex:1}.xt-nav b{opacity:.75}</style><div class="xt-nav"><a href="index.html">← 返回作品集</a><span class="sp"></span><b>行途 · 作品集</b></div>
+
+<header>
+  <div class="wrap">
+    <h1>《四大AI工程深度解析》研读报告</h1>
+    <div class="sub">致网科技 · 模智空间 ULTIMATE AI 出品（55 页）｜研读日期 2026-09-02｜行途体系对照版</div>
+    <div class="meta">
+      <span class="tag">Prompt 提示词工程</span>
+      <span class="tag">Context 上下文工程</span>
+      <span class="tag">Harness 驾驭工程</span>
+      <span class="tag">Loop 循环工程</span>
+      <span class="tag">↔ xingtu 仓库矩阵对照</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="lead">
+    <b>一句话结论：</b>AI 工程的重心，已从「如何让模型答得对」转向「如何让系统把任务做成、做稳、做闭环」。四层工程不是替代关系，而是从<b>输入控制 → 信息供给 → 受控执行 → 反馈闭环</b>的能力叠加；真正的瓶颈不是模型能力，而是<b>上下文与执行环境</b>。
+  </div>
+
+  <h2>01 · 四大工程：怎么问 / 看什么 / 在什么环境工作 / 下一步怎么办</h2>
+  <div class="grid4">
+    <div class="eng e1"><div class="en">Prompt Engineering</div><div class="zh">怎么问</div><div class="q">把模糊意图变成可执行任务</div><div class="core">指令 · 约束 · 示例 · 输出协议</div></div>
+    <div class="eng e2"><div class="en">Context Engineering</div><div class="zh">让 AI 看到什么</div><div class="q">正确、可信、可追溯的信息</div><div class="core">检索 · 窗口 · 记忆 · 引用</div></div>
+    <div class="eng e3"><div class="en">Harness Engineering</div><div class="zh">在什么环境工作</div><div class="q">安全、可靠、可控地行动</div><div class="core">工具 · 权限沙箱 · 验证 · 日志</div></div>
+    <div class="eng e4"><div class="en">Loop Engineering</div><div class="zh">做完一步怎么办</div><div class="q">观察 · 评估 · 重试 · 收敛</div><div class="core">人设计循环，循环驱动智能体</div></div>
+  </div>
+
+  <h3>缺一不可（报告反例）</h3>
+  <p><span class="pill">只有 Prompt，缺事实</span>任务清楚但可能编造或片面　<span class="pill">只有 Context，不会行动</span>资料丰富但无法解决问题　<span class="pill">只有 Harness，缺目标</span>能调工具但不知做什么　<span class="pill">只有 Loop，易空转</span>反复迭代但不收敛</p>
+
+  <h2>02 · 总览与四层演进</h2>
+  <div class="two">
+    <div class="imgbox"><img src="截图素材/01_总览/P04-AI工程四层演进Prompt-Context-Harness-Loop.jpg" alt="四层演进"><div class="cap">P04 · AI 工程四层演进：从单次被动响应到可运行·可验证·可交付的任务系统</div></div>
+    <div class="imgbox"><img src="截图素材/01_总览/P06-四层协作关系与缺一不可反例.jpg" alt="四层协作"><div class="cap">P06 · 四层协作关系与缺一不可反例</div></div>
+  </div>
+  <div class="imgbox"><img src="截图素材/01_总览/P03-从生成答案到闭环执行.jpg" alt="从生成答案到闭环执行"><div class="cap">P03 · AI 工程关注重点：从生成答案到闭环执行（资料检索 → 工具调用 → 验证结果 → 反馈调整 → 交付产物 → 持续迭代）</div></div>
+
+  <h2>03 · Prompt Engineering 要点</h2>
+  <div class="two">
+    <div class="imgbox"><img src="截图素材/02_Prompt/P09-提示基本结构-身份任务上下文约束输出.jpg" alt="提示基本结构"><div class="cap">P09 · 提示基本结构：身份/任务/上下文/约束/输出 + 验收标准/不确定性处理/引用要求</div></div>
+    <div class="imgbox"><img src="截图素材/02_Prompt/P14-Prompt工程化发布流程-仓库灰度回滚.jpg" alt="Prompt工程化"><div class="cap">P14 · Prompt 工程化：仓库 → 草稿 → 离线评测 → 灰度 → 监控 → 回滚；可版本化·可评测·可回滚</div></div>
+  </div>
+  <p><span class="pill">Few-Shot</span>用少量示例立标准　<span class="pill">CoT 思维链</span>多步推理逐步推导　<span class="pill">Self-Consistency</span>多路径采样投票　<span class="pill">角色/受众/场景</span>同任务不同输出结构　<span class="pill">边界</span>无法超越模型能力上限</p>
+
+  <h2>04 · Context Engineering 要点</h2>
+  <div class="two">
+    <div class="imgbox"><img src="截图素材/03_Context/P16-Context-信息来源到上下文包.jpg" alt="Context到上下文包"><div class="cap">P16 · Context：多源信息 → 检索/筛选/排序/压缩/权限过滤/引用绑定 → 上下文包（去噪·保真·控权）</div></div>
+    <div class="imgbox"><img src="截图素材/03_Context/P19-RAG离线索引与在线推理全流程.jpg" alt="RAG全流程"><div class="cap">P19 · RAG：离线索引（采集/清洗切分/向量化/索引库）+ 在线推理（改写/召回/Rerank/拼装/生成/引用）</div></div>
+  </div>
+  <div class="imgbox"><img src="截图素材/03_Context/P20-Naive-RAG-vs-Agentic-RAG对比.jpg" alt="Naive vs Agentic RAG"><div class="cap">P20 · Naive RAG（固定流程单轮检索） vs Agentic RAG（动态编排多轮检索+证据判断）</div></div>
+  <div class="note">关键结论：<b>窗口变长 ≠ 信息质量变高</b>。上下文是"有限预算"，需保留/裁剪/摘要/刷新/按需检索；记忆分三层：短期上下文（工作内存）、任务状态、长期记忆。</div>
+
+  <h2>05 · Harness Engineering：系统的安全护栏（本报告最重章节）</h2>
+  <div class="imgbox"><img src="截图素材/04_Harness/P28-Harness七层架构-ETCLOVG.jpg" alt="七层架构"><div class="cap">P28 · Harness 七层架构 ETCLOVG：运行底座（E/T/C/L）+ 全局管控平面（O/V/G）</div></div>
+
+  <table>
+    <tr><th>层</th><th>模块</th><th>要点</th></tr>
+    <tr><td><b>E</b> Execution</td><td rowspan="4">核心运行底座<br>（身体与行动）</td><td>执行环境与沙箱：隔离/可复现/提自主性；主流 E2B</td></tr>
+    <tr><td><b>T</b> Tool</td><td>工具接口与协议：精简精准工具集远优于大而全</td></tr>
+    <tr><td><b>C</b> Context</td><td>三级记忆；上下文衰减（窗口未满性能下降）、上下文漂移（长跑偏离目标）</td></tr>
+    <tr><td><b>L</b> Lifecycle</td><td>生命周期与编排：单智能体/多智能体/流水线；有状态 vs 无状态权衡</td></tr>
+    <tr><td><b>O</b> Observability</td><td rowspan="3">全局管控平面<br>（大脑与风控）</td><td>链路追踪、成本性能监控、故障运维</td></tr>
+    <tr><td><b>V</b> Verification</td><td>五阶段闭环质检；Agent 分数 = 模型 + Harness 共同作用</td></tr>
+    <tr><td><b>G</b> Governance</td><td>权限/审计/防御/合规；安全是开源最薄弱环节</td></tr>
+  </table>
+
+  <h3>三大核心取舍</h3>
+  <p><span class="pill">① 成本-质量-速度三元悖论</span>ToB 优先质量，C 端优先速度与成本　<span class="pill">② 能力与管控此消彼长</span>能力越强管控越难　<span class="pill">③ 层间耦合</span>局部优化 ≠ 全局最优，需全链路测试</p>
+  <div class="two">
+    <div class="imgbox"><img src="截图素材/04_Harness/P36-核心取舍一-成本质量速度三元悖论.jpg" alt="三元悖论"><div class="cap">P36 · 成本-质量-速度三元悖论</div></div>
+    <div class="imgbox"><img src="截图素材/04_Harness/P39-Harness五大技术难题.jpg" alt="五大难题"><div class="cap">P39 · 五大技术难题：环境加固、状态一致性、链路故障诊断、跨角色交接、随模型迭代动态简化</div></div>
+  </div>
+
+  <h2>06 · Loop Engineering：循环的设计与自主执行</h2>
+  <div class="imgbox"><img src="截图素材/05_Loop/P41-Loop-人设计循环循环驱动智能体.jpg" alt="Loop驱动"><div class="cap">P41 · 过去：人不断驱动智能体；现在：人设计循环，循环驱动智能体</div></div>
+  <div class="imgbox"><img src="截图素材/05_Loop/P43-Loop六大组件总览.jpg" alt="Loop六大组件"><div class="cap">P43 · Loop 六大组件总览</div></div>
+  <table>
+    <tr><th>组件</th><th>作用</th></tr>
+    <tr><td>1. Automations 自动化机制</td><td>循环持续运行的心跳：定时触发、扫描状态、总结失败</td></tr>
+    <tr><td>2. Worktrees</td><td>并行协作隔离：同一仓库拆独立目录/分支，防文件覆盖与代码冲突</td></tr>
+    <tr><td>3. Skills</td><td>知识沉淀底座：项目规范/构建/踩坑写入 SKILL.md，循环自动复用</td></tr>
+    <tr><td>4. Plugins &amp; Connectors（MCP）</td><td>连接真实工具：GitHub/Slack/数据库/CI/API</td></tr>
+    <tr><td>5. Sub-Agents</td><td>执行与验证分离：避免"既当运动员又当裁判"的自审盲区</td></tr>
+    <tr><td>6. Memory</td><td>外部持久化记忆：状态写入磁盘，记录完成/失败/待处理，断点恢复</td></tr>
+  </table>
+
+  <h2>07 · 演进路径：三次范式跃迁</h2>
+  <div class="imgbox"><img src="截图素材/06_总结/P52-智能体工程三次范式跃迁.jpg" alt="三次范式跃迁"><div class="cap">P52 · 指令驱动（Prompt）→ 信息驱动（Context+Harness）→ 系统驱动（Loop）</div></div>
+
+  <h2>08 · 与行途（xingtu）体系的对照</h2>
+  <div class="lead" style="font-size:13.5px;">这份报告描述的「AI 驱动研发体系 / 项目 Harness」模型，与 xingtu 当前的开源仓库矩阵<b>高度同构</b>。与其说是学到新概念，不如说是<b>验证了我们已经走的方向，并补上了缺位</b>。</div>
+  <div class="map">
+    <div class="mapc"><div class="rep">项目 Harness（本地优先：Agent+文件夹+Git）</div><div class="xt">xingtu-harness / xingtu-cli</div><div class="exp">规则/技能/MCP/工具/SDD/钩子聚合为一个工作区整体</div></div>
+    <div class="mapc"><div class="rep">规则与决策边界（AGENTS.md）</div><div class="xt">xingtu-rules</div><div class="exp">分层规则 rules / rules-scoped / SELF.md</div></div>
+    <div class="mapc"><div class="rep">领域能力 skills/</div><div class="xt">xingtu-skills</div><div class="exp">Skill 组织一类任务，已能力市场化（marketplace.json）</div></div>
+    <div class="mapc"><div class="rep">门禁 scripts/</div><div class="xt">xingtu-hooks + xingtu-cli</div><div class="exp">把不能靠语言自觉保证的门禁执行到底</div></div>
+    <div class="mapc"><div class="rep">MCP 连接器</div><div class="xt">xingtu-mcps</div><div class="exp">Loop 组件 4：连接真实工具/环境</div></div>
+    <div class="mapc"><div class="rep">机器可读迭代协议（REQ/AC/TC）</div><div class="xt">xingtu-sdd</div><div class="exp">Spec-Driven Development：PRD→方案→测试固定串联</div></div>
+    <div class="mapc"><div class="rep">知识层 wiki/ + 知识飞轮</div><div class="xt">xingtu-vault</div><div class="exp">Raw→Wiki→Schema 三层编译 + 双链/MOC/来源必录</div></div>
+    <div class="mapc"><div class="rep">方法论与哲学</div><div class="xt">xingtu-ai-engineering</div><div class="exp">philosophy / methodology / governance</div></div>
+    <div class="mapc"><div class="rep">内容与传播输出端</div><div class="xt">articles / book / video / site / github-io</div><div class="exp">知识飞轮对外输出：文章、书、视频、站点、作品集</div></div>
+    <div class="mapc"><div class="rep">专用工具适配</div><div class="xt">xingtu-tools</div><div class="exp">Harness 工具层的精细适配</div></div>
+  </div>
+
+  <h3>报告给我们补的位（差距 → 可落地动作）</h3>
+  <table>
+    <tr><th>差距</th><th>报告依据</th><th>行途动作</th></tr>
+    <tr><td>动态事实验证不足</td><td>测试必须绑定真实环境，回填 traceId 与断言；接口成功 ≠ 业务完成</td><td>SDD 补"验收必须可执行验证"门禁，人工验证显式标注</td></tr>
+    <tr><td>发布完成标准未固化</td><td>合入主干 + 状态一致 + 证据齐全才视为迭代结束</td><td>hooks/CLI 增加发布完成三要素校验</td></tr>
+    <tr><td>观测与成本较弱</td><td>O 层：链路追踪、Token 成本统计</td><td>工具链增加单次任务 Token/成本回执</td></tr>
+    <tr><td>循环自动化仍是雏形</td><td>Loop 组件 1：Automations + 状态文件</td><td>沉淀"定时触发+状态落盘+失败总结"模板</td></tr>
+    <tr><td>Worktree 并行隔离未显式使用</td><td>Loop 组件 2</td><td>多 Agent 并行时启用 worktree 分支隔离</td></tr>
+    <tr><td>验证与执行分离可强化</td><td>Loop 组件 5：Sub-Agents 执行/审查分离</td><td>写代码与验收用不同角色/会话执行</td></tr>
+  </table>
+
+  <h2>09 · 我们的核心判断</h2>
+  <div class="note">
+    <b>1. Context 是第一性瓶颈</b> —— 谁的上下文资产厚、维护得好，谁的 Agent 就靠谱。<br>
+    <b>2. Harness 会收缩但不会消失</b> —— 业务知识治理、规则边界、领域工具、验证标准这四块"不会消失"的，正是行途在沉淀的部分。<br>
+    <b>3. 业务技术人更接近 FDE</b> —— 核心价值 = 业务理解 + 系统连接 + 端到端结果责任。<br>
+    <b>4. 质量底线是"可验证"不是"看起来对"</b> —— 任何自动化都要绑定真实环境证据回收。<br>
+    <b>5. 知识飞轮 = 行途护城河</b> —— 报告把知识飞轮讲成框架，我们已在跑真实闭环。
+  </div>
+
+  <footer>
+    《四大AI工程深度解析》研读报告 · 分析总结 + 截图素材拆分 + 行途体系对照<br>
+    源报告版权归原作者/发布机构所有，本研读仅作内部学习与技术交流用途。
+  </footer>
+
+</div>
+</body>
+</html>

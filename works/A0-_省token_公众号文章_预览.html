@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>省 token 的第一性原理 · 公众号文章预览 · 行途/Justin Li</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #1f2329;
+    --text-2: #4e5969;
+    --text-3: #86909c;
+    --brand: #056DE8;
+    --brand-2: #0A84FF;
+    --accent: #FF6B35;
+    --green: #00b42a;
+    --gold: #ff9a00;
+    --border: #e5e6eb;
+    --code-bg: #f7f8fa;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1080px; margin: 0 auto; padding: 24px 20px 60px; }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    padding: 12px 16px; background: #fff; border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: var(--text-2);
+  }
+  .top-bar .brand { font-weight: 700; color: var(--brand); }
+  .top-bar .meta { display: flex; gap: 16px; }
+  .cover-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    padding: 18px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+  .cover-card .cover-img { width: 100%; height: auto; border-radius: 8px; display: block; }
+  .cover-card .cover-caption { margin-top: 10px; font-size: 12px; color: var(--text-3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  .main { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+  @media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+  .article {
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    padding: 36px 40px; box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+  .article h1 { font-size: 24px; line-height: 1.4; margin: 0 0 8px; font-weight: 800; color: var(--text); }
+  .article .subtitle { font-size: 13px; color: var(--text-3); margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .article h2 { font-size: 19px; margin: 36px 0 12px; font-weight: 700; color: var(--text); padding-left: 12px; border-left: 4px solid var(--brand); }
+  .article h3 { font-size: 16px; margin: 24px 0 8px; font-weight: 700; color: var(--text); }
+  .article p { margin: 12px 0; font-size: 15.5px; color: var(--text-2); }
+  .article strong { color: var(--text); font-weight: 700; }
+  .article em { color: var(--text-3); font-style: normal; }
+  .article ul, .article ol { padding-left: 22px; color: var(--text-2); }
+  .article li { margin: 6px 0; font-size: 15px; }
+  .article img { width: 100%; height: auto; border-radius: 8px; display: block; margin: 16px 0 6px; border: 1px solid var(--border); }
+  .article .img-cap { font-size: 12px; color: var(--text-3); text-align: center; margin: 0 0 20px; padding: 0 6px; }
+  .article blockquote {
+    border-left: 3px solid var(--brand); padding: 8px 14px; background: var(--code-bg);
+    margin: 16px 0; border-radius: 6px; color: var(--text-2); font-size: 14.5px;
+  }
+  .article blockquote p { margin: 4px 0; font-size: 14.5px; color: var(--text-2); }
+  .article blockquote.key {
+    border-left-color: var(--accent); background: #fff7f0;
+  }
+  .article blockquote.key p { color: #9a3412; }
+  table.compare {
+    width: 100%; border-collapse: collapse; margin: 14px 0 18px; font-size: 14px;
+    background: #fff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+  }
+  table.compare thead th {
+    background: linear-gradient(180deg, #f0f6ff, #e8f0fb); color: var(--text);
+    font-weight: 700; padding: 12px 10px; text-align: center; border-bottom: 2px solid var(--brand); font-size: 13.5px;
+  }
+  table.compare tbody td { padding: 11px 10px; text-align: center; border-bottom: 1px solid var(--border); color: var(--text-2); }
+  table.compare tbody tr:last-child td { border-bottom: none; }
+  table.compare td:first-child { text-align: left; font-weight: 600; color: var(--text); background: #f0f6ff; }
+  table.compare td.best { color: var(--brand); font-weight: 800; background: #eef5ff; }
+  .layer-box {
+    border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin: 12px 0;
+    background: #fafcff; border-left: 4px solid var(--brand);
+  }
+  .layer-box .l-name { font-weight: 700; color: var(--text); font-size: 15px; }
+  .layer-box .l-name .idx { color: var(--brand); font-weight: 800; margin-right: 4px; }
+  .layer-box .l-think { font-size: 13.5px; color: var(--text-2); margin-top: 4px; }
+  .layer-box .l-think b { color: var(--brand); }
+  /* 六层颜色：与金字塔配图一一对应 */
+  .layer-box.l1 { border-left-color: #1E40AF; } .layer-box.l1 .l-name .idx { color: #1E40AF; }
+  .layer-box.l2 { border-left-color: #0A84FF; background: #f0f7ff; box-shadow: 0 2px 14px rgba(10,132,255,0.14); } .layer-box.l2 .l-name .idx { color: #0A84FF; }
+  .layer-box.l3 { border-left-color: #7C3AED; } .layer-box.l3 .l-name .idx { color: #7C3AED; }
+  .layer-box.l4 { border-left-color: #F97316; background: #fff7f0; } .layer-box.l4 .l-name .idx { color: #F97316; }
+  .layer-box.l5 { border-left-color: #06B6D4; } .layer-box.l5 .l-name .idx { color: #06B6D4; }
+  .layer-box.l6 { border-left-color: #22C55E; } .layer-box.l6 .l-name .idx { color: #22C55E; }
+  .sources { margin-top: 18px; padding: 14px 16px; background: var(--code-bg); border: 1px dashed var(--border); border-radius: 8px; font-size: 13px; color: var(--text-2); }
+  .sources h4 { margin: 0 0 8px; font-size: 14px; color: var(--text); }
+  .sources table { width: 100%; border-collapse: collapse; }
+  .sources td { padding: 5px 6px; vertical-align: top; }
+  .sources td:first-child { width: 120px; color: var(--text-3); font-weight: 600; }
+  .sources a { color: var(--brand); text-decoration: none; word-break: break-all; }
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+  .panel h4 { margin: 0 0 12px; font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .panel h4::before { content: ""; width: 4px; height: 14px; background: var(--brand); border-radius: 2px; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600; margin: 2px 4px 2px 0; }
+  .pill-red { background: #ffe8e8; color: #cf2424; }
+  .pill-blue { background: #e8f0ff; color: #1d6fe6; }
+  .pill-green { background: #e6f7ec; color: var(--green); }
+  .pill-purple { background: #eef5ff; color: var(--brand); }
+  .pill-gold { background: #fff5e0; color: #c97a00; }
+  .checklist { list-style: none; padding: 0; margin: 0; }
+  .checklist li { padding: 6px 0 6px 22px; font-size: 13px; color: var(--text-2); border-bottom: 1px dashed var(--border); position: relative; }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before { content: "✓"; color: var(--green); font-weight: 800; position: absolute; left: 4px; top: 6px; }
+  .tip-box { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: #875800; line-height: 1.6; }
+  .article-footer { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-3); text-align: center; }
+  .copy-tip { background: #e8f7ee; border: 1px solid #b3e0c2; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #1a6b3b; margin: 16px 0; }
+</style>
+</head>
+<body><style>.xt-nav{position:sticky;top:0;z-index:99999;display:flex;gap:12px;align-items:center;padding:10px 14px;background:#056DE8;color:#fff;font:14px/1.4 -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;}.xt-nav a{color:#fff;text-decoration:none;opacity:.92}.xt-nav a:hover{opacity:1}.xt-nav .sp{flex:1}.xt-nav b{opacity:.75}</style><div class="xt-nav"><a href="index.html">← 返回作品集</a><span class="sp"></span><b>行途 · 作品集</b></div>
+<div class="container">
+
+  <div class="top-bar">
+    <div><span class="brand">行途 / Justin Li</span> · 自媒体 IP 创作工作台</div>
+    <div class="meta">
+      <span>📅 2026-08-28</span>
+      <span>🤖 deepseek-v4-pro</span>
+      <span>🏷️ 行途 · 省 token 系列（第 1 篇）</span>
+    </div>
+  </div>
+
+  <div class="cover-card">
+    <img class="cover-img" src="公众号封面_G3_内容展开_900x383.png" alt="省 token 封面 G3 内容展开版">
+    <div class="cover-caption">
+      <span>封面图：900 × 383 px（公众号头条封面 2.35:1）</span>
+      <span>路径：a0_省token总纲/公众号封面_G3_内容展开_900x383.png</span>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <div class="article">
+      <h1>省 token 的第一性原理：把「不用推理的活」，从模型手里拿回来</h1>
+      <div class="subtitle">发布日期：2026-08-28 · 数据来自团队 8 个月账单统计 · 配图自制</div>
+
+      <div class="copy-tip">📋 <b>使用说明</b>：本文 Markdown 源在 <code>a0_省token总纲/公众号正文.md</code>；正文「复制到公众号」版在 <code>公众号正文_公众号版.html</code>；配图 2 张已 HTML 化重做，上传到公众号素材库后在正文对应位置插入即可。</div>
+
+      <p>我是行途，一线技术经理，带团队也写代码。过去 8 个月，公司几十个人天天用 coding agent，烧掉了<strong>上百亿 token</strong>——用久了，「<strong>省 token</strong>」就成了肌肉记忆：让 AI「少说点」、关掉思考、换个便宜点的模型。</p>
+
+      <p>但上个月，我把这 8 个月的账单导出统计，发现一个反直觉到有点讽刺的事实：</p>
+
+      <p><strong>AI 说出来的话（输出），只占 token 总量的 0.4%；而它反复重读的「上下文」（缓存读），占了 97.7%。</strong></p>
+
+      <blockquote>
+        <p>（注：0.4% 是数 token 个数。按钱算，输出单价贵 5 倍，会占到约 14.6%。我全文按个数说。）</p>
+      </blockquote>
+
+      <blockquote class="key">
+        <p>缓存命中率为什么这么高？这个后面单独拆一篇，今天先记住结论：大头在缓存读。</p>
+      </blockquote>
+
+      <p>也就是说——你拼命让 AI 少说话，省的是那个只占 0.4% 的小头；真正的大头，97.7%，你压根没碰。</p>
+
+      <blockquote class="key">
+        <p><strong>一句话结论（可引用）</strong>：省 token 的本质 = 把「不用推理的活」（索引、检索、压缩、搬运、客套）从模型手里拿回来，交给确定性的系统；只把「需要推理的活」（理解、设计、生成、判断）留给模型。模型贵在「想」，不贵在「搬」。</p>
+      </blockquote>
+
+      <img src="图1_token去向_v2_900x580.png" alt="一次对话 token 去向：缓存读 97.7% / 输入 1.9% / 输出 0.4%">
+      <div class="img-cap">（配图① · 自制 · token 数量口径，团队 8 个月账单统计）</div>
+
+      <h2>一、省 token 先纠正认知：token 到底烧在哪</h2>
+
+      <p>一个 AI 编程工具，每跑一次，token 的去向只有三个地方：</p>
+
+      <table class="compare">
+        <thead>
+          <tr><th>去向</th><th>是什么</th><th>占比（数量口径）</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>输入</td><td>你这次新喂进去的内容</td><td>1.9%</td></tr>
+          <tr><td>缓存读</td><td>对话历史、工具结果、系统提示词这些跨轮次被反复重读的内容</td><td class="best">97.7%</td></tr>
+          <tr><td>输出</td><td>AI 生成的话</td><td>0.4%</td></tr>
+        </tbody>
+      </table>
+
+      <p>你天天琢磨「怎么让 AI 少说两句」「关掉思考省 token」，全是在那 0.4% 里抠。而 97.7% 的缓存读，是 AI 每次对话都要重新读一遍的「固定上下文」——这些才是账单上的大头。</p>
+
+      <p><strong>缓存读便宜（按原价 1/10 计价），但它不免费。</strong>它吃掉的是另一件更贵的东西——模型的注意力。上下文越杂，模型越容易在噪音里迷路。</p>
+
+      <h2>二、省 token 的第一性原理：token 只有两种</h2>
+
+      <ol>
+        <li><strong>需要 AI 推理的</strong>：理解需求、设计方案、写代码、判断对错。这类活，只有模型能干。</li>
+        <li><strong>不需要 AI 推理的</strong>：索引代码、检索文件、压缩命令输出、搬运数据、写客套话。这类活，模型干是浪费。</li>
+      </ol>
+
+      <p><strong>省 token 的本质，一句话：把「不用推理的活」，从模型手里拿回来，交给确定性的系统（脚本、工具、缓存）。</strong>模型贵在「想」，不贵在「搬」。</p>
+
+      <p>打个比方：你花高薪请了个架构师，结果天天让他干「把文件从 A 拷到 B」——这不是省钱，这是浪费。</p>
+
+      <p>这条思想的关键好处是：<strong>它不挑工具</strong>。你用 Claude Code、Codex、WorkBuddy、豆包、Cursor，这套「该模型的只模型、该系统的只系统」都成立。同一套 hook，我从 Claude Code 拆下来，装到 Codex 上照用不误。</p>
+
+      <h3>这不是我拍脑袋：业内也早就这么想</h3>
+      <ul>
+        <li><strong>Rich Sutton《The Bitter Lesson》（2019）</strong>：强化学习之父、图灵奖得主的核心论断——能随算力扩展的「通用方法」最终胜过人类硬编码的规则。「规则是愿望，钩子是墙」正是这条规律在 token 成本场景的投影。</li>
+        <li><strong>Anthropic《Effective Context Engineering for AI Agents》（2025）</strong>：明确把「Just-in-time 上下文」列为 agent 工程核心策略——别预先塞满，按需动态加载。</li>
+        <li><strong>Andrej Karpathy</strong>：「Context engineering 是一门为下一步填充恰当时机的恰当信息的艺术与科学。」</li>
+      </ul>
+
+      <img src="图1_六层金字塔.png" alt="省 token 六层金字塔">
+      <div class="img-cap">（配图② · 自制 · 六层金字塔：从地基到尖端，层层剥离）</div>
+
+      <h2>三、省 token 的六层：把「不用推理的活」一层层剥离</h2>
+
+      <blockquote>
+        <p>下面每层我都用一个工具举例（来自 Claude Code 的实测），但这六层本身不是某个工具的配置，是「让模型只干推理」这个思想的六种落法。</p>
+      </blockquote>
+
+      <div class="layer-box l1">
+        <div class="l-name"><span class="idx">①</span> 需求层：先把需求写清楚，别让 AI 猜</div>
+        <div class="l-think">让 AI 猜着干是最贵的浪费。解法是 <b>Spec 先文档</b>：动手前把「要做什么」写成结构化文档，作为唯一真相源。</div>
+      </div>
+
+      <div class="layer-box l2">
+        <div class="l-name"><span class="idx">②</span> 检索层：按需拉取，别一次全塞（省 token 的大头）</div>
+        <div class="l-think">把代码库索引成关系图，AI 要什么查什么。实测：从「20 次 grep」降到「3–4 次图查询」，<b>工具调用省了 80%</b>。</div>
+      </div>
+
+      <div class="layer-box l3">
+        <div class="l-name"><span class="idx">③</span> 协议层：命令的输出，别原样喂回去</div>
+        <div class="l-think">命令输出先过一层压缩，只保留有意义的部分。实测：<b>命令输出压缩 93.6%</b>，累计省下几千万 token。</div>
+      </div>
+
+      <div class="layer-box l4">
+        <div class="l-name"><span class="idx">④</span> 输入压缩层：从源头压输入</div>
+        <div class="l-think">进模型之前的前置过滤和精简入参。开源项目实测能省 20%–95%（随任务类型波动）。</div>
+      </div>
+
+      <div class="layer-box l5">
+        <div class="l-name"><span class="idx">⑤</span> 散文层：别客套（就是「让 AI 少说话」，但只是六分之一）</div>
+        <div class="l-think">把输出侧调成「先给结果、跳过铺垫」。它只占六层里的六分之一，你只在它上面下功夫，等于治水只堵了最小的支流。</div>
+      </div>
+
+      <div class="layer-box l6">
+        <div class="l-name"><span class="idx">⑥</span> 生成层：让「写代码」本身也讲效率</div>
+        <div class="l-think">让模型只生成「做什么」的契约（骨架），让编译器/测试去验证补全细节。生成不是终点，校验才是。</div>
+      </div>
+
+      <h2>四、省 token 的两条底层律（比工具更底层）</h2>
+
+      <p><strong>律 1：规则是愿望，钩子是墙。</strong>实测规则遵从率只有 70%–90%（随任务和表达方式波动）。靠「自觉」省 token 靠不住，真正稳的是钩子（hooks）：把约束变成系统级硬墙。我写过 20 多条「请不要 X」的规矩，实测只执行了七到九成——不如直接上一个 hook，比口头叮嘱管用。</p>
+
+      <p><strong>律 2：注意力比 token 更贵。</strong>一份 128K 上下文塞 70% 噪音，模型表现往往不如精心管理到 32K 的干净上下文。token 省下来是账面的，模型在噪音里迷路才是真亏。</p>
+
+      <h2>五、收束：省 token 真正的杠杆是思想，不是配置</h2>
+
+      <p>你换 Claude、换 Codex、换 WorkBuddy、换豆包，界面在变、价格在变、榜单在变。但「把不用推理的活从模型手里拿回来交给系统」这条，从第一天到今天都成立。</p>
+
+      <p>配置三个月就过期，这条思想我今天还能拿去改 Codex、改豆包。省钱的不是哪套配置，是你脑子里那条「模型只干推理」。</p>
+      <p>这个系列我会一周写 1–2 篇。每篇只拆一层，第一篇讲思想，下一篇拆检索层——那是我账单上省得最狠的一块。</p>
+
+      <p>下一篇我会拆具体的一层——<strong>检索层</strong>，讲讲怎么用图查询把「20 次 grep」打到「3 次查询」，那是省 token 最大的一块肥肉。</p>
+
+      <p><strong>六层速查表（建议收藏）</strong></p>
+      <table class="compare">
+        <thead><tr><th>层</th><th>动作</th><th>效果</th></tr></thead>
+        <tbody>
+          <tr><td>① 需求层</td><td>Spec 先文档</td><td>省返工</td></tr>
+          <tr><td>② 检索层</td><td>图查询</td><td class="best">省 80%</td></tr>
+          <tr><td>③ 协议层</td><td>压缩输出</td><td>压 93.6%</td></tr>
+          <tr><td>④ 输入压缩层</td><td>前置过滤</td><td>省 20-95%</td></tr>
+          <tr><td>⑤ 散文层</td><td>别客套</td><td>六分之一</td></tr>
+          <tr><td>⑥ 生成层</td><td>决策+校验</td><td>YAGNI</td></tr>
+        </tbody>
+      </table>
+
+      <blockquote class="key">
+        <p>六层落地清单、token 优化踩坑卡、提示词框架模板都整理好了——公众号回复「六层」自取，我把清单发你。</p>
+      </blockquote>
+
+      <div class="sources">
+        <h4>📎 附录 · 六层工具链（GitHub 实时数据，2026-08-28 查证）</h4>
+        <table>
+          <tr><td>检索层 · CodeGraph</td><td><a href="https://github.com/colbymchenry/codegraph" target="_blank">github.com/colbymchenry/codegraph</a> · ⭐68.4k · MIT · <code>npx @colbymchenry/codegraph</code></td></tr>
+          <tr><td>检索层 · CBM</td><td><a href="https://github.com/DeusData/codebase-memory-mcp" target="_blank">github.com/DeusData/codebase-memory-mcp</a> · ⭐40.9k · MIT</td></tr>
+          <tr><td>协议层 · RTK</td><td><a href="https://github.com/rtk-ai/rtk" target="_blank">github.com/rtk-ai/rtk</a> · ⭐77.6k · Apache-2.0 · <code>brew install rtk</code></td></tr>
+          <tr><td>输入压缩 · Headroom</td><td><a href="https://github.com/headroomlabs-ai/headroom" target="_blank">github.com/headroomlabs-ai/headroom</a> · ⭐67.8k · Apache-2.0</td></tr>
+          <tr><td>散文层 · Caveman</td><td><a href="https://github.com/JuliusBrussee/caveman" target="_blank">github.com/JuliusBrussee/caveman</a> · ⭐101.4k · BSL-1.1</td></tr>
+          <tr><td>生成层 · Ponytail</td><td><a href="https://github.com/DietrichGebert/ponytail" target="_blank">github.com/DietrichGebert/ponytail</a> · ⭐113.8k · MIT</td></tr>
+        </table>
+        <p style="margin:10px 0 0;font-size:12.5px;color:var(--text-2)">参考来源：Rich Sutton《The Bitter Lesson》（2019）；Anthropic《Effective Context Engineering for AI Agents》（2025）；Andrej Karpathy 公开论述；Claude Code 官方文档；团队 2026 年 1–8 月 token 账单统计。</p>
+      </div>
+
+      <div class="article-footer">本文由真实工程实践 + AI 协作产出，方法论可复现，已列入行途「省 token」系列（共约 16 篇，本篇为第 1 篇）。</div>
+    </div>
+
+    <aside class="sidebar">
+
+      <div class="panel">
+        <h4>核心数据（团队 8 个月实测）</h4>
+        <ul class="checklist">
+          <li>缓存读 <strong>97.7%</strong>（数量口径）</li>
+          <li>输出 <strong>0.4%</strong> / 输入 1.9%</li>
+          <li>费用口径输出约 <strong>14.6%</strong></li>
+          <li>检索层省 <strong>80%</strong> 工具调用</li>
+          <li>协议层压缩 <strong>93.6%</strong></li>
+          <li>累计省 <strong>几千万</strong> token</li>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <h4>SEO 埋词（搜一搜友好）</h4>
+        <div>
+          <span class="pill pill-purple">核心词 · 省 token</span>
+          <span class="pill pill-purple">第一性原理</span>
+        </div>
+        <div style="margin-top:8px">
+          <span class="pill pill-blue">AI 编程</span>
+          <span class="pill pill-blue">Claude Code</span>
+          <span class="pill pill-blue">coding agent</span>
+          <span class="pill pill-blue">上下文工程</span>
+          <span class="pill pill-blue">缓存读</span>
+          <span class="pill pill-gold">token 优化</span>
+          <span class="pill pill-gold">AI 工具链</span>
+          <span class="pill pill-gold">代码知识图谱</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h4>六层框架速览</h4>
+        <ul class="checklist">
+          <li>① 需求层 · Spec 先文档</li>
+          <li>② 检索层 · 图查询（省 80%）</li>
+          <li>③ 协议层 · 压缩（93.6%）</li>
+          <li>④ 输入压缩层 · 前置过滤</li>
+          <li>⑤ 散文层 · 别客套</li>
+          <li>⑥ 生成层 · 决策+校验</li>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <h4>素材清单</h4>
+        <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;color:var(--text-2)">
+          <li>📄 <code>公众号正文.md</code></li>
+          <li>🖼️ <code>公众号封面_G3_内容展开_900x383.png</code></li>
+          <li>🖼️ <code>图1_token去向_v2_900x580.png</code></li>
+          <li>🖼️ <code>图1_六层金字塔.png</code></li>
+          <li>📋 <code>A0_公众号发布描述包.md</code></li>
+        </ul>
+      </div>
+
+      <div class="tip-box">💡 <b>发布提示</b>：标题含「省 token」核心词，5 个 H2 全部埋词；配图 2 张已 HTML 化重做，上传公众号素材库后插入正文即可。推荐今晚 20:00 定时发布。</div>
+
+    </aside>
+
+  </div>
+</div>
+</body>
+</html>

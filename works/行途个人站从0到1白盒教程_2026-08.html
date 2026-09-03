@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>行途个人站 从0到1 白盒教程（可视化）｜2026-08-19 实录</title>
+<style>
+  :root{--bg:#f7f8fb;--card:#fff;--line:#e3e6ef;--txt:#1a2333;--muted:#5b6b83;
+        --brand:#4f46e5;--brand2:#7c6cf0;--accent:#d97706;--ok:#059669;--warn:#dc2626;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+       background:var(--bg);color:var(--txt);line-height:1.7;padding:28px 14px}
+  .wrap{max-width:960px;margin:0 auto}
+  h1{font-size:24px;line-height:1.4}
+  .meta{color:var(--muted);font-size:13px;margin:8px 0 22px}
+  h2{font-size:18px;margin:34px 0 10px;padding-left:10px;border-left:4px solid var(--brand)}
+  h3{font-size:15px;margin:16px 0 6px}
+  p,li{font-size:14px;color:#2a3648}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;background:var(--card)}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#eef0f8;font-weight:600}
+  code{background:#eef0f8;border-radius:5px;padding:1px 6px;font-size:12.5px;color:#4338ca}
+  pre{background:#0f1220;color:#d5dcf2;border-radius:10px;padding:12px 14px;font-size:12.5px;
+      overflow-x:auto;margin:8px 0;line-height:1.55}
+  pre code{background:none;color:inherit;padding:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:10px 0}
+  .stage{border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden;background:var(--card)}
+  .stage>.head{background:#eef0f8;padding:9px 16px;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .stage>.body{padding:14px 16px}
+  .num{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+  .chip{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:999px;margin:2px 4px 2px 0;background:#eae9fd;color:var(--brand)}
+  .chip.g{background:#e7f6ef;color:var(--ok)} .chip.o{background:#fdf0e0;color:var(--accent)} .chip.r{background:#fdeaea;color:var(--warn)}
+  .kv{display:grid;grid-template-columns:90px 1fr;gap:4px 12px;font-size:13px;margin:6px 0}
+  .kv b{color:var(--muted);font-weight:600}
+  .flow{width:100%;overflow-x:auto}
+  .foot{margin-top:34px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:12px}
+  .bb{background:#fffdf5;border:1px solid #f0e0b8;border-radius:8px;padding:10px 12px;font-size:13px;margin:8px 0}
+  .bb b{color:var(--accent)}
+</style>
+</head>
+<body><style>.xt-nav{position:sticky;top:0;z-index:99999;display:flex;gap:12px;align-items:center;padding:10px 14px;background:#056DE8;color:#fff;font:14px/1.4 -apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;}.xt-nav a{color:#fff;text-decoration:none;opacity:.92}.xt-nav a:hover{opacity:1}.xt-nav .sp{flex:1}.xt-nav b{opacity:.75}</style><div class="xt-nav"><a href="index.html">← 返回作品集</a><span class="sp"></span><b>行途 · 作品集</b></div>
+<div class="wrap">
+  <h1>行途个人站 · 从 0 到 1 白盒教程</h1>
+  <div class="meta">2026-08-19 实录 ｜ 全程 3 小时 ｜ 目标：<code>https://xingtu1996.pages.dev</code> 上线 + 知识库 Git 化 + GitHub 品牌统一 ｜ 原则：不黑盒，每一步的工具 / 命令 / 提示词 / 原理全部摊开</div>
+
+  <h2>〇、总览：8 个阶段一张图</h2>
+  <div class="card">
+    <div class="flow">
+      <svg viewBox="0 0 920 150" width="100%" style="min-width:860px">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4f46e5"/>
+          </marker>
+        </defs>
+        <!-- nodes -->
+        <g font-family="inherit" font-size="12" text-anchor="middle">
+          <rect x="10" y="30" width="100" height="56" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+          <text x="60" y="50" font-weight="700">①需求澄清</text><text x="60" y="68" fill="#5b6b83">AskUserQuestion</text>
+          <rect x="130" y="30" width="100" height="56" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+          <text x="180" y="50" font-weight="700">②域名调研</text><text x="180" y="68" fill="#5b6b83">Search/Fetch/whois</text>
+          <rect x="250" y="30" width="100" height="56" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+          <text x="300" y="50" font-weight="700">③决策1996</text><text x="300" y="68" fill="#5b6b83">RDAP实测</text>
+          <rect x="370" y="30" width="100" height="56" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+          <text x="420" y="50" font-weight="700">④建站MVP</text><text x="420" y="68" fill="#5b6b83">Write 单文件</text>
+          <rect x="490" y="30" width="100" height="56" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+          <text x="540" y="50" font-weight="700">⑤GitHub改名</text><text x="540" y="68" fill="#5b6b83">Settings/API</text>
+          <rect x="610" y="30" width="100" height="56" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+          <text x="660" y="50" font-weight="700">⑥授权推送</text><text x="660" y="68" fill="#5b6b83">gh + SSH</text>
+          <rect x="730" y="30" width="100" height="56" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+          <text x="780" y="50" font-weight="700">⑦CF部署</text><text x="780" y="68" fill="#5b6b83">wrangler/API</text>
+          <rect x="850" y="30" width="60" height="56" rx="10" fill="#e7f6ef" stroke="#059669"/>
+          <text x="880" y="50" font-weight="700">⑧上线</text><text x="880" y="68" fill="#059669">pages.dev</text>
+        </g>
+        <!-- arrows -->
+        <g stroke="#4f46e5" stroke-width="2" marker-end="url(#ar)">
+          <line x1="110" y1="58" x2="126" y2="58"/>
+          <line x1="230" y1="58" x2="246" y2="58"/>
+          <line x1="350" y1="58" x2="366" y2="58"/>
+          <line x1="470" y1="58" x2="486" y2="58"/>
+          <line x1="590" y1="58" x2="606" y2="58"/>
+          <line x1="710" y1="58" x2="726" y2="58"/>
+          <line x1="830" y1="58" x2="846" y2="58"/>
+        </g>
+        <!-- timeline -->
+        <g font-size="11" fill="#5b6b83" text-anchor="middle">
+          <text x="60" y="120">11:15</text><text x="180" y="120">11:30</text><text x="300" y="120">11:50</text>
+          <text x="420" y="120">12:00</text><text x="540" y="120">13:21</text><text x="660" y="120">14:33</text>
+          <text x="780" y="120">14:46</text><text x="880" y="120">14:46</text>
+        </g>
+      </svg>
+    </div>
+    <p style="font-size:13px;color:var(--muted)">图 1：主线 8 阶段（时间线标注为 2026-08-19 实测节点）。每阶段下方卡片给出「目标 / AI 工具 / bash / skill / 提示词 / 输出 / 坑」。</p>
+  </div>
+
+  <h2>一、阶段拆解（白盒）</h2>
+
+  <div class="stage">
+    <div class="head"><span class="num">1</span>需求澄清：买域名到底用来干嘛</div>
+    <div class="body">
+      <div class="kv"><b>目标</b><span>把「想买域名」收敛成「用途 + 托管策略」两个明确选择</span></div>
+      <div class="kv"><b>AI 工具</b><span><span class="chip">AskUserQuestion</span>（交互式澄清，不猜）</span></div>
+      <div class="kv"><b>提示词（boss）</b><span>「我要买 1 个域名」+ 指南转发；「考虑长远 + MVP 双轨，关心免费方案和坑」</span></div>
+      <div class="kv"><b>输出</b><span>双轨方案：现在免费 MVP，将来国内备案拿搜一搜 SEO</span></div>
+      <div class="bb"><b>白盒点：</b>为什么先问？因为「域名买来干什么」决定后缀（.cn 备案 / .dev 免备案）和成本，不问就动手是黑盒。</div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="head"><span class="num">2</span>域名调研：核实指南 + 撞名证据链</div>
+    <div class="body">
+      <div class="kv"><b>AI 工具</b><span><span class="chip">WebSearch</span>×3 并行（续费价/实名范围/隐私保护）＋<span class="chip">WebFetch</span>（抓 xingtu.com/.cn 身份）＋<span class="chip">Bash whois</span>（批量查占用）</span></div>
+      <div class="kv"><b>skill</b><span>无（纯 Web + 终端）</span></div>
+      <div class="kv"><b>关键命令</b><span>
+<pre><code>whois -h whois.nic.google xingtu.dev        # 查 Google 系后缀
+whois xingtu1996.com                          # 查 .com
+curl -s https://rdap.nic.google/domain/xingtu.dev   # RDAP 标准接口</code></pre></span></div>
+      <div class="kv"><b>关键发现</b><span>xingtu.com=兴图新科；xingtu.cn=字节巨量星图；拼音 xingtu 撞 兴图/星途/星图 → 高度拥挤</span></div>
+      <div class="bb"><b>白盒点：</b>whois 是注册局的真实数据库，不是注册商「建议页」（Spaceship 那页全是溢价 upsell）；RDAP 是 ICANN 标准 HTTP 接口，whois 服务器不通时的替代。</div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="head"><span class="num">3</span>决策：为什么是 xingtu1996</div>
+    <div class="body">
+      <div class="flow">
+        <svg viewBox="0 0 920 170" width="100%" style="min-width:840px">
+          <g font-family="inherit" font-size="12" text-anchor="middle">
+            <rect x="370" y="8" width="180" height="40" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+            <text x="460" y="32">候选词根 xingtu/thinkgame/…</text>
+            <rect x="360" y="70" width="200" height="40" rx="10" fill="#fff" stroke="#5b6b83"/>
+            <text x="460" y="94">所有「根」域名都被大厂/米农占？</text>
+            <rect x="110" y="70" width="180" height="40" rx="10" fill="#fdeaea" stroke="#dc2626"/>
+            <text x="200" y="86" font-weight="700">是 → 纯 xingtu 不能直接用</text>
+            <text x="200" y="102" fill="#5b6b83">撞名+法务风险（字节/兴图）</text>
+            <rect x="110" y="130" width="180" height="34" rx="10" fill="#e7f6ef" stroke="#059669"/>
+            <text x="200" y="151">加 1996（出生年）绕开占用</text>
+            <rect x="380" y="130" width="180" height="34" rx="10" fill="#e7f6ef" stroke="#059669"/>
+            <text x="470" y="151">0 元：pages.dev 先跑 MVP</text>
+            <rect x="650" y="130" width="200" height="34" rx="10" fill="#e7f6ef" stroke="#059669"/>
+            <text x="750" y="151">真域名：xingtu1996.com/.cn</text>
+          </g>
+          <g stroke="#5b6b83" stroke-width="1.5" marker-end="url(#ar)" fill="none">
+            <line x1="460" y1="48" x2="460" y2="66"/>
+            <line x1="360" y1="90" x2="295" y2="90"/>
+            <line x1="200" y1="110" x2="200" y2="126"/>
+            <line x1="460" y1="110" x2="470" y2="126"/>
+            <line x1="560" y1="90" x2="700" y2="126"/>
+          </g>
+        </svg>
+      </div>
+      <p style="font-size:13px;color:var(--muted)">图 2：域名决策树。左支=品牌资产路线（保留行途，加 1996）；右支=免费 MVP 路线。</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="head"><span class="num">4</span>建站 MVP：单文件零依赖作品集</div>
+    <div class="body">
+      <div class="kv"><b>AI 工具</b><span><span class="chip">Write</span>（生成 index.html / README.md / deploy.sh）＋<span class="chip">Bash git</span>（init/commit）</span></div>
+      <div class="kv"><b>关键命令</b><span>
+<pre><code>git init && git branch -M main
+git add -A && git commit -m "feat: 行途 XingTu MVP 作品集"
+git remote add origin ***@***:xingtu1996/xingtu-site.git</code></pre></span></div>
+      <div class="kv"><b>设计原则</b><span>纯静态、无构建、内容数组化（改 index.html 底部 JS 数组即更新文章/视频/开源入口）</span></div>
+      <div class="bb"><b>白盒点：</b>为什么零依赖？Cloudflare Pages 直接托管静态文件，无构建=零成本+零构建报错；内容数组化=非技术人也能维护。</div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="head"><span class="num">5</span>GitHub 品牌统一：xingtutech → xingtu1996</div>
+    <div class="body">
+      <div class="kv"><b>AI 工具</b><span><span class="chip">WebFetch</span>（绕过缓存实测用户名）+ <span class="chip">Bash curl</span>（GitHub API 查创建时间）</span></div>
+      <div class="kv"><b>关键命令</b><span>
+<pre><code>curl -s https://api.github.com/users/xingtu1996 | grep created_at   # 查账号年龄
+# 改名：Settings → Account → Change username（官方规则：旧名立即释放）</code></pre></span></div>
+      <div class="kv"><b>白盒结论</b><span>改名已生效；旧主页永久 404 是官方行为；1996 = 时间戳资产（「出厂日期」），不进显示名</span></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="head"><span class="num">6</span>授权与推送：gh + SSH 双通道</div>
+    <div class="body">
+      <div class="kv"><b>skill</b><span><span class="chip g">github</span>（gh CLI）+ <span class="chip">agent-browser</span>（登录表单，最终因沙箱限制由 boss 手动）</span></div>
+      <div class="kv"><b>关键命令</b><span>
+<pre><code># 授权（走代理，因为直连 github.com 不通）
+HTTPS_PROXY=http://127.0.0.1:7897 gh auth login -h github.com
+echo 'github_pat_...' | gh auth login --with-token -h github.com   # 备选：PAT 方式
+GH_HOST=github.com gh repo create xingtu1996/xingtu-site --private   # 建仓（强制走 github.com）
+ssh -T ***@***                                                # SSH 验证
+git push -u origin main                                              # 推送（SSH 走 443+代理）</code></pre></span></div>
+      <div class="kv"><b>坑</b><span>gh 默认走公司主机（github.cn-pgcloud.com）→ 必须 <code>GH_HOST=github.com</code>；设备流需 POST github.com → 直连超时 → 走代理或 PAT</span></div>
+      <div class="bb"><b>白盒点：</b>这台机器「直连 github.com 不通、走 127.0.0.1:7897 代理通」（curl 实测 000 vs 200）；SSH 用 443 + ProxyCommand 已配好 → 推送走 SSH 最稳。</div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="head"><span class="num">7</span>Cloudflare Pages 部署：API 建项目 + wrangler 上传</div>
+    <div class="body">
+      <div class="kv"><b>AI 工具</b><span><span class="chip">Bash curl</span>（验证 token / 建项目）+ <span class="chip">wrangler</span>（部署）</span></div>
+      <div class="kv"><b>关键命令</b><span>
+<pre><code>curl "https://api.cloudflare.com/client/v4/user/tokens/verify" -H "Authorization: Bearer $CF_TOKEN"   # 验 token
+ACCT_ID=$(curl -s "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer $CF_TOKEN" | grep -oE '"id":"[a-f0-9]{32}"' | head -1 | cut -d'"' -f4)
+curl -X POST "https://api.cloudflare.com/client/v4/accounts/$ACCT_ID/pages/projects" \
+  -H "Authorization: Bearer $CF_TOKEN" -H "Content-Type: application/json" \
+  -d '{"name":"xingtu1996","production_branch":"main"}'
+CLOUDFLARE_API_TOKEN=$CF_TOKEN npx -y wrangler pages deploy . --project-name=xingtu1996</code></pre></span></div>
+      <div class="kv"><b>坑</b><span>token 缺 Account Settings Read → wrangler 列不出账号；wrangler 4 首次建项目非交互报错 → 先 API 建项目再 deploy</span></div>
+      <div class="bb"><b>白盒点：</b>wrangler「自动识别账号」= 调 GET /accounts；token 权限决定它能不能看到账号。看懂 API 依赖，就知道为什么报错、怎么解。</div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="head"><span class="num">8</span>上线 + 验证</div>
+    <div class="body">
+      <div class="kv"><b>验证命令</b><span>
+<pre><code>curl -sI https://xingtu1996.pages.dev   # HTTP 200
+curl -s https://xingtu1996.pages.dev | head   # 返回真实首页内容</code></pre></span></div>
+      <div class="kv"><b>结果</b><span>自动 HTTPS ✅ 免备案 ✅ 永久免费 ✅；源代码在私有仓库 xingtu1996/xingtu-site，后续 git push 可接自动部署</span></div>
+    </div>
+  </div>
+
+  <h2>二、工具总表（谁负责什么）</h2>
+  <div class="card">
+    <table>
+      <tr><th>工具/能力</th><th>本教程中干的事</th><th>什么时候用</th></tr>
+      <tr><td>AskUserQuestion</td><td>澄清用途/托管，不瞎猜</td><td>需求有分支选项时</td></tr>
+      <tr><td>WebSearch</td><td>核实价格/规则/商标</td><td>需要最新事实</td></tr>
+      <tr><td>WebFetch</td><td>抓站点身份、查用户名占用</td><td>看页面内容/身份</td></tr>
+      <tr><td>Bash + whois/RDAP</td><td>域名占用实测</td><td>域名可用性（不信注册商推荐页）</td></tr>
+      <tr><td>Bash + curl</td><td>GitHub/Cloudflare API、连通性测试</td><td>API 操作、网络诊断</td></tr>
+      <tr><td>Bash + git</td><td>init/commit/push</td><td>版本管理与推送</td></tr>
+      <tr><td>Write/Edit</td><td>建站、写文档、改台账</td><td>一切文件产出</td></tr>
+      <tr><td>skill: github</td><td>gh CLI 建仓/API</td><td>GitHub 自动化</td></tr>
+      <tr><td>skill: agent-browser</td><td>浏览器自动化（本环境受限）</td><td>登录/表单场景（环境允许时）</td></tr>
+      <tr><td>wrangler</td><td>Cloudflare Pages 部署</td><td>部署/CI</td></tr>
+    </table>
+  </div>
+
+  <h2>三、白盒要点速查（为什么）</h2>
+  <div class="card">
+    <table>
+      <tr><th>现象</th><th>原理</th></tr>
+      <tr><td>直连 github.com 报错</td><td>网络直连 000，走 127.0.0.1:7897 代理 200 → 浏览器/gh 都要代理或走 SSH 443</td></tr>
+      <tr><td>gh 建仓跑公司服务器</td><td>gh 默认取「active 主机」→ 用 <code>GH_HOST=github.com</code> 强制</td></tr>
+      <tr><td>wrangler 报「列不出账号」</td><td>token 缺 Account:Account Settings:Read → 加权限或显式 CLOUDFLARE_ACCOUNT_ID</td></tr>
+      <tr><td>wrangler 非交互报错</td><td>首次部署要「确认建项目」→ 先用 API 建好项目再 deploy</td></tr>
+      <tr><td>浏览器自动关闭</td><td>沙箱在命令结束回收后台进程 → 跨命令自动化不可行，改单命令或人工</td></tr>
+      <tr><td>改名后旧链接 404</td><td>GitHub 官方规则：旧用户名释放、旧主页永久 404</td></tr>
+      <tr><td>为什么 1996 不进显示名</td><td>显示名=给读者记；handle=唯一标识层，两层职责不同</td></tr>
+    </table>
+  </div>
+
+  <h2>九、发布原理：不可变快照（白盒）</h2>
+  <div class="card">
+    <div class="flow">
+      <svg viewBox="0 0 920 150" width="100%" style="min-width:860px">
+        <defs>
+          <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4f46e5"/>
+          </marker>
+        </defs>
+        <g font-family="inherit" font-size="12" text-anchor="middle">
+          <rect x="40" y="40" width="150" height="60" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+          <text x="115" y="62" font-weight="700">本地文件</text><text x="115" y="82" fill="#5b6b83">index.html 等（整包）</text>
+          <rect x="260" y="40" width="170" height="60" rx="10" fill="#eae9fd" stroke="#4f46e5"/>
+          <text x="345" y="62" font-weight="700">wrangler API 上传</text><text x="345" y="82" fill="#5b6b83">生成不可变快照</text>
+          <rect x="500" y="40" width="170" height="60" rx="10" fill="#e7f6ef" stroke="#059669"/>
+          <text x="585" y="62" font-weight="700">production 指针</text><text x="585" y="82" fill="#059669">v1/v2/v3…旧版可回滚</text>
+          <rect x="740" y="40" width="140" height="60" rx="10" fill="#fdf0e0" stroke="#d97706"/>
+          <text x="810" y="62" font-weight="700">全球 CDN 边缘</text><text x="810" y="82" fill="#d97706">用户读 production</text>
+        </g>
+        <g stroke="#4f46e5" stroke-width="2" marker-end="url(#ar2)">
+          <line x1="190" y1="70" x2="256" y2="70"/>
+          <line x1="430" y1="70" x2="496" y2="70"/>
+          <line x1="670" y1="70" x2="736" y2="70"/>
+        </g>
+        <g stroke="#888" stroke-width="1.5" stroke-dasharray="5 4" fill="none">
+          <path d="M585 100 L585 120 L200 120 L200 104" />
+        </g>
+        <text x="340" y="136" font-size="12" fill="#888">出错 → Rollback 指回旧快照（1 秒恢复）</text>
+      </svg>
+    </div>
+    <div class="kv"><b>原理</b><span>每次部署 = 一个不可变版本（类似 git commit）；Cloudflare 无服务器进程，文件存在边缘存储、全球 300+ 节点代为分发</span></div>
+    <div class="kv"><b>专属 URL</b><span>每次部署生成唯一地址（如 <code>cd719a2c.xingtu1996.pages.dev</code>），永久可访问，可回滚</span></div>
+    <div class="bb"><b>白盒点：</b>「发布」不是覆盖文件，而是「上传新快照 + 切换 production 指针」。这就是为什么改坏了能一键回滚，比 FTP 覆盖安全一个量级。</div>
+  </div>
+
+  <h2>十、自定义域名绑定流程</h2>
+  <div class="card">
+    <div class="kv"><b>前提</b><span>先买真域名：<code>xingtu.dev</code>（~$12–15/年，大厂背书）或 <code>xingtu1996.com</code>（国内可备案）</span></div>
+    <div class="kv"><b>步骤</b><span>
+      <ol>
+        <li>控制台 → Workers & Pages → <code>xingtu1996</code> → <b>Custom domains</b> → Add custom domain；</li>
+        <li>输入域名（如 <code>xingtu.dev</code>）→ 若 DNS 已在 Cloudflare 托管：自动加记录，等几分钟验证；</li>
+        <li>若 DNS 在别处（Namecheap/腾讯云等）：按提示加一条 <b>CNAME</b>：<code>xingtu.dev → xingtu1996.pages.dev</code>；</li>
+        <li>验证通过 → Cloudflare 自动签发 HTTPS 证书 → 生效；</li>
+        <li>可选：设为主域，<code>pages.dev</code> 保留或 301 重定向过去。</li>
+      </ol></span></div>
+    <div class="bb"><b>白盒点：</b>自定义域的原理 = DNS 把域名「指到」Cloudflare，证书由 CF 自动管理（免费）；免备案（服务器在境外）。国内搜一搜 SEO 需另买 <code>.cn</code> 走 ICP 备案（7–20 天）。</div>
+  </div>
+
+  <h2>十一、时间账本与 AI 提效（直观感受）</h2>
+  <div class="card">
+    <table>
+      <tr><th>阶段</th><th>人工估算</th><th>AI 实际</th><th>提效</th><th>AI 干的是哪部分</th></tr>
+      <tr><td>① 需求澄清</td><td>0.1h</td><td>0.05h</td><td>×2</td><td>提问收敛选项</td></tr>
+      <tr><td>② 域名调研</td><td>3.0h</td><td>0.3h</td><td>×10</td><td>并行搜索+抓站+whois 实测+交叉验证</td></tr>
+      <tr><td>③ 决策</td><td>1.5h</td><td>0.15h</td><td>×10</td><td>批量查 13 个组合+年龄 API</td></tr>
+      <tr><td>④ 建站</td><td>4.0h</td><td>0.25h</td><td>×16</td><td>单文件作品集全量生成</td></tr>
+      <tr><td>⑤ GitHub 改名</td><td>1.0h</td><td>0.2h</td><td>×5</td><td>官方规则核实+账号年龄实测</td></tr>
+      <tr><td>⑥ 授权推送</td><td>1.5h</td><td>0.5h</td><td>×3</td><td>gh/SSH 配置+踩坑（含环境限制）</td></tr>
+      <tr><td>⑦ CF 部署</td><td>2.5h</td><td>0.3h</td><td>×8</td><td>token 权限排查+wrangler 流程</td></tr>
+      <tr><td>⑧ 内容沉淀</td><td>6.0h</td><td>0.7h</td><td>×9</td><td>教程/手记/复盘文档生成</td></tr>
+      <tr><td><b>合计</b></td><td><b>≈19.6h（2.5 工作日）</b></td><td><b>≈2.5h（半天）</b></td><td><b>≈8 倍</b></td><td>—</td></tr>
+    </table>
+    <div class="bb"><b>白盒点（诚实说明）：</b>① 估算是「熟练者手工做」的量级，不是严格计时；② AI 用时含当日真实耗时（含踩坑）；③ <b>注册账号/登录/授权/改密/revoke 等"身份动作"AI 做不了，必须本人</b>，约占实际总时间 30%——AI 提效的是"脑力活"，不是"身份活"。</div>
+  </div>
+
+  <div class="foot">行途 / XingTu · 实战派技术深耕者 ｜ 本教程为 2026-08-19 实录白盒复盘，所有命令真实可复现 ｜ 配套 MD 版见 <code>02_内容仓库 (Content Hub)/行途个人站从0到1白盒教程_2026-08.md</code></div>
+</div>
+</body>
+</html>
