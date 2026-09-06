@@ -1,52 +1,195 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" type="image/png" href="favicon.png" />
 <title>Justin Li · 行途 XingTu</title>
-<meta name="description" content="Justin Li · 行途 XingTu · 资深技术经理兼一线开发，专注 AI 工具链与 Agent 应用实践。" />
+<meta name="description" content="Justin Li · 行途 XingTu · 资深技术经理兼一线开发，GPT-6 Astra 时代专注 Harness Engineering 与多平台内容复利。" />
+<meta property="og:title" content="Justin Li · 行途 XingTu" />
+<meta property="og:description" content="11年Java后端，AI工程化布道者。GPT-6 Astra时代，专注Harness Engineering与多平台内容复利。" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://xingtu1996.github.io" />
 <style>
+  :root{
+    --brand:#056DE8;
+    --brand-strong:#0066CC;
+    --bg:#f7f8fb;
+    --card:#ffffff;
+    --txt:#1a2333;
+    --txt-2:#5b6b83;
+    --line:#e3e6ef;
+    --accent:#4f46e5;
+  }
+  :root[data-theme="dark"]{
+    --bg:#000000;
+    --card:#1d1d1f;
+    --txt:#f5f5f7;
+    --txt-2:rgba(255,255,255,.72);
+    --line:rgba(255,255,255,.14);
+    --brand:#2997ff;
+    --accent:#818cf8;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-       background:#f7f8fb;color:#1a2333;line-height:1.7;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-  .card{max-width:520px;width:100%;background:#fff;border:1px solid #e3e6ef;border-radius:16px;padding:40px 36px;text-align:center}
-  .avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c6cf0);color:#fff;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+       background:var(--bg);color:var(--txt);line-height:1.7;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+       position:relative;transition:background .3s,color .3s}
+  #particleCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.5}
+  :root[data-theme="dark"] #particleCanvas{opacity:.7}
+  .card{position:relative;z-index:1;max-width:520px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:40px 36px;text-align:center;
+    box-shadow:0 4px 24px rgba(0,0,0,.06);backdrop-filter:blur(20px)}
+  .avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#7c6cf0);color:#fff;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
   h1{font-size:22px;margin-bottom:2px}
-  .en{color:#5b6b83;font-size:13px;margin-bottom:10px}
-  .tag{display:inline-block;font-size:12px;color:#4f46e5;background:#eae9fd;border-radius:999px;padding:3px 12px;margin-bottom:16px}
-  .bio{font-size:14px;color:#2a3648;margin-bottom:24px}
+  .en{color:var(--txt-2);font-size:13px;margin-bottom:10px}
+  .tag{display:inline-block;font-size:12px;color:var(--accent);background:rgba(79,70,229,.1);border-radius:999px;padding:3px 12px;margin-bottom:16px}
+  .bio{font-size:14px;color:var(--txt);margin-bottom:24px;line-height:1.8}
+  .bio b{color:var(--accent)}
   .links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-  .links a{text-decoration:none;font-size:13px;color:#fff;background:#4f46e5;border-radius:8px;padding:8px 16px;transition:.2s}
-  .links a:hover{opacity:.85}
+  .links a{text-decoration:none;font-size:13px;color:#fff;background:var(--accent);border-radius:8px;padding:8px 16px;transition:.2s}
+  .links a:hover{opacity:.85;transform:translateY(-1px)}
   .links a.gh{background:#1a2333}
   .links a.x{background:#000}
   .links a.cf{background:#059669}
   .links a.mp{background:#07c160}
-  .cta{margin-top:18px;padding:14px 16px;background:#f0f7ff;border:1px dashed #4f46e5;border-radius:12px;font-size:13px;color:#2a3648;text-align:left;line-height:1.8}
-  .cta b{color:#4f46e5}
+  .links a.article{background:var(--brand)}
+  .cta{margin-top:18px;padding:14px 16px;background:rgba(5,109,232,.05);border:1px dashed var(--brand);border-radius:12px;font-size:13px;color:var(--txt);text-align:left;line-height:1.8}
+  .cta b{color:var(--brand)}
   .cta .w{font-weight:700;color:#07c160;letter-spacing:.5px}
-  .foot{margin-top:28px;font-size:12px;color:#888}
+  .foot{margin-top:28px;font-size:12px;color:var(--txt-2)}
+  .tools{position:absolute;top:16px;right:16px;display:flex;gap:8px}
+  .icon-btn{width:30px;height:30px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--txt-2);cursor:pointer;font-size:14px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transition:.2s}
+  .icon-btn:hover{color:var(--brand);border-color:var(--brand)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
+
+<canvas id="particleCanvas"></canvas>
+
 <div class="card">
+  <div class="tools">
+    <button class="icon-btn" id="themeBtn" title="切换主题" aria-label="toggle theme" style="font-size:15px">☾</button>
+  </div>
   <div class="avatar">行</div>
   <h1>Justin Li · 行途</h1>
   <div class="en">XingTu ｜ Justin Li</div>
-  <div class="tag">实战派技术深耕者</div>
-  <p class="bio">资深技术经理兼一线开发，专注 AI 编程工具链 / Agent 应用 / 终端 coding agent 的真实工程实践。利他、实干、可复用。</p>
+  <div class="tag">AI 工程化布道者 · Harness Engineering</div>
+  <p class="bio">11年Java后端，技术经理兼一线开发。<b>GPT-6 Astra时代</b>，专注Harness Engineering、墨排排版引擎与多平台内容复利。跑过生产、有数字、能抄作业。</p>
   <div class="links">
     <a href="https://github.com/xingtu1996" class="gh">GitHub</a>
     <a href="https://x.com/xingtu1996" class="x">X / Twitter</a>
-    <a href="works/index.html" class="cf">作品库 22 件</a>
-    <a href="https://xingtu1996.pages.dev" class="cf">作品集站 · 全库 103</a>
+    <a href="https://xingtu1996.pages.dev" class="cf">个人站 · 全库</a>
+    <a href="works/index.html" class="cf">作品库</a>
+    <a href="https://github.com/xingtu1996/xingtu-articles" class="article">文章库</a>
+    <a href="https://github.com/xingtu1996/md2wechat" class="article">墨排排版</a>
     <a href="https://mp.weixin.qq.com/" class="mp">公众号</a>
   </div>
   <div class="cta">
     📮 私人微信：<b>xingtu_note</b>（备注「公众号」优先通过）。AI 工程化 / 省 token / 职业破局，微信直聊。
   </div>
-  <p class="foot">build in public</p>
+  <p class="foot">build in public · GPT-6 Astra 时代</p>
 </div>
+
+<script>
+/* ===== 主题切换 ===== */
+const root = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+function initTheme(){
+  const saved = localStorage.getItem('xt-theme');
+  if(saved){ root.setAttribute('data-theme', saved); return; }
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  root.setAttribute('data-theme', dark ? 'dark' : 'light');
+}
+function paintTheme(){
+  const cur = root.getAttribute('data-theme');
+  themeBtn.textContent = cur === 'dark' ? '☀' : '☾';
+}
+themeBtn.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('xt-theme', next);
+  paintTheme();
+});
+
+/* ===== 粒子流动背景 ===== */
+(function(){
+  const canvas = document.getElementById('particleCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], mouse = {x:null, y:null};
+  const PARTICLE_COUNT = 50;
+  const CONNECT_DIST = 100;
+  const MOUSE_DIST = 120;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  function getColor(){
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return dark ? 'rgba(41,151,255,' : 'rgba(5,109,232,';
+  }
+  function initParticles(){
+    particles = [];
+    for(let i=0;i<PARTICLE_COUNT;i++){
+      particles.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        vx: (Math.random()-0.5)*0.3,
+        vy: (Math.random()-0.5)*0.3,
+        r: Math.random()*2+1
+      });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const baseColor = getColor();
+    for(let p of particles){
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = baseColor + '0.5)';
+      ctx.fill();
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x<0||p.x>W) p.vx *= -1;
+      if(p.y<0||p.y>H) p.vy *= -1;
+      if(mouse.x!==null){
+        const dx = p.x - mouse.x, dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist < MOUSE_DIST){
+          const force = (MOUSE_DIST-dist)/MOUSE_DIST * 0.4;
+          p.x += dx/dist * force;
+          p.y += dy/dist * force;
+        }
+      }
+    }
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist < CONNECT_DIST){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = baseColor + (0.12*(1-dist/CONNECT_DIST)) + ')';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+  window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+  resize();
+  initParticles();
+  draw();
+})();
+
+initTheme(); paintTheme();
+</script>
 </body>
 </html>
