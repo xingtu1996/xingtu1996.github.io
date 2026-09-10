@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 头衔定位自查卡 · 行途</title>
+<style>
+  :root{--brand:#056DE8;--brand2:#4A9EFF;--accent:#FF6B35;--green:#0C8A3C;--ink:#1f2329;--ink2:#3f4756;--ink3:#8a94a6;--line:#e4e9f0;--bg:#f4f7fb;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;color:var(--ink);line-height:1.7;padding:34px 16px;}
+  .card{max-width:720px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:18px;padding:36px 40px 30px;box-shadow:0 4px 20px rgba(15,40,90,.06);}
+  @media(max-width:640px){.card{padding:24px 20px;}}
+  .top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-bottom:3px solid var(--brand);padding-bottom:14px;}
+  h1{font-size:27px;font-weight:800;color:var(--ink);}
+  .by{font-size:12.5px;color:var(--ink3);}
+  .sub{margin:14px 0 4px;font-size:14px;color:var(--ink2);}
+  h2{font-size:17px;font-weight:800;color:var(--brand);margin:26px 0 6px;display:flex;align-items:center;gap:8px;}
+  h2 .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;font-size:12.5px;align-items:center;justify-content:center;flex:none;}
+  table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:13px;}
+  th{background:#eef4fd;font-weight:700;padding:8px 10px;text-align:left;border-bottom:2px solid var(--brand);white-space:nowrap;}
+  td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--ink2);}
+  .chk{list-style:none;margin:8px 0;}
+  .chk li{margin:9px 0;font-size:14px;color:var(--ink2);display:flex;gap:10px;align-items:flex-start;}
+  .chk .box{width:16px;height:16px;border:2px solid var(--brand);border-radius:4px;flex:none;margin-top:3px;}
+  .fill{margin:10px 0;font-size:14px;color:var(--ink2);}
+  .fill .row{display:flex;align-items:center;gap:8px;margin:8px 0;}
+  .fill .lbl{flex:none;color:var(--ink);font-weight:600;}
+  .fill .ln{flex:1;border-bottom:1.5px dashed var(--ink3);height:18px;}
+  .axis-notes{margin-top:8px;font-size:12.5px;color:var(--ink3);line-height:1.8;}
+  svg{width:100%;height:auto;display:block;}
+  .fig{background:#fafcff;border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;}
+  .cap{font-size:11.5px;color:var(--ink3);text-align:center;margin-top:6px;}
+  .footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--ink3);text-align:center;line-height:1.9;}
+  .footer b{color:var(--brand);}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top">
+    <h1>AI 头衔定位自查卡</h1>
+    <span class="by">行途 · AI 工程化实践者</span>
+  </div>
+  <p class="sub">别急着给自己贴标签——先量三个数，再定你的坐标。2 分钟填完，比争论头衔有用。</p>
+
+  <h2><span class="n">1</span>两个轴，先看清头衔在问什么</h2>
+  <div class="fig">
+    <svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="40" width="600" height="8" rx="4" fill="#056DE8" opacity=".15"/>
+      <line x1="40" y1="120" x2="640" y2="120" stroke="#98a3b3" stroke-width="1.6"/>
+      <line x1="40" y1="210" x2="640" y2="210" stroke="#c9d4e2" stroke-width="1.2" stroke-dasharray="5 5"/>
+      <line x1="120" y1="120" x2="120" y2="40" stroke="#c9d4e2" stroke-width="1.2" stroke-dasharray="5 5"/>
+      <line x1="120" y1="120" x2="120" y2="200" stroke="#98a3b3" stroke-width="1.6"/>
+      <text x="360" y="96" font-size="12" font-weight="600" fill="#39424f" text-anchor="middle">纵轴 · 协作方式（自治度 × 护栏密度）</text>
+      <text x="360" y="150" font-size="12" font-weight="600" fill="#39424f" text-anchor="middle">横轴 · 落地距离（离业务多近）</text>
+      <circle cx="150" cy="120" r="7" fill="#8a94a6"/><text x="150" y="100" font-size="11" fill="#5a6478" text-anchor="middle">Vibe Coder</text>
+      <circle cx="235" cy="120" r="7" fill="#8a94a6"/><text x="235" y="100" font-size="11" fill="#5a6478" text-anchor="middle">AI Native</text>
+      <circle cx="320" cy="120" r="7" fill="#8a94a6"/><text x="320" y="100" font-size="11" fill="#5a6478" text-anchor="middle">Harness Engineer</text>
+      <circle cx="405" cy="120" r="7" fill="#8a94a6"/><text x="405" y="100" font-size="11" fill="#5a6478" text-anchor="middle">Agentic Engineer</text>
+      <circle cx="520" cy="120" r="9" fill="#4A9EFF"/><text x="520" y="98" font-size="11.5" font-weight="700" fill="#2f6bb8" text-anchor="middle">AI Builder</text>
+      <circle cx="612" cy="120" r="11" fill="#FF6B35"/><text x="612" y="172" font-size="12" font-weight="700" fill="#D9480F" text-anchor="middle">FDE</text>
+      <text x="40" y="232" font-size="11" fill="#8a94a6">纯技术</text>
+      <text x="640" y="232" font-size="11" fill="#8a94a6" text-anchor="end">业务一线</text>
+    </svg>
+    <div class="cap">头衔不并列：前四个讲"你怎么用 AI"，AI Builder / FDE 讲"你离业务多近"</div>
+  </div>
+
+  <h2><span class="n">2</span>三个数，量出你的位置</h2>
+  <ul class="chk">
+    <li><span class="box"></span><span><b>自治度</b>——你一次交给 Agent 的活，能跑完再回头找你吗？翻最近会话，数"确认类"交互占比。</span></li>
+    <li><span class="box"></span><span><b>护栏密度</b>——harness 常驻注入多少 token？（1M 上下文窗口超 ~50K 就在挤占干活空间）用 harness-size 量。</span></li>
+    <li><span class="box"></span><span><b>边际收益</b>——挑一个堆了很久的护栏，做一次减法，让审计说话，别让"省了多少"自我感动。</span></li>
+  </ul>
+
+  <h2><span class="n">3</span>六个头衔都在哪（一句话）</h2>
+  <table>
+    <tr><th>头衔</th><th>一句话落位</th></tr>
+    <tr><td>Vibe Coder</td><td>裸奔原型：全交 AI，能跑就算——危险区，没人兜底</td></tr>
+    <tr><td>AI Native Engineer</td><td>AI-first，有兜底意识，护栏还没成体系</td></tr>
+    <tr><td>Harness Engineer</td><td>专门造护栏——小心堆过头，护栏会吃上下文</td></tr>
+    <tr><td>Agentic Engineer</td><td>高自治 + 高护栏，目标区</td></tr>
+    <tr><td>AI Builder</td><td>把业务问题"造"成产品（定义问题 · 编排 · 验证）</td></tr>
+    <tr><td>FDE</td><td>把模型"落"进客户现场，跨界翻译官</td></tr>
+  </table>
+
+  <h2><span class="n">4</span>写下你的坐标</h2>
+  <div class="fill">
+    <div class="row"><span class="lbl">现在的你</span><span class="ln"></span></div>
+    <div class="row"><span class="lbl">想成为</span><span class="ln"></span></div>
+    <p class="axis-notes">提示：纵轴写（自治度 / 护栏）大概几成，横轴写离业务多远。两个坐标都填，比贴一个头衔诚实得多。</p>
+  </div>
+
+  <div class="footer">
+    <b>行途</b> · AI 工程化实践者 · 一线技术经理，仍在写代码<br>
+    公众号回复「<b>角色</b>」获取这张卡的高清版与配套清单｜私人微信 <b>xingtu_note</b>（备注"公众号"优先通过）
+  </div>
+</div>
+</body>
+</html>
