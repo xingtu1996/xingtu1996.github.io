@@ -7,7 +7,7 @@
 
 ## 这是什么
 
-本仓库是 **行途 XingTu**（Justin Li）的 GitHub Pages 个人主页，单页名片卡片（`index.html`）。
+本仓库是 **行途 XingTu** 的 GitHub Pages 个人主页，单页名片卡片（`index.html`）。
 
 - 仓库名 `xingtu1996.github.io` 是 GitHub Pages 用户页的**强制命名**（`<账号名>.github.io`），账号名 `xingtu1996` 不代表品牌名——品牌是 **行途 XingTu**。
 - 技术栈：零依赖静态 HTML + CSS，无构建链。
@@ -35,7 +35,7 @@
 
 ## 📡 关于作者 · 行途
 
-我是**行途（Justin Li）**，一线技术经理 + 仍在写代码。
+我是**行途 XingTu**，一线技术经理 + 仍在写代码。
 
 - 🔔 公众号 **「行途技术手记」**：微信搜索关注，看 AI 工程化落地实战
 - 🌐 博客 / 作品集：https://xingtu1996.github.io
