@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 自媒体复利自查卡 v1.0 · 行途</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: #1a1a1a;
+    background: #f5f5f5;
+    line-height: 1.7;
+    padding: 20px;
+  }
+  .card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 48px 56px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  /* 头部 */
+  .header { text-align: center; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid #1a1a1a; }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+  .header .subtitle { font-size: 14px; color: #666; margin-bottom: 12px; }
+  .header .meta { font-size: 12px; color: #999; }
+  .header .meta span { margin: 0 8px; }
+  /* 维度区块 */
+  .dimension { margin-bottom: 32px; page-break-inside: avoid; }
+  .dim-header { display: flex; align-items: baseline; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0; }
+  .dim-num { font-size: 20px; font-weight: 700; margin-right: 12px; color: #1a1a1a; }
+  .dim-title { font-size: 17px; font-weight: 600; flex: 1; }
+  .dim-desc { font-size: 12px; color: #888; margin-left: 12px; }
+  .dim-score { font-size: 13px; color: #666; white-space: nowrap; }
+  /* 问题列表 */
+  .question { display: flex; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed #eee; }
+  .question:last-child { border-bottom: none; }
+  .q-num { font-size: 13px; color: #999; width: 28px; flex-shrink: 0; padding-top: 2px; }
+  .q-content { flex: 1; }
+  .q-text { font-size: 14px; margin-bottom: 4px; }
+  .q-standard { font-size: 12px; color: #888; padding-left: 12px; border-left: 2px solid #e0e0e0; }
+  .q-check { width: 20px; height: 20px; border: 1.5px solid #ccc; border-radius: 3px; flex-shrink: 0; margin-left: 12px; margin-top: 2px; }
+  /* 总分区 */
+  .total-section { margin-top: 40px; padding: 28px; background: #fafafa; border: 1px solid #e0e0e0; page-break-inside: avoid; }
+  .total-section h2 { font-size: 18px; margin-bottom: 16px; text-align: center; }
+  .total-score { text-align: center; font-size: 15px; margin-bottom: 20px; }
+  .total-score .big { font-size: 36px; font-weight: 700; margin: 0 6px; }
+  .maturity-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .maturity-table th { background: #1a1a1a; color: #fff; padding: 10px 8px; text-align: left; font-weight: 500; }
+  .maturity-table td { padding: 10px 8px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+  .maturity-table tr:last-child td { border-bottom: none; }
+  .maturity-table .score-range { font-weight: 600; white-space: nowrap; }
+  /* 短板提醒 */
+  .weakness { margin-top: 32px; page-break-inside: avoid; }
+  .weakness h2 { font-size: 17px; margin-bottom: 14px; padding-left: 10px; border-left: 3px solid #1a1a1a; }
+  .weakness-item { padding: 12px 0; border-bottom: 1px solid #eee; }
+  .weakness-item:last-child { border-bottom: none; }
+  .weakness-item .w-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .weakness-item .w-solution { font-size: 13px; color: #555; }
+  /* 底部 */
+  .footer { margin-top: 40px; padding-top: 24px; border-top: 2px solid #1a1a1a; text-align: center; }
+  .footer .belief { font-size: 15px; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.5px; }
+  .footer .brand { font-size: 13px; color: #666; margin-bottom: 4px; }
+  .footer .version { font-size: 11px; color: #999; }
+  /* 打印优化 */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .card { box-shadow: none; padding: 32px 40px; max-width: 100%; }
+    .dimension { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- 头部 -->
+  <div class="header">
+    <h1>AI 自媒体复利自查卡</h1>
+    <div class="subtitle">一张卡，查清楚你的 AI 自媒体复利工程缺了哪一环</div>
+    <div class="meta">
+      <span>适用：想用 AI 做自媒体的普通人</span>·
+      <span>用法：逐题打分，达标=1 未达标=0</span>·
+      <span>24 题 / 6 维度</span>
+    </div>
+  </div>
+
+  <!-- 维度一：定位层 -->
+  <div class="dimension">
+    <div class="dim-header">
+      <span class="dim-num">01</span>
+      <span class="dim-title">定位层</span>
+      <span class="dim-desc">你到底在为谁做内容？</span>
+      <span class="dim-score">小计：____ / 4</span>
+    </div>
+    <div class="question">
+      <span class="q-num">1</span>
+      <div class="q-content">
+        <div class="q-text">你的目标读者是谁？</div>
+        <div class="q-standard">一句话能说清（如"想用AI提效的普通技术人"），不是"所有人"</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">2</span>
+      <div class="q-content">
+        <div class="q-text">你的差异化定位是什么？</div>
+        <div class="q-standard">能说出和同类账号的 1 个本质不同（视角/经历/方法）</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">3</span>
+      <div class="q-content">
+        <div class="q-text">你的内容主线是什么？</div>
+        <div class="q-standard">有 3-5 个固定主题，80% 的内容围绕这些主题</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">4</span>
+      <div class="q-content">
+        <div class="q-text">你的"不变的思想"是什么？</div>
+        <div class="q-standard">有一条不随工具变化的核心理念（如"技术细节终会过时，工程思想历久弥新"）</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+  </div>
+
+  <!-- 维度二：内容生产层 -->
+  <div class="dimension">
+    <div class="dim-header">
+      <span class="dim-num">02</span>
+      <span class="dim-title">内容生产层</span>
+      <span class="dim-desc">你有没有稳定的产出机制？</span>
+      <span class="dim-score">小计：____ / 4</span>
+    </div>
+    <div class="question">
+      <span class="q-num">5</span>
+      <div class="q-content">
+        <div class="q-text">你有固定的发布节奏吗？</div>
+        <div class="q-standard">每周至少 1 篇，连续 4 周未断更</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">6</span>
+      <div class="q-content">
+        <div class="q-text">你有选题池吗？</div>
+        <div class="q-standard">存量 ≥ 20 个待开发选题，不是"每次现想"</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">7</span>
+      <div class="q-content">
+        <div class="q-text">你有成稿模板吗？</div>
+        <div class="q-standard">标题/结构/排版有标准化模板，不是每次从零开始</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">8</span>
+      <div class="q-content">
+        <div class="q-text">你用 AI 辅助生产了吗？</div>
+        <div class="q-standard">AI 参与度 ≥ 50%（选题/初稿/排版/配图至少两项用 AI）</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+  </div>
+
+  <!-- 维度三：素材管理层 -->
+  <div class="dimension">
+    <div class="dim-header">
+      <span class="dim-num">03</span>
+      <span class="dim-title">素材管理层</span>
+      <span class="dim-desc">你的内容资产在复利吗？</span>
+      <span class="dim-score">小计：____ / 4</span>
+    </div>
+    <div class="question">
+      <span class="q-num">9</span>
+      <div class="q-content">
+        <div class="q-text">你有素材库吗？</div>
+        <div class="q-standard">有分类、可检索的素材仓库（不是散落在聊天记录和收藏夹里）</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">10</span>
+      <div class="q-content">
+        <div class="q-text">你有素材蒸馏流程吗？</div>
+        <div class="q-standard">对话/阅读/灵感 → 素材卡 → 选题，有固定的转化路径</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">11</span>
+      <div class="q-content">
+        <div class="q-text">你的素材在回流吗？</div>
+        <div class="q-standard">旧素材能反哺新内容（不是"存了就再也不看"）</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">12</span>
+      <div class="q-content">
+        <div class="q-text">你有素材价值分级吗？</div>
+        <div class="q-standard">素材按价值分级（黄金/关键/重点/高知），优先用高价值素材</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+  </div>
+
+  <!-- 维度四：分发引流层 -->
+  <div class="dimension">
+    <div class="dim-header">
+      <span class="dim-num">04</span>
+      <span class="dim-title">分发引流层</span>
+      <span class="dim-desc">你的内容能被人看到吗？</span>
+      <span class="dim-score">小计：____ / 4</span>
+    </div>
+    <div class="question">
+      <span class="q-num">13</span>
+      <div class="q-content">
+        <div class="q-text">你有主阵地吗？</div>
+        <div class="q-standard">1 个平台为主（公众号/小红书/B站等），精力集中不分散</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">14</span>
+      <div class="q-content">
+        <div class="q-text">你有多平台差异化分发吗？</div>
+        <div class="q-standard">不是一篇通稿全平台同步，每个平台有适配改写</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">15</span>
+      <div class="q-content">
+        <div class="q-text">你有引流钩子吗？</div>
+        <div class="q-standard">文末有关注引导/互动设计/关键词回复承接</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">16</span>
+      <div class="q-content">
+        <div class="q-text">你有 SEO 意识吗？</div>
+        <div class="q-standard">标题含核心关键词，布局长尾搜索流量</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+  </div>
+
+  <!-- 维度五：变现层 -->
+  <div class="dimension">
+    <div class="dim-header">
+      <span class="dim-num">05</span>
+      <span class="dim-title">变现层</span>
+      <span class="dim-desc">你想清楚怎么赚钱了吗？</span>
+      <span class="dim-score">小计：____ / 4</span>
+    </div>
+    <div class="question">
+      <span class="q-num">17</span>
+      <div class="q-content">
+        <div class="q-text">你有变现产品吗？</div>
+        <div class="q-standard">至少 1 个可售卖的产品（付费内容/咨询/模板/课程）</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">18</span>
+      <div class="q-content">
+        <div class="q-text">你有免费引流产品吗？</div>
+        <div class="q-standard">有 1 个免费产品（自查卡/清单/模板）用来引流和建立信任</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">19</span>
+      <div class="q-content">
+        <div class="q-text">你有高客单价产品吗？</div>
+        <div class="q-standard">有定价 ≥ 500 元的产品（咨询/陪跑/培训），不是只有 9.9 元</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">20</span>
+      <div class="q-content">
+        <div class="q-text">你有长期资产吗？</div>
+        <div class="q-standard">有持续增值的资产（书/课程/社群/工具产品），不是只靠流量主广告</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+  </div>
+
+  <!-- 维度六：复利机制层 -->
+  <div class="dimension">
+    <div class="dim-header">
+      <span class="dim-num">06</span>
+      <span class="dim-title">复利机制层</span>
+      <span class="dim-desc">你的系统在自我进化吗？</span>
+      <span class="dim-score">小计：____ / 4</span>
+    </div>
+    <div class="question">
+      <span class="q-num">21</span>
+      <div class="q-content">
+        <div class="q-text">你的内容在互相引流吗？</div>
+        <div class="q-standard">旧文带新文、合集/系列化，不是每篇孤立</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">22</span>
+      <div class="q-content">
+        <div class="q-text">你有知识沉淀机制吗？</div>
+        <div class="q-standard">每次会话/项目后有复盘和方法论提炼，不是"做完就忘"</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">23</span>
+      <div class="q-content">
+        <div class="q-text">你有自动化流水线吗？</div>
+        <div class="q-standard">重复工作（排版/发布/素材整理）已自动化或半自动化</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+    <div class="question">
+      <span class="q-num">24</span>
+      <div class="q-content">
+        <div class="q-text">你有决策留痕吗？</div>
+        <div class="q-standard">关键决策有记录可回溯，不是"凭感觉做、做完就忘"</div>
+      </div>
+      <div class="q-check"></div>
+    </div>
+  </div>
+
+  <!-- 总分与成熟度 -->
+  <div class="total-section">
+    <h2>总分与成熟度判断</h2>
+    <div class="total-score">
+      总分：<span class="big">____</span> / 24 分
+    </div>
+    <table class="maturity-table">
+      <thead>
+        <tr>
+          <th style="width:18%">分数段</th>
+          <th style="width:14%">成熟度</th>
+          <th style="width:34%">核心特征</th>
+          <th style="width:34%">下一步重点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="score-range">20-24 分</td>
+          <td>🏆 引擎已运转</td>
+          <td>六个维度基本齐全，系统在自我进化</td>
+          <td>优化效率、提升客单价、考虑规模化</td>
+        </tr>
+        <tr>
+          <td class="score-range">14-19 分</td>
+          <td>⚙️ 框架已搭</td>
+          <td>有定位和内容生产，但素材/分发/变现有缺口</td>
+          <td>找到得分最低的 1-2 个维度，集中补齐</td>
+        </tr>
+        <tr>
+          <td class="score-range">8-13 分</td>
+          <td>🌱 有基础</td>
+          <td>偶尔发内容，但没有系统和复利</td>
+          <td>先建立定位+内容生产节奏，其他暂缓</td>
+        </tr>
+        <tr>
+          <td class="score-range">0-7 分</td>
+          <td>🥚 从零开始</td>
+          <td>还没有稳定的内容输出</td>
+          <td>先回答维度一的 4 个问题，找到定位再动手</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 最常见的三个短板 -->
+  <div class="weakness">
+    <h2>最常见的三个短板（对照自查）</h2>
+    <div class="weakness-item">
+      <div class="w-title">1. 素材管理层（维度三）得分最低——"存了很多素材但从来不用"</div>
+      <div class="w-solution">解决方法：建立"对话→素材卡→选题"的固定蒸馏流程，每周回流一次。</div>
+    </div>
+    <div class="weakness-item">
+      <div class="w-title">2. 分发引流层（维度四）得分最低——"写了但没人看"</div>
+      <div class="w-solution">解决方法：集中 1 个主阵地，文末加关键词回复承接，标题埋 SEO 关键词。</div>
+    </div>
+    <div class="weakness-item">
+      <div class="w-title">3. 复利机制层（维度六）得分最低——"每篇都是从零开始"</div>
+      <div class="w-solution">解决方法：建立合集/系列化，每次项目后写复盘，重复工作自动化。</div>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer">
+    <div class="belief">技术细节终会过时，工程思想历久弥新</div>
+    <div class="brand">行途 · AI 时代个人 IP 与内容资产复利工程</div>
+    <div class="version">v1.0 · 2026-09-09 · 免费分发，欢迎转载（请注明出处）</div>
+  </div>
+
+</div>
+</body>
+</html>
