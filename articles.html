@@ -8,200 +8,178 @@
 :root{--blue:#056DE8;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.6;}
-header{background:linear-gradient(135deg,#056DE8,#0A4FB0);color:#fff;padding:48px 24px 40px;text-align:center;}
-header h1{font-size:30px;font-weight:700;letter-spacing:1px;}
-header p{margin-top:10px;opacity:.92;font-size:15px;}
-.wrap{max-width:960px;margin:0 auto;padding:32px 20px 60px;}
-.intro{background:#fff;border-left:4px solid var(--blue);padding:16px 20px;margin:-28px 0 32px;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);font-size:14px;color:#444;}
-.cluster{margin-bottom:40px;}
-.cluster-head{display:flex;align-items:center;gap:10px;border-bottom:2px solid;padding-bottom:10px;}
-.cluster-head h2{font-size:20px;font-weight:700;}
-.cluster-head .dot{width:12px;height:12px;border-radius:50%;}
-.cluster-head .count{margin-left:auto;font-size:13px;color:#888;background:#f0f0f0;padding:2px 10px;border-radius:20px;}
-.cluster-desc{color:#666;font-size:14px;margin:12px 0 18px;}
+header{background:linear-gradient(135deg,#056DE8,#0A4FB0);color:#fff;padding:44px 24px 36px;text-align:center;}
+header h1{font-size:28px;font-weight:700;letter-spacing:1px;}
+header p{margin-top:8px;opacity:.92;font-size:14px;}
+.wrap{max-width:960px;margin:0 auto;padding:28px 20px 60px;}
+.intro{background:#fff;border-left:4px solid var(--blue);padding:14px 18px;margin:-24px 0 28px;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);font-size:13.5px;color:#444;}
+h2.sec{font-size:18px;margin:28px 0 14px;padding-left:10px;border-left:4px solid var(--blue);}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
-.card{display:block;background:#fff;border:1px solid #eee;border-radius:10px;padding:16px 18px;text-decoration:none;color:inherit;transition:.18s;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.card{display:block;position:relative;background:#fff;border:1px solid #eee;border-radius:10px;padding:15px 17px;text-decoration:none;color:inherit;transition:.18s;box-shadow:0 1px 4px rgba(0,0,0,.04);}
 .card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(5,109,232,.16);border-color:var(--blue);}
-.card .date{font-size:12px;color:#999;font-family:ui-monospace,monospace;}
-.card .title{font-size:15px;font-weight:600;margin:6px 0 8px;color:var(--blue);line-height:1.45;}
-.card .summ{font-size:13px;color:#666;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
-footer{text-align:center;padding:30px 20px;color:#999;font-size:13px;border-top:1px solid #eee;}
+.card .rank{position:absolute;top:-8px;right:-6px;background:var(--blue);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;}
+.card .date{font-size:12px;color:#999;}
+.card .title{font-size:15px;font-weight:600;margin:6px 0 6px;color:var(--blue);line-height:1.45;}
+.card .summ{font-size:13px;color:#666;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+details{margin:10px 0 0;}
+details summary{cursor:pointer;font-size:14.5px;font-weight:600;color:#333;background:#fff;border:1px solid #eee;border-radius:8px;padding:12px 16px;}
+details[open] summary{border-color:var(--blue);color:var(--blue);}
+details .grid{margin-top:12px;}
+footer{text-align:center;padding:28px 20px;color:#999;font-size:13px;border-top:1px solid #eee;}
 footer a{color:var(--blue);text-decoration:none;}
 </style>
 </head>
 <body>
 <header>
   <h1>行途技术手记 · 文章星图</h1>
-  <p>公众号已发布文章索引 ｜ X → GitHub → 公众号 漏斗中间承载层 ｜ 共 25 篇归档</p>
+  <p>公众号已发布文章索引 ｜ 共 25 篇按年月归档 ｜ GitHub 为镜像可检索层</p>
 </header>
 <div class="wrap">
-  <div class="intro">这里按主题聚类呈现已发布文章，每篇链接到 GitHub 上的完整 Markdown 原文（含配图与元数据）。内容首发于公众号「行途技术手记」，GitHub 为镜像与可检索归档。技术细节会过时，工程思想历久弥新。</div>
-
-    <section class="cluster">
-      <div class="cluster-head" style="border-color:#056DE8">
-        <span class="dot" style="background:#056DE8"></span>
-        <h2>FDE · AI 工程化落地</h2>
-        <span class="count">11 篇</span>
-      </div>
-      <p class="cluster-desc">行途的核心定位——AI 怎么真正在生产现场落地</p>
-      <div class="grid">
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-25-fde-working-method-three-stages.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-25</div>
-        <div class="title">FDE 工作法：进场、在场、离场，AI 落地是这样跑完的</div>
-        <div class="summ">
-title: FDE 工作法：进场、在场、离场
-slug: fde08workingmethod
-series: 看懂FDE
-date: 20260915
-status: 成稿待</div>
-      </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-24-token-09-context-management.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-24</div>
+  <div class="intro">最新 10 篇直达原文（完整 Markdown + 配图）；更早文章按分类折叠，点开即看。内容首发于公众号「行途技术手记」，每天一篇，本页永远保持一屏可读。</div>
+  <h2 class="sec">🆕 最新 10 篇</h2>
+  <div class="grid">
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-24-token-09-context-management.md" target="_blank" rel="noopener">
+        <span class="rank">#1</span><div class="date">2026-09-24 · 🔧 FDE · AI 工程化落地</div>
         <div class="title">AI 越用越笨？问题不在模型，在上下文管理</div>
-        <div class="summ"> 行途导读：我花 25 美元修一个 Bug，发现账单几乎全付给了被清空的缓存。AI 不是变笨了，是上下文没管好。这篇讲清楚 AI&quot;变笨&quot;的四个机制，和六招上下文管理的工程动作——最</div>
+        <div class="summ">行途导读：我花 25 美元修一个 Bug，发现账单几乎全付给了被清空的缓存。AI 不是变笨了，是上下文没管好。这篇讲清楚 AI&#x27;变笨&#x27;的四个机制，和六招上下文管</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-20-fde-communication-three-step.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-20</div>
-        <div class="title">FDE 沟通三段论：拒绝需求但不拒绝人</div>
-        <div class="summ"> 一句话：客户现场 90% 的冲突，不是技术问题，是沟通问题。三段论——信息同步、技术翻译、高情商收尾——从一线实战里磨出来的沟通框架。</div>
-      </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-19-fde-hiring-client-site-communication.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-19</div>
-        <div class="title">AI 工程师/FDE 招聘：会调 Prompt 不够，能去客户现场聊才是硬门槛</div>
-        <div class="summ">前段时间，我作为技术面试官，面试了几位全栈交付工程师（FDE 方向）候选人。多轮面试后，我把考察维度从&quot;AI 工程化优先&quot;调整为&quot;客户现场沟通 + Java 双硬门槛&quot;。最终定型为</div>
-      </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-18-small-team-ai-delivery-fde-review.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-18</div>
-        <div class="title">小团队加 AI，一个多月交付十多万行代码：一次 FDE 实战复盘</div>
-        <div class="summ">前段时间，我作为 FDE 主导了一个某快消巨头的企业级应用改造项目。小团队加 AI 编程助手，一个多月从 0 到完整交付了十多万行代码和大量文档，团队远程协作完成。这篇把团队架构、</div>
-      </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-17-palantir-fde-dual-role.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-17</div>
-        <div class="title">Palantir 的 FDE 拆成两个人：Echo 懂、Delta 造，AI 落地最后 100 米</div>
-        <div class="summ"> 一句话摘要：Palantir 跑通 AI 落地靠两个人：Echo 负责懂，Delta 负责造。这篇拆机制，对项目，一个人顶两个角色。</div>
-      </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-14-fde-capability-model-8-dimensions.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-14</div>
-        <div class="title">FDE 能力模型：8 个维度拆解，从技术到沟通的完整画像</div>
-        <div class="summ"> 一句话摘要：FDE 不是&quot;会用 AI 的全栈工程师&quot;，而是项目管理、全栈架构、基础设施、AI 编排、领域建模、团队协调、沟通管理、文档能力八个维度的综合体。这篇把每个维度拆开讲清</div>
-      </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-13-pec-2026-conference-field-notes.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-13</div>
-        <div class="title">PEC 2026 AI 创新者大会台下一天：Token 工厂、FDE、AI 出海与Harness</div>
-        <div class="summ"> 一句话总结：2026 年 9 月 12 日，我去北京中关村参加 PEC 2026 AI 创新者大会，从上午坐到下午五点。上午四场圆桌，下午八场分享，中午还有三项年度发布。台上讲 </div>
-      </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-10-fde-ai-landing-people.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-10</div>
-        <div class="title">国家点名 FDE：AI 落地缺的不是模型，是现场的人</div>
-        <div class="summ"> 一句话摘要：2026年8月27日，工信部印发通知，点名鼓励培育&quot;前线部署工程师（FDE）&quot;团队。我从今年上半年开始关注这个岗位，做了 FDE 相关项目、面试了几位候选人。这篇把政</div>
-      </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-04-five-types-engineers.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-04</div>
-        <div class="title">Vibe Coder、FDE、Harne ss Engineer……AI 时代的 5 种工程师，你是哪种？</div>
-        <div class="summ"> 系列：AI 时代的角色（新开）｜ B 档 ｜ 行途 ｜ 草稿已导入（appmsgid=100000183，9/3 v2）</div>
-      </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-04-15-microservice-overselling-ai-troubleshooting.md" target="_blank" rel="noopener">
-        <div class="date">2026-04-15</div>
-        <div class="title">把 4 小时排查压到 75 分钟：我是如何用 AI 解决微服务&quot;超卖&quot;悬案的</div>
-        <div class="summ"> 写在前面：大家好，我是行途。从最早修电脑算起，在技术圈摸爬滚打十来年，正式扎根研发与架构管理也有8年了。
-
- 前两天，团队遇到了一个极其棘手的微服务并发BUG。过去处理这种跨越上</div>
-      </a>
-      </div>
-    </section>
-    <section class="cluster">
-      <div class="cluster-head" style="border-color:#1A73E8">
-        <span class="dot" style="background:#1A73E8"></span>
-        <h2>工具横评 · 模型实测</h2>
-        <span class="count">13 篇</span>
-      </div>
-      <p class="cluster-desc">一线上手与横向对比，只写亲测可抄作业的部分</p>
-      <div class="grid">
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-23-vibe-coding-nobody-reads-code.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-23</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-23-vibe-coding-nobody-reads-code.md" target="_blank" rel="noopener">
+        <span class="rank">#2</span><div class="date">2026-09-23 · 🚀 工具横评 · 模型实测</div>
         <div class="title">Vibe coding 出来的代码没人看了：我花 spec 的时间比写代码还多</div>
-        <div class="summ">【配图：00引子图vibecoding.png】</div>
+        <div class="summ">【配图：00-引子图-vibe-coding.png】</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-22-token-benchmark-9-coding-agents.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-22</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-22-token-benchmark-9-coding-agents.md" target="_blank" rel="noopener">
+        <span class="rank">#3</span><div class="date">2026-09-22 · 🚀 工具横评 · 模型实测</div>
         <div class="title">省token横评：9个主流编程Agent谁最省token</div>
-        <div class="summ"> 行途导读：9 个主流编程 Agent，从省 token 角度分成三档。终端 Agent 最省——直接操作代码不用模拟 GUI；AI IDE 中等；独立云端 Agent 最费。文末</div>
+        <div class="summ">行途导读：9 个主流编程 Agent，从省 token 角度分成三档。终端 Agent 最省——直接操作代码不用模拟 GUI；AI IDE 中等；独立云端 Ag</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-21-five-ai-tools-same-spec.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-21</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-21-five-ai-tools-same-spec.md" target="_blank" rel="noopener">
+        <span class="rank">#4</span><div class="date">2026-09-21 · 🚀 工具横评 · 模型实测</div>
         <div class="title">我给 5 个 AI 工具写同一份说明书，两个月后 Claude Code 追上来了</div>
-        <div class="summ">【配图：00引子图AGENTSmd三入口.png】</div>
+        <div class="summ">【配图：00-引子图-AGENTSmd三入口.png】</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-16-workbuddy-doubao-qwen-ecosystem-choice.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-16</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-20-fde-communication-three-step.md" target="_blank" rel="noopener">
+        <span class="rank">#5</span><div class="date">2026-09-20 · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">FDE 沟通三段论：拒绝需求但不拒绝人</div>
+        <div class="summ">一句话：客户现场 90% 的冲突，不是技术问题，是沟通问题。三段论——信息同步、技术翻译、高情商收尾——从一线实战里磨出来的沟通框架。</div>
+      </a>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-19-fde-hiring-client-site-communication.md" target="_blank" rel="noopener">
+        <span class="rank">#6</span><div class="date">2026-09-19 · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">AI 工程师/FDE 招聘：会调 Prompt 不够，能去客户现场聊才是硬门槛</div>
+        <div class="summ">前段时间，我作为技术面试官，面试了几位全栈交付工程师（FDE 方向）候选人。多轮面试后，我把考察维度从&#x27;AI 工程化优先&#x27;调整为&#x27;客户现场沟通 + Java 双</div>
+      </a>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-18-small-team-ai-delivery-fde-review.md" target="_blank" rel="noopener">
+        <span class="rank">#7</span><div class="date">2026-09-18 · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">小团队加 AI，一个多月交付十多万行代码：一次 FDE 实战复盘</div>
+        <div class="summ">前段时间，我作为 FDE 主导了一个某快消巨头的企业级应用改造项目。小团队加 AI 编程助手，一个多月从 0 到完整交付了十多万行代码和大量文档，团队远程协作完</div>
+      </a>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-17-palantir-fde-dual-role.md" target="_blank" rel="noopener">
+        <span class="rank">#8</span><div class="date">2026-09-17 · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">Palantir 的 FDE 拆成两个人：Echo 懂、Delta 造，AI 落地最后 100 米</div>
+        <div class="summ">一句话摘要：Palantir 跑通 AI 落地靠两个人：Echo 负责懂，Delta 负责造。这篇拆机制，对项目，一个人顶两个角色。</div>
+      </a>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-16-workbuddy-doubao-qwen-ecosystem-choice.md" target="_blank" rel="noopener">
+        <span class="rank">#9</span><div class="date">2026-09-16 · 🚀 工具横评 · 模型实测</div>
         <div class="title">员工比功能，老板看生态：WorkBuddy、豆包工作、千问办公选型账本</div>
-        <div class="summ"> 一句话摘要：翻了三家大厂离职与在职资深从业者的公开访谈，三款工具各跑了一段真实工作流。判断：这场三国杀刚开打，终局跟协同软件绑死。</div>
+        <div class="summ">一句话摘要：翻了三家大厂离职与在职资深从业者的公开访谈，三款工具各跑了一段真实工作流。判断：这场三国杀刚开打，终局跟协同软件绑死。</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-15-deepseek-v4-pro-retirement-reversed.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-15</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-15-deepseek-v4-pro-retirement-reversed.md" target="_blank" rel="noopener">
+        <span class="rank">#10</span><div class="date">2026-09-15 · 🚀 工具横评 · 模型实测</div>
         <div class="title">DeepSeek V4 Pro 不下线了：一场没完成的退役，和三个通用判断</div>
-        <div class="summ"> 一句话摘要：原定 9 月 14 日 12:00 下线的 DeepSeek V4 Pro，在「死线」当天被官方按住了——继续提供 API 服务，计费方式不变。两天三个版本，这场没完</div>
+        <div class="summ">一句话摘要：原定 9 月 14 日 12:00 下线的 DeepSeek V4 Pro，在「死线」当天被官方按住了——继续提供 API 服务，计费方式不变。两天</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-12-deepseek-upgrade-306-lines-removed.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-12</div>
+  </div>
+
+  <details>
+    <summary>🚀 工具横评 · 模型实测 · 更早 8 篇</summary>
+    <div class="grid">
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-12-deepseek-upgrade-306-lines-removed.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-12 · 🚀 工具横评 · 模型实测</div>
         <div class="title">DeepSeek 升级没让我改一行配置，我却删了 306 行规则</div>
-        <div class="summ"> 一句话总结：2026 年 9 月中旬，我用的 API 平台把 DeepSeek 升级到 V4.1Flash，公告写明「无需改任何配置」——旧模型名自动路由，配置确实一行没动。但 </div>
+        <div class="summ">一句话总结：2026 年 9 月中旬，我用的 API 平台把 DeepSeek 升级到 V4.1-Flash，公告写明「无需改任何配置」——旧模型名自动路由，配</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-11-deepseek-price-cutdown.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-11</div>
-        <div class="title">DeepSeek V4.1 Flash 把旗舰价格砍了 86.7%：当 V4.1 Flash 追上 V4 Pro，AI 应用的斩杀线到了</div>
-        <div class="summ"> 一句话总结：DeepSeek 2026 年 9 月 10 日 12:00 上线 DeepSeek V4.1 Flash（基于 DeepSeek V4 Flash 的轻量架构），把</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-11-deepseek-price-cutdown.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-11 · 🚀 工具横评 · 模型实测</div>
+        <div class="title">DeepSeek 降价全景：旗舰砍到 1/7.5，企业只省 17.5%</div>
+        <div class="summ">一句话总结：DeepSeek 2026 年 9 月 10 日 12:00 上线 DeepSeek V4.1 Flash（基于 DeepSeek V4 Flash</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-09-deepseek-v4.1-flash-review.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-09</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-09-deepseek-v4.1-flash-review.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-09 · 🚀 工具横评 · 模型实测</div>
         <div class="title">DeepSeek V4.1 Flash 内测上手：会看图了、快了 5.5 倍、价格一分没涨</div>
-        <div class="summ">![引子图_V4.1Flash内测三卖点.png](引子图_V4.1Flash内测三卖点.png)</div>
+        <div class="summ">先说结论：V4.1 Flash 内测，是 Flash 系从&#x27;轻量快速&#x27;变成&#x27;多模态全能&#x27;的关键一步——原生会看图、思考速度快 5.5 倍、价格跟 V4-Flas</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-08-ai-agent-explained.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-08</div>
-        <div class="title">普通人也能看懂：AI Agent 到底是什么？三年，从会说话到会干活</div>
-        <div class="summ"> 三年，AI 从&quot;会说话&quot;变成&quot;会干活&quot;。这篇文章讲清楚：AI 是啥、LLM 是啥、Agent 是啥、能干嘛、怎么来的。</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-08-ai-agent-explained.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-08 · 🚀 工具横评 · 模型实测</div>
+        <div class="title">AI Agent 到底是什么？三年，从会说话到会干活</div>
+        <div class="summ">三年，AI 从&#x27;会说话&#x27;变成&#x27;会干活&#x27;。这篇文章讲清楚：AI 是啥、LLM 是啥、Agent 是啥、能干嘛、怎么来的。</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-07-fable-5.1-prompt-patterns.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-07</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-07-fable-5.1-prompt-patterns.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-07 · 🚀 工具横评 · 模型实测</div>
         <div class="title">Anthropic官方提示词手册：Fable 5.1的12条模式</div>
         <div class="summ">有时候停下来想想：我用了这么久Claude，提示词写了一堆，但模型一升级，老提示词还管用吗？</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-05-harness-cognition.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-05</div>
-        <div class="title">GPT-6 Astra 与 Work Agent 时代，Harness 是工具还是规矩？—— 基于五级认知梯度的 AI 工程化可控性研究</div>
-        <div class="summ"> 全文约 4900 字，预计阅读 12 分钟。
-
- 核心观点：harness 不是工具收藏，是 AI 规模化使用的前提。模型会变，Agent 形态会变，但&quot;可控&quot;这个需求不会变。
-</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-05-harness-cognition.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-05 · 🚀 工具横评 · 模型实测</div>
+        <div class="title">GPT-6 Astra 与 Work Agent 时代，Harness 是工具还是规矩？——基于五级认知梯度的 AI 工程化可控性研究</div>
+        <div class="summ">全文约 4900 字，预计阅读 12 分钟。</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-08-28-save-token-first-principle.md" target="_blank" rel="noopener">
-        <div class="date">2026-08-28</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/08/2026-08-28-save-token-first-principle.md" target="_blank" rel="noopener">
+        <div class="date">2026-08-28 · 🚀 工具横评 · 模型实测</div>
         <div class="title">省 token 的第一性原理：把「不用推理的活」，从模型手里拿回来</div>
-        <div class="summ">发布日期 2026-08-28 · 数据来自团队 8 个月账单统计 · 配图自制</div>
+        <div class="summ">发布日期：2026-08-28 · 数据来自团队 8 个月账单统计 · 配图自制</div>
       </a>
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-08-27-glm-5.3-flash.md" target="_blank" rel="noopener">
-        <div class="date">2026-08-27</div>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/08/2026-08-27-glm-5.3-flash.md" target="_blank" rel="noopener">
+        <div class="date">2026-08-27 · 🚀 工具横评 · 模型实测</div>
         <div class="title">智谱「牛来（Ox Alpha）」GLM-5.3 Flash 正式开源：输入 0.4 元 / 输出 1.4 元，比 DeepSeek V4 Flash 还便宜</div>
-        <div class="summ"> 发布日期：20260827 · 数据全部来自官方来源（文末标注） · 配图来源：智谱官网 z.ai/blog/glm5.3flash</div>
+        <div class="summ">发布日期：2026-08-27 · 数据全部来自官方来源（文末标注） · 配图来源：智谱官网 z.ai/blog/glm-5.3-flash</div>
       </a>
-      </div>
-    </section>
-    <section class="cluster">
-      <div class="cluster-head" style="border-color:#34A853">
-        <span class="dot" style="background:#34A853"></span>
-        <h2>认知复利 · 方法论</h2>
-        <span class="count">1 篇</span>
-      </div>
-      <p class="cluster-desc">让过去的自己替未来的你打工</p>
-      <div class="grid">
-      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026-09-06-knowledge-compounding.md" target="_blank" rel="noopener">
-        <div class="date">2026-09-06</div>
-        <div class="title">AI 时代知识复利｜让过去的自己替未来的你打工</div>
-        <div class="summ">为什么你做了很多事，却什么都没留下？一套普通人也能用的知识复利方法。</div>
+    </div>
+  </details>
+  <details>
+    <summary>🔧 FDE · AI 工程化落地 · 更早 6 篇</summary>
+    <div class="grid">
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-14-fde-capability-model-8-dimensions.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-14 · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">FDE 能力模型：8 个维度拆解，从技术到沟通的完整画像</div>
+        <div class="summ">一句话摘要：FDE 不是&#x27;会用 AI 的全栈工程师&#x27;，而是项目管理、全栈架构、基础设施、AI 编排、领域建模、团队协调、沟通管理、文档能力八个维度的综合体。这篇</div>
       </a>
-      </div>
-    </section>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-13-pec-2026-conference-field-notes.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-13 · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">PEC 2026 AI 创新者大会台下一天：Token 工厂、FDE、AI 出海与 Harness</div>
+        <div class="summ">一句话总结：2026 年 9 月 12 日，我去北京中关村参加 PEC 2026 AI 创新者大会，从上午坐到下午五点。上午四场圆桌，下午八场分享，中午还有三项</div>
+      </a>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-10-fde-ai-landing-people.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-10 · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">国家点名 FDE：AI 落地缺的不是模型，是现场的人</div>
+        <div class="summ">一句话摘要：2026年8月27日，工信部印发通知，点名鼓励培育&#x27;前线部署工程师（FDE）&#x27;团队。我从今年上半年开始关注这个岗位，做了 FDE 相关项目、面试了几</div>
+      </a>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-04-five-types-engineers.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-04 · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">Vibe Coder、FDE、Harness Engineer……AI 时代的 5 种工程师，你是哪种？</div>
+        <div class="summ">系列：AI 时代的角色（新开）｜ B 档 ｜ 行途 ｜ 草稿已导入（appmsgid=100000183，9/3 v2）</div>
+      </a>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-25-fde-working-method-three-stages.md" target="_blank" rel="noopener">
+        <div class="date">2026-09- · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">FDE 工作法：进场、在场、离场</div>
+        <div class="summ">title: FDE 工作法：进场、在场、离场</div>
+      </a>
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/04/2026-04-15-microservice-overselling-ai-troubleshooting.md" target="_blank" rel="noopener">
+        <div class="date">2026-04-15 · 🔧 FDE · AI 工程化落地</div>
+        <div class="title">把4小时排查压到75分钟：我是如何用AI解决微服务&#x27;超卖&#x27;悬案的</div>
+        <div class="summ">写在前面：大家好，我是行途。从最早修电脑算起，在技术圈摸爬滚打十来年，正式扎根研发与架构管理也有8年了。</div>
+      </a>
+    </div>
+  </details>
+  <details>
+    <summary>🌱 认知复利 · 方法论 · 更早 1 篇</summary>
+    <div class="grid">
+      <a class="card" href="https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-06-knowledge-compounding.md" target="_blank" rel="noopener">
+        <div class="date">2026-09-06 · 🌱 认知复利 · 方法论</div>
+        <div class="title">为什么你做了很多事，却什么都没留下？——一套普通人也能用的知识复利方法</div>
+        <div class="summ">有时候停下来想想，会发现一个挺扎心的事：每天忙忙碌碌，一年下来回头看，好像什么都没留下。</div>
+      </a>
+    </div>
+  </details>
 </div>
 <footer>
   行途 · 一线 builder，仍在写代码 ｜ <a href="https://github.com/xingtu1996" target="_blank" rel="noopener">GitHub</a> · <a href="https://x.com/xingtu1996" target="_blank" rel="noopener">X</a> · 公众号「行途技术手记」<br>
