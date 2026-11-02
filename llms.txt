@@ -1,0 +1,47 @@
+# 行途技术 · xingtu1996.github.io
+
+> 一线 AI 工程化实践者（FDE 方向）的个人名片页。仍在写代码，专注 AI 工具链与工程化落地，分享跑过生产、可抄作业的实战经验。工具会变，思想不变。
+
+## 关键事实
+
+- 品牌：行途技术（公众号渠道名「行途技术手记」；GitHub 工程署名「行途 XingTu」；GitHub handle：xingtu1996）
+- 定位：一线 AI 工程化实践者（FDE 方向），Java 后端出身 → AI 原生全栈（FDE）→ 把前沿 AI 工具链实践转成可复用资产
+- 内容主线：AI 工程化（Harness / Agent / MCP / Skill / Rules）、FDE 实战、省 token 工程化、知识复利
+- 主要平台：公众号「行途技术手记」（内容主阵地）、GitHub（开源矩阵）、X（@xingtu1996）
+
+## 核心链接
+
+- [GitHub 主页](https://github.com/xingtu1996)：开源矩阵总入口，24 公开仓 + 5 私有仓
+- [个人站 · 全库](https://xingtu1996.pages.dev)：个人作品集（文章 / 开源 / 视频 / 关注）
+- [文章星图](https://xingtu1996.github.io/articles.html)：已发文章可视化索引（47 篇，按年月归档）
+- [公众号 · 行途技术手记](https://mp.weixin.qq.com/)：微信搜索「行途技术手记」关注，AI 工程化落地实战
+- [X / Twitter](https://x.com/xingtu1996)：AI 工程化实战，build in public
+
+## 开源矩阵（代表性仓库）
+
+- [xingtu-ai-engineering](https://github.com/xingtu1996/xingtu-ai-engineering)：方法论旗舰仓：理念 / 方法 / 五大工程 / 治理 / 会话 / 样板（77 资产）
+- [xingtu-articles](https://github.com/xingtu1996/xingtu-articles)：公众号文章库：已发布文章 Markdown 镜像 + 配图（47 篇）
+- [xingtu-skills](https://github.com/xingtu1996/xingtu-skills)：AI Agent 技能聚合仓（138 SKILL.md + 89 prompts，find-skills 可检索）
+- [xingtu-harness](https://github.com/xingtu1996/xingtu-harness)：AI 工程化脚手架：一键拉全开源资产
+- [md2wechat](https://github.com/xingtu1996/md2wechat)：Markdown → 公众号排版引擎（行途排版「墨排」）
+- [article2pod](https://github.com/xingtu1996/article2pod)：文章 → 双人对话播客零成本流水线
+- [book2vido](https://github.com/xingtu1996/book2vido)：文本 → 竖屏短视频零成本流水线
+- [tokenhub-bench](https://github.com/xingtu1996/tokenhub-bench)：可复现 LLM 模型能力对比评测平台
+- [xingtu-scheduled](https://github.com/xingtu1996/xingtu-scheduled)：多 Agent 定时任务 Registry（22 条任务的工具中立清单）
+- [harness-kit](https://github.com/xingtu1996/harness-kit)：可回滚的角色化 Agent Harness 工作区生成器
+
+## 文章选读（按主题）
+
+- [Agent 到底是什么？AI 开始自己干活，差的不是模型](https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/10/2026-10-29-agent-daodi-shenme.md)
+- [代码写得飞快，交付还是慢：70+ 企业的四道质量门禁](https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/10/2026-10-26-four-quality-gates.md)
+- [token 效率工具 Headroom：官方说代码省 20%，日志能省 99%](https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/10/2026-10-27-token-06-headroom.md)
+- [AI 时代知识复利｜让过去的自己替未来的你打工](https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-06-ai-knowledge-compounding.md)
+- [FDE 能力模型：8 个维度拆解](https://github.com/xingtu1996/xingtu-articles/blob/main/articles/2026/09/2026-09-14-fde-capability-model-8-dimensions.md)
+
+## 联系方式
+
+- 邮箱：xingtutech@163.com（商务合作 / 企业陪跑 / 内训）
+- 公众号：微信搜索「行途技术手记」
+
+---
+行途技术 · build in public · 工具会变，思想不变

@@ -21,6 +21,7 @@
 
 - 单文件 `index.html`，改完直接 push 到 `main` 即自动发布（GitHub Actions Pages）。
 - 卡片内容：实名 / 定位 / 主链接三个入口（GitHub、X、作品集站）。
+- GEO / AI 可读层：`llms.txt`（站点事实 + 核心链接 + 开源矩阵 + 文章选读，供 LLM 引用）；`index.html` 内置 JSON-LD Person 结构化数据。
 
 ## 链接
 
@@ -33,12 +34,13 @@
 
 ---
 
-## 📡 关于作者 · 行途 XingTu
+## 关于作者 · 行途 XingTu
 
 我是**行途 XingTu**，一线技术经理 + 仍在写代码。
 
-- 🔔 公众号 **「行途技术手记」**：微信搜索关注，看 AI 工程化落地实战
-- 🌐 博客 / 作品集：https://xingtu1996.github.io
+- 公众号 **「行途技术手记」**：微信搜索关注，看 AI 工程化落地实战
+- 个人站：https://xingtu1996.pages.dev
+- 文章星图：https://xingtu1996.github.io/articles.html
 
-如果这份仓库对你有帮助，欢迎在公众号留言交流 🙌
+如果这份仓库对你有帮助，欢迎在公众号留言交流。
 
