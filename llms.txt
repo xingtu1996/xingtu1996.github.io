@@ -13,7 +13,7 @@
 
 - [GitHub 主页](https://github.com/xingtu1996)：开源矩阵总入口，24 公开仓 + 5 私有仓
 - [个人站 · 全库](https://xingtu1996.pages.dev)：个人作品集（文章 / 开源 / 视频 / 关注）
-- [文章星图](https://xingtu1996.github.io/articles.html)：已发文章可视化索引（47 篇，按年月归档）
+- [行途 · 文章索引](https://xingtu1996.github.io/articles.html)：已发文章可视化索引（47 篇，按年月归档）
 - [公众号 · 行途技术手记](https://mp.weixin.qq.com/)：微信搜索「行途技术手记」关注，AI 工程化落地实战
 - [X / Twitter](https://x.com/xingtu1996)：AI 工程化实战，build in public
 
