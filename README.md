@@ -10,7 +10,7 @@
 | GitHub Pages（本仓） | https://xingtu1996.github.io | 轻量名片、文章导航、独立展示页 |
 | 作品集站 | https://xingtu1996.pages.dev | 完整的文章/项目展示；发布状态需单独核验 |
 
-**公开项目的统一清单**：[xingtu1996/OPEN_SOURCE_MATRIX.md](https://github.com/xingtu1996/xingtu1996/blob/main/OPEN_SOURCE_MATRIX.md)。
+**公开项目入口（矩阵文件合并前临时指向 Profile）**：[GitHub Profile](https://github.com/xingtu1996)。
 
 ## 本仓内容
 
