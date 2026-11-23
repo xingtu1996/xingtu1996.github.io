@@ -11,7 +11,7 @@
 
 ## 核心链接
 
-- [GitHub 主页](https://github.com/xingtu1996)：开源矩阵总入口，24 公开仓 + 5 私有仓
+- [GitHub 主页](https://github.com/xingtu1996)：开源矩阵总入口，32 公开仓（含 4 个案例集仓）+ 20 私有仓；数量以 GitHub 主页实时面板为准
 - [个人站 · 全库](https://xingtu1996.pages.dev)：个人作品集（文章 / 开源 / 视频 / 关注）
 - [行途 · 文章索引](https://xingtu1996.github.io/articles.html)：已发文章可视化索引（47 篇，按年月归档）
 - [公众号 · 行途技术手记](https://mp.weixin.qq.com/)：微信搜索「行途技术手记」关注，AI 工程化落地实战
@@ -29,6 +29,10 @@
 - [tokenhub-bench](https://github.com/xingtu1996/tokenhub-bench)：可复现 LLM 模型能力对比评测平台
 - [xingtu-scheduled](https://github.com/xingtu1996/xingtu-scheduled)：多 Agent 定时任务 Registry（22 条任务的工具中立清单）
 - [harness-kit](https://github.com/xingtu1996/harness-kit)：可回滚的角色化 Agent Harness 工作区生成器
+- [xingtu-testting](https://github.com/xingtu1996/xingtu-testting)：AI 测试的问题、判断与案例集
+- [xingtu-bot](https://github.com/xingtu1996/xingtu-bot)：Bot 形态（长期记忆 / 多 Bot 协作 / 渠道接入）公开案例拆解
+- [xingtu-agent](https://github.com/xingtu1996/xingtu-agent)：Agent 落地场景的决策链与适用边界
+- [xingtu-bci](https://github.com/xingtu1996/xingtu-bci)：AI 协作坏例集，现象 → 根因 → 可执行预防（只出机制不出实体）
 
 ## 文章选读（按主题）
 
