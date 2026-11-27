@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="application-version" content="1.2.2">
+  <meta name="application-version" content="1.4.0">
   <meta name="theme-color" content="#e2f5df">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="小包乐园">
@@ -279,6 +279,12 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 .voice-status { color: #513d63; }
 .rail-announcement { padding: 6px 8px; border-radius: 9px; background: #edf7ed; }
 
+.trip-settings{margin:10px 0;padding:9px 12px;background:#f3f7eb;border-radius:16px;color:#254a40}
+.trip-settings summary{font-weight:750;cursor:pointer;min-height:36px;line-height:36px}
+.trip-settings p{margin:6px 0}.trip-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:6px 0}
+.trip-choices button,.answer-horn{border:1px solid #b9ceba;border-radius:12px;min-height:45px;background:#fffdf4;color:#254a40;font:inherit;font-weight:700;touch-action:manipulation}
+.trip-choices button[aria-pressed=true],.trip-choices button.selected,.answer-horn{background:#c7ebc0}.answer-horn{width:100%;margin-top:6px}
+.sound-credit{font-size:13px;line-height:1.45}.sound-credit a{color:#26543c}
 </style>
   <title>小包乐园</title>
 </head>
@@ -345,7 +351,7 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
         </div>
         <div class="journey">
           <span id="rail-state" role="status">列车已停稳</span>
-          <span>彩虹车站</span>
+          <span id="trip-destination">彩虹车站</span>
           <progress id="rail-progress" max="1" value="0" aria-label="到站进度"></progress>
         </div>
         <p id="rail-announcement" class="rail-announcement" role="status" hidden></p>
@@ -361,6 +367,22 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
           <button type="button" data-rail="door" id="rail-door"><span aria-hidden="true">▣</span><b>开车门</b></button>
           <button type="button" data-rail="horn"><span aria-hidden="true">♫</span>鸣笛</button>
         </div>
+        <details class="trip-settings" open>
+          <summary>🚉 接站和送站</summary>
+          <div id="trip-plan">
+            <p>开往哪里？</p>
+            <div class="trip-choices" role="group" aria-label="选择目的地">
+              <button data-dest="houma" aria-pressed="false">🏡 回侯马</button>
+              <button data-dest="beijing" aria-pressed="false">🏙️ 回北京</button>
+            </div>
+            <p>今天和谁坐火车？</p>
+            <div class="trip-choices" role="group" aria-label="选择接送任务">
+              <button data-family="grandma">👵 接奶奶</button><button data-family="nana">🌷 接姥姥</button>
+              <button data-family="dad">👨 接爸爸</button><button data-family="send">👋 送妈妈</button>
+              <button data-family="baby">🎒 宝宝乘车</button><button data-family="together">👩‍👦 和妈妈坐</button>
+            </div>
+          </div>
+        </details>
       </div>
 
       <div id="radio-stage" hidden>
@@ -380,6 +402,19 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
           <button type="button" data-clip="arrive"><span aria-hidden="true">■</span>列车到站</button>
           <button type="button" data-clip="doors"><span aria-hidden="true">▣</span>关闭车门</button>
         </div>
+        <button type="button" id="radio-horn" class="answer-horn" hidden>📯 我来鸣笛</button>
+        <details class="trip-settings" open>
+          <summary>🎧 听真实车站</summary>
+          <div class="trip-choices" id="field-controls">
+            <button data-clip="trainReal">🚄 北京西站</button><button data-clip="metro">🚇 上海地铁</button>
+            <button data-clip="bus">🚌 延吉公交</button><button data-clip="pass">🛤️ 列车经过</button>
+          </div>
+          <details class="sound-credit"><summary>录音来源</summary>
+            <p>北京西站 G80 到站广播由 N509FZ 录制，游戏版调整音量并转码，沿用 CC BY-SA 4.0。</p>
+            <p>列车鸣笛与经过由 theplax 录制，延吉公交由 Lenguaverde 录制，采用 CC BY 4.0。开关门由 Yoyodaman234 录制，上海地铁由 erosax 录制，采用 CC0。游戏版经过裁剪或音量调整。家庭故事使用普通话合成配音。</p>
+            <a href="./sound-sources.html">录音原作和许可</a>
+          </details>
+        </details>
       </div>
 
       <div id="cover" class="cover" hidden>
@@ -410,7 +445,7 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 <script>
 "use strict";
 
-function createRailway({ unlock, soundOn, horn, checkChime }) {
+function createRailway({ unlock, soundOn, checkChime }) {
   const scene = document.getElementById("rail-scene");
   const train = document.getElementById("train");
   const status = document.getElementById("rail-state");
@@ -426,12 +461,29 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
   const player = new Audio();
   player.preload = "auto";
   const clips = {
-    "driver": "小司机，你好！请看看信号灯，我们准备出发。",
-    "depart": "女士们，先生们，欢迎乘车。本次列车开往彩虹车站。",
-    "approach": "旅客朋友们，前方到站，彩虹车站。",
-    "arrive": "彩虹车站到了。请等车停稳，再下车。",
+    "welcome": "高铁来了！小司机，轮到你鸣笛啦！",
+    "depart": "女士们，先生们，欢迎乘车。本次列车，开往彩虹车站。",
+    "driver": "小司机，坐好啦。看看信号灯，是什么颜色？",
+    "approach": "前方到站，彩虹车站。请带好随身物品。",
+    "arrive": "彩虹车站，到了。小司机，我们到站啦！",
     "doors": "车门就要关上了。小手请离开车门。",
-    "welcome": "高铁来了！小朋友，请站在黄线后面，向列车挥挥手吧。"
+    "grandma": "奶奶，站台见！我们来接你啦！",
+    "nana": "姥姥，下火车啦！看，宝宝在向你招手呢！",
+    "dad": "爸爸下车啦！爸爸，这里！我们来接你。",
+    "send": "妈妈上车啦。我们挥挥手，妈妈再见！",
+    "together": "宝宝和妈妈，一起坐火车。坐好啦，看看窗外吧！",
+    "baby": "宝宝坐火车啦！你听，高铁要出发了。",
+    "beijingTrip": "女士们，先生们，欢迎乘车。本次列车开往北京。",
+    "houmaTrip": "女士们，先生们，欢迎乘车。本次列车开往侯马。",
+    "beijingEnd": "北京到了，请准备下车。",
+    "houmaEnd": "侯马到了，请准备下车。",
+    "horn": "列车鸣笛，嘟——！",
+    "open": "车门打开了。",
+    "close": "车门关好了。",
+    "trainReal": "北京西站 · G80 次列车到站实录",
+    "metro": "上海地铁 · 普通话广播实录",
+    "bus": "延吉公交 · 车内报站实录",
+    "pass": "听，列车从面前驶过去了。"
 };
   let activeMode = "";
   let paused = false;
@@ -440,17 +492,27 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
   let doorsOpen = false;
   let greenSignal = true;
   let ticketChecked = false;
+  const trip = document.getElementById("trip-plan");
+  const destinationLabel = document.getElementById("trip-destination");
+  const replyHorn = document.getElementById("radio-horn");
+  const fieldControls = document.getElementById("field-controls");
+  let destination = "";
+  let family = "";
+  const isPickup = () => ["grandma", "nana", "dad"].includes(family);
+  const place = () => ({ houma: "侯马", beijing: "北京" })[destination] || "彩虹车站";
   let playId = 0;
   function silence() {
     playId++;
+    player.onended = null;
     player.pause();
   }
 
-  function broadcast(clip) {
+  function broadcast(clip, following = "") {
     silence();
     const id = playId;
     const onTrain = activeMode === "rail";
     const display = onTrain ? trainCaption : caption;
+    replyHorn.hidden = onTrain || (clip !== "welcome" && clip !== "horn");
     display.textContent = clips[clip];
     display.hidden = false;
     voiceStatus.hidden = true;
@@ -471,6 +533,9 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
     const reportFailure = () => {
       if (id === playId) showHint("广播暂时没响，请再点一次。");
     };
+    if (following) player.onended = () => {
+      if (id === playId && !paused && soundOn()) broadcast(following);
+    };
     player.play().catch(reportFailure);
   }
 
@@ -489,10 +554,12 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
     drivingButtons.slow.disabled = speed <= 1;
     drivingButtons.stop.disabled = speed === 0;
     drivingButtons.door.disabled = speed > 0;
+    if (!speed && destination) destinationLabel.textContent = place();
+    for (const choice of trip.querySelectorAll("button")) choice.disabled = speed > 0;
     progress.value = distance;
     status.textContent = doorsOpen ? "车门已打开" : speed
       ? distance >= 0.67 ? "前方到站" : ["", "慢速行驶", "中速行驶", "快速行驶"][speed]
-      : distance === 1 ? "已到彩虹车站" : "列车已停稳";
+      : distance === 1 ? "已到" + place() : "列车已停稳";
   }
 
   function stop(arrived) {
@@ -501,7 +568,7 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
       distance = 1;
       greenSignal = false;
       ticketChecked = false;
-      broadcast("arrive");
+      broadcast(destination ? destination + "End" : "arrive");
     } else {
       silence();
     }
@@ -515,7 +582,7 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
       case "go":
         if (distance === 1) distance = 0;
         speed = 1;
-        broadcast("depart");
+        broadcast(destination ? destination + "Trip" : "depart", family && !isPickup() ? family : "");
         break;
       case "fast":
         speed++;
@@ -528,10 +595,11 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
         break;
       case "door":
         doorsOpen = !doorsOpen;
-        if (!doorsOpen) broadcast("doors");
+        if (doorsOpen) broadcast("open", distance === 1 && isPickup() ? family : "");
+        else broadcast("doors", "close");
         break;
       case "horn":
-        horn();
+        broadcast("horn");
         break;
       case "signal":
         greenSignal = !greenSignal;
@@ -546,17 +614,42 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
   driverControls.addEventListener("click", handleDrive);
   stationControls.addEventListener("click", handleDrive);
 
-  radioControls.addEventListener("click", event => {
+  function radioPress(event) {
     const button = event.target.closest("[data-clip]");
     if (!button || activeMode !== "radio" || paused) return;
-    const { clip } = button.dataset;
     unlock();
-    for (const choice of radioControls.querySelectorAll("button")) choice.classList.toggle("selected", choice === button);
-    broadcast(clip);
+    for (const choice of document.querySelectorAll("#radio-stage [data-clip]")) {
+      choice.classList.toggle("selected", choice === button);
+    }
+    broadcast(button.dataset.clip);
+  }
+  radioControls.addEventListener("click", radioPress);
+  fieldControls.addEventListener("click", radioPress);
+  replyHorn.addEventListener("click", () => {
+    if (activeMode === "radio" && !paused) { unlock(); broadcast("horn"); }
+  });
+  trip.addEventListener("click", event => {
+    const button = event.target.closest("button");
+    if (!button || button.disabled || paused) return;
+    unlock();
+    if (button.dataset.dest) destination = button.dataset.dest;
+    else family = button.dataset.family;
+    for (const choice of trip.querySelectorAll("button")) {
+      choice.setAttribute("aria-pressed", String(choice.dataset.dest === destination || choice.dataset.family === family));
+    }
+    render();
+    if (button.dataset.dest) broadcast(destination + "Trip");
+    else if (distance === 1 && doorsOpen) broadcast(family);
+    else {
+      silence();
+      trainCaption.hidden = false;
+      trainCaption.textContent = button.textContent.trim() + "，准备好就按发车。";
+    }
   });
 
   return {
     setMode(next) {
+      if (activeMode !== next) replyHorn.hidden = true;
       if (activeMode !== next) silence();
       activeMode = next;
       render();
@@ -573,6 +666,9 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
       doorsOpen = false;
       greenSignal = true;
       ticketChecked = false;
+      destination = family = "";
+      destinationLabel.textContent = "彩虹车站";
+      for (const choice of trip.querySelectorAll("button")) choice.setAttribute("aria-pressed","false");
       caption.textContent = "小小广播员，按按钮放广播。";
       trainCaption.hidden = true;
       voiceStatus.hidden = true;
@@ -589,7 +685,8 @@ function createRailway({ unlock, soundOn, horn, checkChime }) {
         render();
       } else if (approaching && distance >= 0.67) {
         render();
-        broadcast("approach");
+        if (!destination) broadcast("approach");
+        else { trainCaption.hidden = false; trainCaption.textContent = "前方到站，" + place() + "。"; }
       }
     }
   };
@@ -682,7 +779,6 @@ let output;
 const railway = createRailway({
   unlock: unlockAudio,
   soundOn: () => soundEnabled,
-  horn: () => playSound("horn"),
   checkChime: () => playSound("reward")
 });
 try {
@@ -1093,7 +1189,7 @@ async function prepareOffline() {
 refreshSoundButton();
 resetBlocks();
 resetMarbles();
-showMode(location.hash === "#radio" ? "radio" : "blocks", false);
+showMode(({ "#radio": "radio", "#rail": "rail" })[location.hash] || "blocks", false);
 byId("preview-help").hidden = true;
 requestAnimationFrame(tick);
 prepareOffline();

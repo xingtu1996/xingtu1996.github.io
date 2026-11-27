@@ -2,9 +2,9 @@
 
 const scope = new URL(self.registration.scope);
 const prefix = `xiaobao-playgarden:${scope.pathname}:`;
-const cacheName = `${prefix}station-mp3-1`;
-const files = ["./index.html", "./manifest.webmanifest",
-  "./voice/driver.mp3", "./voice/depart.mp3", "./voice/approach.mp3", "./voice/arrive.mp3", "./voice/doors.mp3", "./voice/welcome.mp3"];
+const cacheName = `${prefix}family-field-v1`;
+const files = ["./index.html", "./manifest.webmanifest", "./sound-sources.html",
+  "./voice/welcome.mp3", "./voice/depart.mp3", "./voice/driver.mp3", "./voice/approach.mp3", "./voice/arrive.mp3", "./voice/doors.mp3", "./voice/grandma.mp3", "./voice/nana.mp3", "./voice/dad.mp3", "./voice/send.mp3", "./voice/together.mp3", "./voice/baby.mp3", "./voice/beijingTrip.mp3", "./voice/houmaTrip.mp3", "./voice/beijingEnd.mp3", "./voice/houmaEnd.mp3", "./voice/horn.mp3", "./voice/open.mp3", "./voice/close.mp3", "./voice/trainReal.mp3", "./voice/metro.mp3", "./voice/bus.mp3", "./voice/pass.mp3"];
 const resources = new Set(files.map(file => new URL(file, scope).href));
 const page = new URL("./index.html", scope).href;
 
