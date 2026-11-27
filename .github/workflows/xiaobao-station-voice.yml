@@ -16,7 +16,7 @@ jobs:
       - name: Render Mandarin MP3 clips
         run: |
           set -eu
-          python -m pip install 'sherpa-onnx==1.12.14' 'soundfile==0.13.1' 'numpy<3' 'imageio-ffmpeg==0.6.0'
+          python -m pip install 'sherpa-onnx==1.12.26' 'soundfile==0.13.1' 'numpy<3' 'imageio-ffmpeg==0.6.0'
           curl --fail --location --retry 2 -o model.tar.bz2 https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-icefall-zh-aishell3.tar.bz2
           tar -xf model.tar.bz2
           mkdir voice
