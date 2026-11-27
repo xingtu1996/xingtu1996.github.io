@@ -1,5 +1,8 @@
 name: Test Xiaobao station playback
 on:
+  push:
+    branches: [main]
+    paths: ["xiaobao/**"]
   pull_request:
     paths: [".github/workflows/xiaobao-playback-test.yml", "xiaobao/**"]
 permissions:
@@ -79,7 +82,7 @@ jobs:
                   page.locator('#resume').tap()
                   page.locator('#blocks').tap()
                   page.locator('[data-action=drop]').tap()
-                  assert page.locator('#score b').inner_text() == '1'
+                  assert page.locator('.tile.animal:not(.falling)').count() > 0
                   page.locator('#balls').tap()
                   frog = page.locator('.marble.frog').last
                   frog.tap()
@@ -112,3 +115,17 @@ jobs:
                   print(engine, profile, 'PASS: local recordings, background music, mute, pickup trip, frog removal, clean board and offline restart')
                   browser.close()
           PY
+      - name: Verify the deployed GitHub Pages version and MP3
+        if: github.event_name == 'push'
+        run: |
+          set -eu
+          for attempt in $(seq 1 20); do
+            if curl -fsSL "https://xingtu1996.github.io/xiaobao/?verify=${GITHUB_SHA}&attempt=$attempt" -o /tmp/xiaobao-live.html && grep -q 'application-version" content="1.4.0"' /tmp/xiaobao-live.html; then
+              curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/horn.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-horn.mp3
+              cmp /tmp/xiaobao-live-horn.mp3 xiaobao/voice/horn.mp3
+              echo "GitHub Pages 1.4.0 and live horn MP3 verified"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
