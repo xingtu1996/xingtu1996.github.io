@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="application-version" content="1.2.1">
+  <meta name="application-version" content="1.2.2">
   <meta name="theme-color" content="#e2f5df">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="小包乐园">
@@ -371,14 +371,14 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
             <p id="radio-caption" role="status">小小广播员，按按钮放广播。</p>
           </div>
         </div>
-        <p id="voice-status" class="voice-status" role="status" hidden>当前设备暂无可用的普通话语音，可以看字幕。</p>
+        <p id="voice-status" class="voice-status" role="status" hidden>广播暂时没响，请再点一次。</p>
         <div id="radio-controls" class="rail-controls radio-controls" role="group" aria-label="选择车站广播">
+          <button type="button" data-clip="welcome"><span aria-hidden="true">🚄</span>高铁来了</button>
           <button type="button" data-clip="driver"><span aria-hidden="true">👋</span>欢迎司机</button>
           <button type="button" data-clip="depart"><span aria-hidden="true">🚄</span>即将发车</button>
           <button type="button" data-clip="approach"><span aria-hidden="true">🚉</span>前方到站</button>
           <button type="button" data-clip="arrive"><span aria-hidden="true">■</span>列车到站</button>
           <button type="button" data-clip="doors"><span aria-hidden="true">▣</span>关闭车门</button>
-          <button type="button" data-clip="welcome"><span aria-hidden="true">♫</span>乘车问候</button>
         </div>
       </div>
 
@@ -410,7 +410,7 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 <script>
 "use strict";
 
-function createRailway({ unlock, soundOn, horn, checkChime, stationChime }) {
+function createRailway({ unlock, soundOn, horn, checkChime }) {
   const scene = document.getElementById("rail-scene");
   const train = document.getElementById("train");
   const status = document.getElementById("rail-state");
@@ -423,15 +423,16 @@ function createRailway({ unlock, soundOn, horn, checkChime, stationChime }) {
   const caption = document.getElementById("radio-caption");
   const trainCaption = document.getElementById("rail-announcement");
   const voiceStatus = document.getElementById("voice-status");
-  const speech = window.speechSynthesis;
+  const player = new Audio();
+  player.preload = "auto";
   const clips = {
-    driver: "小司机，请检查车门和信号灯。",
-    depart: "各位旅客，列车即将出发。请坐稳扶好。",
-    approach: "前方到站，彩虹车站。请提前做好下车准备。",
-    arrive: "彩虹车站到了。列车已停稳，请有序下车。",
-    doors: "车门即将关闭。请勿倚靠车门。",
-    welcome: "各位旅客，欢迎乘坐本次列车。祝您旅途愉快。"
-  };
+    "driver": "小司机，你好！请看看信号灯，我们准备出发。",
+    "depart": "女士们，先生们，欢迎乘车。本次列车开往彩虹车站。",
+    "approach": "旅客朋友们，前方到站，彩虹车站。",
+    "arrive": "彩虹车站到了。请等车停稳，再下车。",
+    "doors": "车门就要关上了。小手请离开车门。",
+    "welcome": "高铁来了！小朋友，请站在黄线后面，向列车挥挥手吧。"
+};
   let activeMode = "";
   let paused = false;
   let speed = 0;
@@ -439,59 +440,38 @@ function createRailway({ unlock, soundOn, horn, checkChime, stationChime }) {
   let doorsOpen = false;
   let greenSignal = true;
   let ticketChecked = false;
-  let utterance = null;
-
+  let playId = 0;
   function silence() {
-    if (!utterance) return;
-    utterance = null;
-    speech.cancel();
-  }
-
-  function voicePreference(voice) {
-    const enhanced = /enhanced|premium|增强|高级/i.test(voice.name);
-    return Number(enhanced) * 2 + Number(voice.default);
+    playId++;
+    player.pause();
   }
 
   function broadcast(clip) {
     silence();
-    const text = clips[clip];
+    const id = playId;
     const onTrain = activeMode === "rail";
-    if (onTrain) {
-      trainCaption.textContent = text;
-      trainCaption.hidden = false;
-    } else {
-      caption.textContent = text;
-      voiceStatus.hidden = true;
+    const display = onTrain ? trainCaption : caption;
+    display.textContent = clips[clip];
+    display.hidden = false;
+    voiceStatus.hidden = true;
+    function showHint(hint) {
+      if (onTrain) display.textContent = clips[clip] + " " + hint;
+      else {
+        voiceStatus.textContent = hint;
+        voiceStatus.hidden = false;
+      }
     }
-    if (!soundOn() || paused) return;
-    stationChime();
-    const localVoice = speech?.getVoices().filter(voice =>
-      voice.localService && /^(zh|cmn)(?:[-_](CN|Hans))?$/i.test(voice.lang)
-    ).sort((first, second) => voicePreference(second) - voicePreference(first))[0];
-    if (!localVoice || typeof SpeechSynthesisUtterance !== "function") {
-      if (!onTrain) voiceStatus.hidden = false;
+    if (paused) return;
+    if (!soundOn()) {
+      showHint("声音已关，请点右上角音符，再点广播。");
       return;
     }
-    const announcement = new SpeechSynthesisUtterance(text);
-    announcement.voice = localVoice;
-    announcement.lang = localVoice.lang;
-    announcement.rate = 0.87;
-    announcement.pitch = 1;
-    announcement.volume = 0.7;
-    announcement.onend = () => {
-      if (utterance === announcement) utterance = null;
+    // Reuse one media element so an iPhone can continue the same train journey.
+    player.src = "./voice/" + clip + ".mp3";
+    const reportFailure = () => {
+      if (id === playId) showHint("广播暂时没响，请再点一次。");
     };
-    announcement.onerror = () => {
-      if (utterance !== announcement) return;
-      utterance = null;
-      if (!onTrain) voiceStatus.hidden = false;
-    };
-    utterance = announcement;
-    try {
-      speech.speak(announcement);
-    } catch {
-      announcement.onerror();
-    }
+    player.play().catch(reportFailure);
   }
 
   function render() {
@@ -703,8 +683,7 @@ const railway = createRailway({
   unlock: unlockAudio,
   soundOn: () => soundEnabled,
   horn: () => playSound("horn"),
-  checkChime: () => playSound("reward"),
-  stationChime: () => playSound("station")
+  checkChime: () => playSound("reward")
 });
 try {
   soundEnabled = localStorage.getItem("playgarden-sound") !== "muted";
@@ -1114,7 +1093,7 @@ async function prepareOffline() {
 refreshSoundButton();
 resetBlocks();
 resetMarbles();
-showMode("blocks", false);
+showMode(location.hash === "#radio" ? "radio" : "blocks", false);
 byId("preview-help").hidden = true;
 requestAnimationFrame(tick);
 prepareOffline();
