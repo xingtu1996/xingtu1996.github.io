@@ -1,67 +1,46 @@
-name: Render station announcements
+name: Collect licensed railway recordings
 on:
   pull_request:
-    paths:
-      - ".github/workflows/xiaobao-station-voice.yml"
+    paths: [".github/workflows/xiaobao-station-voice.yml"]
 permissions:
   contents: read
 jobs:
-  render:
+  collect:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 5
     steps:
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Render Mandarin MP3 clips
+      - name: Fetch the published Freesound audio previews
         run: |
-          set -eu
-          python -m pip install 'sherpa-onnx==1.12.26' 'soundfile==0.13.1' 'numpy<3' 'imageio-ffmpeg==0.6.0'
-          curl --fail --location --retry 2 -o model.tar.bz2 https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_1.tar.bz2
-          tar -xf model.tar.bz2
-          mkdir voice
+          mkdir field
           python - <<'PY'
-          import subprocess
-          import imageio_ffmpeg
-          import sherpa_onnx as s
-          import soundfile as sf
-          root = "kokoro-multi-lang-v1_1"
-          import numpy as np
-          voice = s.OfflineTtsKokoroModelConfig(model=f"{root}/model.onnx", voices=f"{root}/voices.bin", tokens=f"{root}/tokens.txt", data_dir=f"{root}/espeak-ng-data", lexicon=f"{root}/lexicon-us-en.txt,{root}/lexicon-zh.txt")
-          tts = s.OfflineTts(s.OfflineTtsConfig(model=s.OfflineTtsModelConfig(kokoro=voice, num_threads=3)))
-          scripts = {"welcome":[[12,1.04,"高铁来了！"],[12,1,"小司机，轮到你鸣笛啦！"]],"depart":[[3,0.99,"女士们，先生们，欢迎乘车。"],[3,0.94,"本次列车，开往彩虹车站。"]],"driver":[[60,1.02,"小司机，坐好啦。"],[60,1.02,"看看信号灯，是什么颜色？"]],"approach":[[3,0.99,"前方到站，彩虹车站。"],[3,1,"请带好随身物品。"]],"arrive":[[3,0.99,"彩虹车站，到了。"],[12,1.03,"小司机，我们到站啦！"]],"doors":[[3,1,"车门就要关上了。"],[3,0.98,"小手请离开车门。"]]}
-          rate = tts.sample_rate
-          def quiet(seconds):
-              return np.zeros(round(seconds * rate))
-          def bell(freq, seconds):
-              t = np.arange(round(seconds * rate)) / rate
-              return 0.115 * np.minimum(t / 0.018, 1) * np.exp(-8*t) * (np.sin(2*np.pi*freq*t) + 0.21*np.sin(4*np.pi*freq*t))
-          def arrive():
-              t = np.arange(round(0.95*rate)) / rate
-              pitch = 315 + 56 * np.sin(np.pi*t / 0.95)
-              phase = 2*np.pi*np.cumsum(pitch)/rate
-              return 0.13 * np.sin(np.pi*t/0.95)**2 * (np.sin(phase)+0.32*np.sin(2*phase)+0.10*np.sin(3*phase))
-          for name, lines in scripts.items():
-              parts = []
-              if name in ("depart","approach"):
-                  parts.extend([bell(660,0.24),bell(495,0.36),quiet(0.12)])
-              for number, (sid,speed,text) in enumerate(lines):
-                  audio = tts.generate(text, sid=sid, speed=speed)
-                  samples = np.asarray(audio.samples)
-                  idx = np.flatnonzero(np.abs(samples)>0.008)
-                  assert len(idx)>rate*0.08
-                  samples = samples[max(0,idx[0]-rate//18):idx[-1]+rate//12]
-                  parts.append(samples)
-                  if number == 0:
-                      if name == "welcome":
-                          parts.extend([quiet(0.20),arrive(),quiet(0.35)])
-                      else:
-                          parts.append(quiet(0.45))
-              sf.write("clip.wav", np.concatenate(parts+[quiet(0.12)]), rate)
-              subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-loglevel", "error", "-y", "-i", "clip.wav", "-af", "loudnorm=I=-17:TP=-2:LRA=8", "-ar", "44100", "-ac", "1", "-codec:a", "libmp3lame", "-b:a", "64k", f"voice/{name}.mp3"], check=True)
+          from urllib.request import Request, urlopen
+          from pathlib import Path
+          import re, html
+          sounds = [('horn','theplax',563299,12172648),('open','Yoyodaman234',341328,None),('close','Yoyodaman234',341329,None)]
+          for name, artist, number, user_id in sounds:
+              def read(url):
+                  with urlopen(Request(url,headers={'User-Agent':'XingTu-Playgarden/1.0 licensed media import'}), timeout=20) as f:
+                      return f.read()
+              page = f'https://freesound.org/people/{artist}/sounds/{number}/'
+              try:
+                  body = html.unescape(read(page).decode()).replace('\\/','/')
+                  match = re.search(rf'{number}_(\d+)-',body)
+                  if match:
+                      user_id = match[1]
+              except Exception as error:
+                  print(name,str(error))
+              if not user_id:
+                  print('Missing preview',name)
+                  continue
+              url=f'https://cdn.freesound.org/previews/{number//1000}/{number}_{user_id}-hq.mp3'
+              data=read(url)
+              assert len(data)>5000 and not data.lstrip().startswith(b'<')
+              Path('field', name+'.mp3').write_bytes(data)
+              print(name, url, len(data))
+          assert Path('field/horn.mp3').exists()
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: station-announcements
-          path: voice/*.mp3
+          name: field-recordings
+          path: field/*.mp3
           retention-days: 2
