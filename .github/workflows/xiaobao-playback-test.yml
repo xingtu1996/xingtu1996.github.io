@@ -1,0 +1,131 @@
+name: Test Xiaobao station playback
+on:
+  push:
+    branches: [main]
+    paths: ["xiaobao/**"]
+  pull_request:
+    paths: [".github/workflows/xiaobao-playback-test.yml", "xiaobao/**"]
+permissions:
+  contents: read
+jobs:
+  playback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install 'playwright==1.55.0' && python -m playwright install --with-deps chromium webkit
+      - name: Mobile controls and offline audio
+        run: |
+          python - <<'PY'
+          from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+          from threading import Thread
+          import socket
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              for engine, profile in [('webkit','iPhone 13'), ('webkit','iPad (gen 7)'), ('chromium','Pixel 7')]:
+                  server = ThreadingHTTPServer(('127.0.0.1', 0), SimpleHTTPRequestHandler)
+                  Thread(target=server.serve_forever, daemon=True).start()
+                  port = server.server_port
+                  browser = getattr(p, engine).launch()
+                  ctx = browser.new_context(**p.devices[profile])
+                  page = ctx.new_page()
+                  errors = []
+                  page.on('pageerror', lambda e: errors.append(str(e)))
+                  page.add_init_script("""{
+                    const OriginalAudio = window.Audio;
+                    window.Audio = function(...args) {
+                      const a = new OriginalAudio(...args); window.testPlayer = a; return a;
+                    };
+                  }""")
+                  url = f'http://127.0.0.1:{port}/xiaobao/#radio'
+                  page.goto(url)
+                  page.wait_for_function("navigator.serviceWorker.controller !== null")
+                  def hear(key):
+                      page.locator('[data-clip="'+key+'"]').tap()
+                      page.wait_for_function("key => testPlayer.currentSrc.endsWith('/'+key+'.mp3') && !testPlayer.paused && testPlayer.currentTime > 0.2", arg=key, timeout=9000)
+                  for key in ['welcome','driver','approach','arrive','doors','trainReal','metro','bus','pass','depart']:
+                      hear(key)
+                  assert '开往彩虹车站' in page.locator('#radio-caption').inner_text()
+                  page.locator('#music').tap()
+                  page.wait_for_function("!music.paused && music.currentTime > 0.2")
+                  hear('welcome')
+                  assert page.evaluate('music.paused')
+                  page.locator('#music').tap()
+                  page.locator('#sound').tap()
+                  page.locator('[data-clip=welcome]').tap()
+                  assert page.evaluate('testPlayer.paused') and '声音已关' in page.locator('#voice-status').inner_text()
+                  page.locator('#sound').tap()
+                  hear('welcome')
+                  page.locator('#radio-horn').tap()
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/horn.mp3') && testPlayer.currentTime > 0.15")
+                  page.locator('#rail').tap()
+                  assert page.evaluate('testPlayer.paused')
+                  page.locator('[data-rail=go]').tap()
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/depart.mp3') && testPlayer.currentTime > 0.2 && !testPlayer.paused")
+                  page.locator('[data-rail=stop]').tap()
+                  page.locator('[data-dest=houma]').tap()
+                  page.locator('[data-family=grandma]').tap()
+                  page.locator('[data-rail=go]').tap()
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/houmaTrip.mp3') && testPlayer.currentTime > 0.15")
+                  page.locator('[data-rail=fast]').tap()
+                  page.locator('[data-rail=fast]').tap()
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/houmaEnd.mp3') && testPlayer.currentTime > 0.15",timeout=22000)
+                  page.locator('[data-rail=door]').tap()
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/grandma.mp3') && testPlayer.currentTime > 0.15")
+                  page.locator('#pause').tap()
+                  assert page.evaluate('testPlayer.paused')
+                  page.locator('#resume').tap()
+                  page.locator('#blocks').tap()
+                  page.locator('[data-action=drop]').tap()
+                  assert page.locator('.tile.animal:not(.falling)').count() > 0
+                  page.locator('#balls').tap()
+                  frog = page.locator('.marble.frog').last
+                  frog.tap()
+                  page.wait_for_function("!document.querySelector('.projectile:not([hidden])')")
+                  for _ in range(24):
+                      if not page.locator('.marble:not(.empty)').count():
+                          break
+                      page.locator('#launcher').tap()
+                      page.wait_for_function("document.querySelector('#projectile').hidden")
+                  assert page.locator('.marble:not(.empty)').count() == 0
+                  page.locator('#launcher').tap()
+                  assert page.locator('.marble:not(.empty)').count() == 24
+                  assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+                  server.shutdown()
+                  server.server_close()
+                  with socket.socket() as probe:
+                      assert probe.connect_ex(('127.0.0.1', port)) != 0
+                  print(engine, profile, 'online playback passed; origin stopped', flush=True)
+                  page.close()
+                  page = ctx.new_page()
+                  page.on('pageerror', lambda e: errors.append(str(e)))
+                  page.add_init_script("const NativeAudio = window.Audio; window.Audio = function(...args) {return window.testPlayer=new NativeAudio(...args)}")
+                  page.goto(url)
+                  hear('welcome')
+                  assert '高铁来了' in page.locator('#radio-caption').inner_text()
+                  for key in ['depart','approach','arrive','doors','driver','trainReal','metro','bus','pass']:
+                      hear(key)
+                  bounds = page.evaluate("""async () => {const r=await fetch('./voice/welcome.mp3',{headers:{Range:'bytes=0-1'}});return [r.status,(await r.arrayBuffer()).byteLength]}""")
+                  assert bounds == [206,2] and not errors, (bounds,errors)
+                  print(engine, profile, 'PASS: local recordings, background music, mute, pickup trip, frog removal, clean board and offline restart')
+                  browser.close()
+          PY
+      - name: Verify the deployed GitHub Pages version and MP3
+        if: github.event_name == 'push'
+        run: |
+          set -eu
+          for attempt in $(seq 1 20); do
+            if curl -fsSL "https://xingtu1996.github.io/xiaobao/?verify=${GITHUB_SHA}&attempt=$attempt" -o /tmp/xiaobao-live.html && grep -q 'application-version" content="1.4.0"' /tmp/xiaobao-live.html; then
+              curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/horn.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-horn.mp3
+              cmp /tmp/xiaobao-live-horn.mp3 xiaobao/voice/horn.mp3
+              echo "GitHub Pages 1.4.0 and live horn MP3 verified"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
