@@ -51,11 +51,13 @@ jobs:
                   for key in ['welcome','driver','approach','arrive','doors','trainReal','metro','bus','pass','depart']:
                       hear(key)
                   assert '开往彩虹车站' in page.locator('#radio-caption').inner_text()
+                  assert page.locator('#music').get_attribute('aria-pressed') == 'true'
+                  for _ in range(2):
+                      hear('welcome')
+                  page.wait_for_function("!music.paused && music.currentTime > 0.2 && musicGain.gain.value < 0.1")
+                  page.wait_for_function("testPlayer.ended && musicGain.gain.value > 0.23")
                   page.locator('#music').tap()
-                  page.wait_for_function("!music.paused && music.currentTime > 0.2")
-                  hear('welcome')
                   assert page.evaluate('music.paused')
-                  page.locator('#music').tap()
                   page.locator('#sound').tap()
                   page.locator('[data-clip=welcome]').tap()
                   assert page.evaluate('testPlayer.paused') and '声音已关' in page.locator('#voice-status').inner_text()
@@ -70,6 +72,10 @@ jobs:
                   page.locator('[data-rail=stop]').tap()
                   page.locator('[data-dest=houma]').tap()
                   page.locator('[data-family=grandma]').tap()
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/pickGrandma.mp3') && testPlayer.currentTime > 0.15")
+                  for key in ['nana','dad','grandpa','team','send','parents','grands','outbound','baby','together','grandma']:
+                      page.locator('[data-family="'+key+'"]').tap()
+                      page.wait_for_function("name => testPlayer.currentSrc.endsWith('/'+name+'.mp3') && testPlayer.currentTime > 0.12",arg='pick'+key.capitalize())
                   page.locator('[data-rail=go]').tap()
                   page.wait_for_function("testPlayer.currentSrc.endsWith('/houmaTrip.mp3') && testPlayer.currentTime > 0.15")
                   page.locator('[data-rail=fast]').tap()
@@ -82,7 +88,13 @@ jobs:
                   page.locator('#resume').tap()
                   page.locator('#blocks').tap()
                   page.locator('[data-action=drop]').tap()
-                  assert page.locator('.tile.animal:not(.falling)').count() > 0
+                  assert page.locator('#score b').inner_text() == '1'
+                  assert '消掉一排' in page.locator('#block-message').inner_text()
+                  stones = page.locator('.tile.falling').evaluate_all('(xs) => xs.map(e => e.offsetTop)')
+                  page.wait_for_timeout(2450)
+                  assert stones == page.locator('.tile.falling').evaluate_all('(xs) => xs.map(e => e.offsetTop)')
+                  page.locator('[data-action=left]').tap()
+                  page.locator('[data-action=rotate]').tap()
                   page.locator('#balls').tap()
                   frog = page.locator('.marble.frog').last
                   frog.tap()
@@ -108,6 +120,11 @@ jobs:
                   page.goto(url)
                   hear('welcome')
                   assert '高铁来了' in page.locator('#radio-caption').inner_text()
+                  assert page.locator('#music').get_attribute('aria-pressed') == 'false'
+                  page.locator('#rail').tap()
+                  page.locator('[data-family=dad]').tap()
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/pickDad.mp3') && testPlayer.currentTime > 0.12")
+                  page.locator('#radio').tap()
                   for key in ['depart','approach','arrive','doors','driver','trainReal','metro','bus','pass']:
                       hear(key)
                   bounds = page.evaluate("""async () => {const r=await fetch('./voice/welcome.mp3',{headers:{Range:'bytes=0-1'}});return [r.status,(await r.arrayBuffer()).byteLength]}""")
@@ -120,10 +137,12 @@ jobs:
         run: |
           set -eu
           for attempt in $(seq 1 20); do
-            if curl -fsSL "https://xingtu1996.github.io/xiaobao/?verify=${GITHUB_SHA}&attempt=$attempt" -o /tmp/xiaobao-live.html && grep -q 'application-version" content="1.4.0"' /tmp/xiaobao-live.html; then
+            if curl -fsSL "https://xingtu1996.github.io/xiaobao/?verify=${GITHUB_SHA}&attempt=$attempt" -o /tmp/xiaobao-live.html && grep -q 'application-version" content="1.4.1"' /tmp/xiaobao-live.html; then
               curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/horn.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-horn.mp3
               cmp /tmp/xiaobao-live-horn.mp3 xiaobao/voice/horn.mp3
-              echo "GitHub Pages 1.4.0 and live horn MP3 verified"
+              curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/pickDad.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-dad.mp3
+              cmp /tmp/xiaobao-live-dad.mp3 xiaobao/voice/pickDad.mp3
+              echo "GitHub Pages 1.4.1 and live horn MP3 verified"
               exit 0
             fi
             sleep 10
