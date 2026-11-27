@@ -48,6 +48,11 @@ jobs:
                   for key in ['welcome','driver','approach','arrive','doors','trainReal','metro','bus','pass','depart']:
                       hear(key)
                   assert '开往彩虹车站' in page.locator('#radio-caption').inner_text()
+                  page.locator('#music').tap()
+                  page.wait_for_function("!music.paused && music.currentTime > 0.2")
+                  hear('welcome')
+                  assert page.evaluate('music.paused')
+                  page.locator('#music').tap()
                   page.locator('#sound').tap()
                   page.locator('[data-clip=welcome]').tap()
                   assert page.evaluate('testPlayer.paused') and '声音已关' in page.locator('#voice-status').inner_text()
@@ -71,6 +76,23 @@ jobs:
                   page.wait_for_function("testPlayer.currentSrc.endsWith('/grandma.mp3') && testPlayer.currentTime > 0.15")
                   page.locator('#pause').tap()
                   assert page.evaluate('testPlayer.paused')
+                  page.locator('#resume').tap()
+                  page.locator('#blocks').tap()
+                  page.locator('[data-action=drop]').tap()
+                  assert page.locator('#score b').inner_text() == '1'
+                  page.locator('#balls').tap()
+                  frog = page.locator('.marble.frog').last
+                  frog.tap()
+                  page.wait_for_function("!document.querySelector('.projectile:not([hidden])')")
+                  for _ in range(24):
+                      if not page.locator('.marble:not(.empty)').count():
+                          break
+                      page.locator('#launcher').tap()
+                      page.wait_for_function("document.querySelector('#projectile').hidden")
+                  assert page.locator('.marble:not(.empty)').count() == 0
+                  page.locator('#launcher').tap()
+                  assert page.locator('.marble:not(.empty)').count() == 24
+                  assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
                   server.shutdown()
                   server.server_close()
                   with socket.socket() as probe:
@@ -87,6 +109,6 @@ jobs:
                       hear(key)
                   bounds = page.evaluate("""async () => {const r=await fetch('./voice/welcome.mp3',{headers:{Range:'bytes=0-1'}});return [r.status,(await r.arrayBuffer()).byteLength]}""")
                   assert bounds == [206,2] and not errors, (bounds,errors)
-                  print(engine, profile, 'PASS: six voices on tap and after offline restart; mute, switch, pause, driver and byte ranges')
+                  print(engine, profile, 'PASS: local recordings, background music, mute, pickup trip, frog removal, clean board and offline restart')
                   browser.close()
           PY
