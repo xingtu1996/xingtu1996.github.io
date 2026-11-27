@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="application-version" content="1.4.0">
+  <meta name="application-version" content="1.4.1">
   <meta name="theme-color" content="#e2f5df">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="小包乐园">
@@ -327,6 +327,7 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 
 @media (min-width:900px) and (orientation:landscape){.trip-settings{grid-column:1 / -1}.trip-choices button{min-height:52px}}
 .audio-settings{display:flex;justify-content:center;margin-top:12px}.audio-settings button{min-height:44px;padding:0 16px;border:1px solid #b9ceba;border-radius:14px;background:#fffdf4}.audio-settings button[aria-pressed=true]{background:#c7ebc0}
+.block-message{text-align:center;min-height:24px;margin:5px 0 0;color:#2b7259;font-size:14px;font-weight:750}.tile.ghost{outline:2px dashed #478757;outline-offset:-3px}
 </style>
   <title>小包乐园</title>
 </head>
@@ -361,9 +362,10 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
         <h2 id="game-title">动物方块</h2>
         <span id="score" class="score" aria-label="获得 0 颗星"><span aria-hidden="true">★</span> <b>0</b></span>
       </div>
-      <p id="tip" class="tip">把方块拼满一整排</p>
+      <p id="tip" class="tip">点「落下」，让小动物坐到亮格子里</p>
       <div id="blocks-stage" class="stage">
         <div id="grid" class="block-grid" aria-label="方块棋盘"></div>
+        <p id="block-message" class="block-message" aria-live="polite">小熊准备好啦！</p>
       </div>
       <div id="balls-stage" class="stage marble-stage" hidden>
         <div id="marbles" class="marble-grid" role="group" aria-label="选择一颗动物弹珠"></div>
@@ -491,7 +493,7 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 <script>
 "use strict";
 
-function createRailway({ unlock, soundOn, checkChime, onBroadcast }) {
+function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
   const scene = document.getElementById("rail-scene");
   const train = document.getElementById("train");
   const status = document.getElementById("rail-state");
@@ -537,7 +539,18 @@ function createRailway({ unlock, soundOn, checkChime, onBroadcast }) {
     "outbound": "宝宝跟妈妈出门啦！小小车票，拿好啦。",
     "quiet": "我们坐好啦。在车厢里，轻轻说话。",
     "shanghaiTrip": "女士们，先生们，列车即将发车。本次列车开往上海。",
-    "shanghaiEnd": "上海到了，请准备下车。"
+    "shanghaiEnd": "上海到了，请准备下车。",
+    "pickGrandma": "出发去接奶奶啦！",
+    "pickNana": "我们去接姥姥啦！",
+    "pickDad": "好呀，一起去接爸爸！",
+    "pickGrandpa": "我们去接爷爷啦！",
+    "pickTeam": "和家人一起出发，去接爸爸！",
+    "pickSend": "我们去车站送妈妈。",
+    "pickParents": "和爸爸妈妈一起坐高铁吧！",
+    "pickGrands": "和爷爷奶奶一起坐高铁吧！",
+    "pickOutbound": "拿好车票，出门旅行啦！",
+    "pickBaby": "宝宝，准备坐火车啦！",
+    "pickTogether": "和妈妈一起坐高铁回家吧！"
 };
   let activeMode = "";
   let paused = false;
@@ -559,6 +572,7 @@ function createRailway({ unlock, soundOn, checkChime, onBroadcast }) {
   function silence() {
     playId++;
     player.onended = null;
+    player.onerror = null;
     player.pause();
     onBroadcast(false);
   }
@@ -597,6 +611,7 @@ function createRailway({ unlock, soundOn, checkChime, onBroadcast }) {
       if (following && !paused && soundOn()) broadcast(following);
       else onBroadcast(false);
     };
+    player.onerror = reportFailure;
     player.play().catch(reportFailure);
   }
 
@@ -647,12 +662,15 @@ function createRailway({ unlock, soundOn, checkChime, onBroadcast }) {
         break;
       case "fast":
         speed++;
+        driveCue("up");
         break;
       case "slow":
         speed--;
+        driveCue("down");
         break;
       case "stop":
         stop(false);
+        driveCue("down");
         break;
       case "door":
         doorsOpen = !doorsOpen;
@@ -664,6 +682,7 @@ function createRailway({ unlock, soundOn, checkChime, onBroadcast }) {
         break;
       case "signal":
         greenSignal = !greenSignal;
+        driveCue(greenSignal ? "up" : "down");
         break;
       case "ticket":
         ticketChecked = true;
@@ -700,12 +719,8 @@ function createRailway({ unlock, soundOn, checkChime, onBroadcast }) {
     }
     render();
     if (button.dataset.dest) broadcast(destination + "Trip");
-    else if (distance === 1 && doorsOpen) broadcast(family);
-    else {
-      silence();
-      trainCaption.hidden = false;
-      trainCaption.textContent = button.textContent.trim() + "，准备好就按发车。";
-    }
+    else if (distance === 1 && doorsOpen && isPickup()) broadcast(family);
+    else broadcast("pick" + family[0].toUpperCase() + family.slice(1));
   });
 
   return {
@@ -770,7 +785,6 @@ const marbleRows = 4;
 const defaultRoundMinutes = 3;
 const roundOptions = [3, 5, 10];
 const roundLength = byId("round-length");
-const fallInterval = 2_350;
 const shapes = [
   [[0, 0], [1, 0], [0, 1], [1, 1]],
   [[0, 0], [1, 0], [2, 0]],
@@ -797,7 +811,7 @@ const scoreValue = score.querySelector("b");
 const announcement = byId("announcement");
 const soundButton = byId("sound");
 const modeCopy = {
-  blocks: ["动物方块", "把方块拼满一整排"],
+  blocks: ["动物方块", "点「落下」，让小动物坐到亮格子里"],
   balls: ["弹珠消除", "点一颗小动物弹珠"],
   rail: ["开高铁", "小司机，按「发车」出发"],
   radio: ["车站广播", "选一段广播，听听车站在说什么"]
@@ -823,7 +837,6 @@ let mode = "blocks";
 let roundState = "playing";
 let roundMinutes = defaultRoundMinutes;
 let remaining;
-let fallElapsed = 0;
 let frameTime = null;
 let previousFocus = null;
 let blockBoard;
@@ -840,13 +853,21 @@ let output;
 const musicButton = byId("music");
 const music = document.createElement("audio");
 music.loop = true;
-let musicEnabled = false;
+let musicEnabled = true;
+let musicGain;
+let hasInteracted = false;
 let talking = false;
 
 function refreshMusic() {
   musicButton.textContent = musicEnabled ? "♫ 关背景音乐" : "♫ 开背景音乐";
   musicButton.setAttribute("aria-pressed", String(musicEnabled));
-  if (!musicEnabled || !soundEnabled || talking || roundState !== "playing" || document.hidden) {
+  if (!hasInteracted || !musicEnabled || !soundEnabled || roundState !== "playing" || document.hidden) {
+    music.pause();
+    return;
+  }
+  if (musicGain) {
+    musicGain.gain.setTargetAtTime(talking ? 0.055 : 0.28, audio.currentTime, 0.045);
+  } else if (talking) {
     music.pause();
     return;
   }
@@ -858,7 +879,7 @@ function refreshMusic() {
 
 musicButton.addEventListener("click", () => {
   musicEnabled = !musicEnabled;
-  if (musicEnabled && !soundEnabled) soundButton.click();
+  try { localStorage.setItem("playgarden-music", musicEnabled ? "on" : "off"); } catch {}
   refreshMusic();
 });
 
@@ -866,12 +887,14 @@ const railway = createRailway({
   unlock: unlockAudio,
   soundOn: () => soundEnabled,
   checkChime: () => playSound("reward"),
+  driveCue: playSound,
   onBroadcast: active => {
     talking = active;
     refreshMusic();
   }
 });
 try {
+  musicEnabled = localStorage.getItem("playgarden-music") !== "off";
   soundEnabled = localStorage.getItem("playgarden-sound") !== "muted";
   const previousRound = Number(localStorage.getItem("playgarden-round-minutes"));
   if (roundOptions.includes(previousRound)) roundMinutes = previousRound;
@@ -890,6 +913,7 @@ function refreshSoundButton() {
   soundButton.firstElementChild.textContent = soundEnabled ? "♫" : "♪×";
 }
 function unlockAudio() {
+  hasInteracted = true;
   if (!soundEnabled) return;
   const Audio = window.AudioContext || window.webkitAudioContext;
   if (!Audio) return;
@@ -899,6 +923,14 @@ function unlockAudio() {
       output = audio.createGain();
       output.gain.value = 0.32;
       output.connect(audio.destination);
+      try {
+        musicGain = audio.createGain();
+        musicGain.gain.value = 0.28;
+        audio.createMediaElementSource(music).connect(musicGain);
+        musicGain.connect(audio.destination);
+      } catch {
+        musicGain = null;
+      }
     }
     if (audio.state !== "running") audio.resume().catch(() => {});
   } catch {}
@@ -908,6 +940,8 @@ function playSound(effect) {
   const notes = {
     select: [479],
     move: [390],
+    up: [430, 575],
+    down: [460, 350],
     land: [330, 393],
     launch: [550, 680],
     reward: [523, 659, 784]
@@ -942,6 +976,12 @@ soundButton.addEventListener("click", () => {
     railway.silence();
     if (output) output.gain.value = 0;
   }
+  refreshMusic();
+});
+
+document.querySelector(".playgarden").addEventListener("click", event => {
+  if (!event.isTrusted || !event.target.closest("button, summary")) return;
+  if (!hasInteracted) unlockAudio();
   refreshMusic();
 });
 
@@ -983,7 +1023,7 @@ function resetBlocks() {
   blockBoard = Array.from({ length: blockRows }, emptyRow);
   blockBoard[blockRows - 1] = [4, 4, null, null, 2, 2];
   piece = spawnBlock(shapes[0], 0);
-  fallElapsed = 0;
+  byId("block-message").textContent = "小熊准备好啦！";
 }
 function fits(test) {
   return test.shape.every(([dx, dy]) => {
@@ -1022,16 +1062,21 @@ function lockPiece() {
   const cleared = blockRows - incomplete.length;
   if (cleared) {
     blockBoard = [...Array.from({ length: cleared }, emptyRow), ...incomplete];
-    reward(cleared === 1 ? "消掉一排，得到一颗星！" : `消掉 ${cleared} 排！`, cleared);
+    const message = cleared === 1 ? "消掉一排，得到一颗星！" : `消掉 ${cleared} 排！`;
+    byId("block-message").textContent = message;
+    reward(message, cleared);
+    if (!reducedMotion.matches && grid.animate) {
+      grid.animate([{ backgroundColor: "#b9efc4" }, { backgroundColor: "transparent" }], 420);
+    }
   } else {
     playSound("land");
+    byId("block-message").textContent = "放好啦！选个位置，再放一个。";
   }
   piece = spawnBlock();
   if (!fits(piece)) {
     resetBlocks();
-    announcement.textContent = "积木铺满了，新的方块来了。";
+    byId("block-message").textContent = "积木铺满啦，又来一盘！";
   }
-  fallElapsed = 0;
 }
 function rotateBlock() {
   const bottom = Math.max(...piece.shape.map(([, y]) => y));
@@ -1247,14 +1292,7 @@ function tick(now) {
     const elapsed = frameTime === null ? 0 : now - frameTime;
     remaining -= elapsed;
     if (remaining <= 0) showRest(true);
-    else if (mode === "blocks") {
-      fallElapsed += elapsed;
-      if (fallElapsed >= fallInterval) {
-        fallElapsed = 0;
-        if (!placeBlock({ ...piece, y: piece.y + 1 })) lockPiece();
-        drawBlocks();
-      }
-    } else if (mode === "rail") {
+    else if (mode === "rail") {
       railway.tick(elapsed);
     }
   }
@@ -1272,7 +1310,7 @@ async function prepareOffline() {
     const registration = await navigator.serviceWorker.register("./sw.js");
     let worker = registration.installing || registration.waiting || registration.active;
     const refresh = () => {
-      if (navigator.serviceWorker.controller) status.textContent = "✓ 可离线游玩";
+      if (navigator.serviceWorker.controller && !registration.installing && !registration.waiting) status.textContent = "✓ 可离线游玩";
       else if (worker?.state === "redundant") status.textContent = "离线准备失败，刷新后重试";
     };
     navigator.serviceWorker.addEventListener("controllerchange", refresh);
