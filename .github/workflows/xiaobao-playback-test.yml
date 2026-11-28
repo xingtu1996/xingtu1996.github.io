@@ -64,7 +64,7 @@ jobs:
                           assert rect and rect['y'] + rect['height'] <= 568 and rect['height'] >= 44, (profile,name,rect)
                       page.set_viewport_size(size)
                   first_screen()
-                  page.locator('#station-recordings summary').tap()
+                  page.locator('#station-recordings > summary').tap()
                   def hear(key):
                       page.locator('[data-clip="'+key+'"]').tap()
                       page.wait_for_function("key => testPlayer.currentSrc.endsWith('/'+key+'.mp3') && !testPlayer.paused && testPlayer.currentTime > 0.2", arg=key, timeout=9000)
@@ -166,7 +166,7 @@ jobs:
                   page.locator('[data-family=dad]').tap()
                   page.wait_for_function("testPlayer.currentSrc.endsWith('/pickDad.mp3') && testPlayer.currentTime > 0.12")
                   page.locator('#radio').tap()
-                  page.locator('#station-recordings summary').tap()
+                  page.locator('#station-recordings > summary').tap()
                   for key in ['depart','approach','arrive','doors','driver','trainReal','metro','bus','pass']:
                       hear(key)
                   bounds = page.evaluate("""async () => {const r=await fetch('./voice/welcome.mp3',{headers:{Range:'bytes=0-1'}});return [r.status,(await r.arrayBuffer()).byteLength]}""")
