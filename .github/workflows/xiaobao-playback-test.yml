@@ -140,7 +140,31 @@ jobs:
                   page.locator('#launcher').tap()
                   assert page.locator('.marble:not(.empty)').count() == 24
                   assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
-                  page.locator('#parent-close').tap()
+                  page.locator('#candy').tap()
+                  for level in range(1,7):
+                      assert f'第 {level} 关' in page.locator('#ball-hint').inner_text()
+                      assert page.evaluate("""() => {
+                          while (marbleBoard.some(value => value !== null)) {
+                              const index = marbleBoard.findIndex(value => value !== null);
+                              finishShot(matchingGroup(index), index);
+                          }
+                          return marbleBoard.every(value => value === null);
+                      }""")
+                      page.locator('#launcher').tap()
+                  page.locator('#draw').tap()
+                  canvas = page.locator('#drawing')
+                  box = canvas.bounding_box()
+                  page.mouse.move(box['x']+30,box['y']+30)
+                  page.mouse.down()
+                  page.mouse.move(box['x']+70,box['y']+70)
+                  page.mouse.up()
+                  assert page.evaluate("ink.getImageData(0,0,drawing.width,drawing.height).data.some((v,i) => i%4===3 && v>0)")
+                  page.locator('#draw-prompt').tap()
+                  page.locator('#draw-reveal').tap()
+                  assert '轮到' in page.locator('#draw-message').inner_text()
+                  page.locator('#draw-reveal').tap()
+                  assert '答案' in page.locator('#draw-message').inner_text()
+                  page.locator('#parent-open').tap()
                   page.locator('#voice-style').select_option('bright')
                   page.locator('#voice-preview').tap()
                   page.wait_for_function("testPlayer.currentSrc.endsWith('/brightHello.mp3') && testPlayer.currentTime > 0.10")
@@ -156,7 +180,7 @@ jobs:
                   page.locator('#lock-touch').uncheck()
                   assert not page.locator('.playgarden').evaluate("node => node.classList.contains('touch-locked')")
                   page.locator('#lock-touch').check()
-                  page.locator('#grownups summary').tap()
+                  page.locator('#parent-close').tap()
                   page.wait_for_function("!document.querySelector('#mother-number').value")
                   if engine == 'chromium':
                       page.locator('#parent-open').tap()
