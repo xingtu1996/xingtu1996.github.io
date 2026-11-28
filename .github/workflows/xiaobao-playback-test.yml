@@ -62,7 +62,15 @@ jobs:
                           page.evaluate("window.scrollTo(0, 0)")
                           rect = page.locator(control).bounding_box()
                           assert rect and rect['y'] + rect['height'] <= 568 and rect['height'] >= 44, (profile,name,rect)
+                      page.set_viewport_size({"width": 1024, "height": 568})
+                      page.locator('#blocks').tap()
+                      page.evaluate("window.scrollTo(0, 0)")
+                      for selector in ['#grid','#block-message','[data-action=drop]']:
+                          rect = page.locator(selector).bounding_box()
+                          assert rect and rect['y'] + rect['height'] <= 568, (profile,'tablet landscape',selector,rect)
                       page.set_viewport_size(size)
+                      page.locator('#radio').tap()
+                      page.evaluate("window.scrollTo(0,0)")
                   first_screen()
                   page.locator('#station-recordings > summary').tap()
                   def hear(key):
