@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="application-version" content="1.6.0">
+  <meta name="application-version" content="1.7.0">
   <meta name="theme-color" content="#e2f5df">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="小宝乐园">
@@ -429,6 +429,30 @@ dialog.grownups::backdrop{background:#17312775}
 @media (max-width:699px){.hero{padding-right:140px}.hero h1{font-size:clamp(18px,5vw,24px)}.mode{gap:2px}.modes{gap:3px}.mode-icon{scale:.85}.round-setting{margin:0}}
 @media (min-width:700px) and (orientation:landscape){.mascots{right:150px}.game[data-mode="blocks"]{--cell:clamp(22px,calc((100svh - 340px)/8),64px)}}
 @media (prefers-reduced-motion:reduce){#radio-stage.speaking .radio-display img{animation:none}}
+
+.modes{grid-template-columns:repeat(7,minmax(0,1fr))}
+#instruments .mode-icon{font-size:20px}
+#art-open,#art-exit,.instrument-picker button,#listen-melody{min-height:44px;border:1px solid #b7d3bb;border-radius:12px;background:#e8f4db;padding:4px 12px;color:#26513e}
+#art-open{display:block;margin:0 auto 7px}
+#art-room{position:fixed;inset:0;margin:0;border:0;box-sizing:border-box;width:100%;height:100%;height:100dvh;max-width:none;max-height:none;padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left));background:#edf4e5;color:#25463e;overflow:hidden;touch-action:none;overscroll-behavior:none}
+#art-room[open]{display:grid;grid-template-rows:auto minmax(0,1fr);gap:5px}
+#art-room::backdrop{background:#edf4e5}
+.art-room-bar{display:flex;align-items:center;justify-content:space-between;padding-inline:6px}
+#art-room-paper,#art-room #art-paper{min-height:0;height:100%}
+#art-room #art-paper{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:5px}
+#art-room #drawing{height:100%;width:100%;max-height:none;min-height:0;aspect-ratio:auto}
+#art-room .art-tools{max-height:40dvh;overflow:auto}
+#art-room .drawing-buttons{margin-top:4px}
+.art-tools .drawing-buttons button{min-height:44px}
+.instrument-picker{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.instrument-picker button[aria-pressed="true"]{background:#c4e6b9;border-color:#7bb18b}
+.keys{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;margin:10px 0;touch-action:none}
+.keys button{min-width:0;min-height:clamp(95px,28svh,220px);padding:0 1px 9px;display:grid;align-items:end;border:1px solid #47645665;border-radius:9px;background:var(--key-color);color:#293c37;box-shadow:0 4px 0 #42644845;font-size:clamp(12px,3vw,18px);user-select:none;touch-action:none}
+.keys button.key-struck{box-shadow:inset 0 0 0 3px #367050;transform:translateY(3px)}
+#listen-melody{display:block;margin:auto}
+#instrument-status{text-align:center;min-height:21px;margin:5px 0 0}
+@media(max-width:480px){.modes{grid-template-columns:repeat(4,minmax(0,1fr))}.mode{min-height:44px}.mode-icon{height:20px}.keys{grid-template-columns:repeat(4,minmax(0,1fr))}.keys button{min-height:clamp(55px,13svh,92px)}.game[data-mode="blocks"]{--cell:clamp(20px,min(calc((100vw - 68px)/6),calc((100svh - 400px)/8)),50px)}}
+@media(orientation:landscape) and (min-width:700px){#art-room #art-paper{grid-template-columns:minmax(0,1fr) 154px;grid-template-rows:minmax(0,1fr)}#art-room .art-tools{max-height:100%;align-self:center}}
 </style>
   <title>小宝乐园</title>
 </head>
@@ -459,6 +483,7 @@ dialog.grownups::backdrop{background:#17312775}
       <button id="radio" type="button" class="mode" aria-pressed="false"><span class="mode-symbol" aria-hidden="true">🎙</span>广播</button>
       <button type="button" id="candy" class="mode" aria-pressed="false"><span class="mode-icon" aria-hidden="true">🍬</span>糖果</button>
       <button type="button" id="draw" class="mode" aria-pressed="false"><span class="mode-icon" aria-hidden="true">🖌️</span>画画</button>
+      <button type="button" id="instruments" class="mode" aria-pressed="false"><span class="mode-icon" aria-hidden="true">🎹</span>乐器</button>
     </nav>
 
     <section class="game" aria-labelledby="game-title">
@@ -574,19 +599,45 @@ dialog.grownups::backdrop{background:#17312775}
       </div>
 
       <section id="draw-stage" hidden aria-label="毛笔画板">
-        <canvas id="drawing" width="720" height="420" aria-label="用手指画画"></canvas>
+        <button type="button" id="art-open">⛶ 全屏画画</button>
+        <div id="drawing-home">
+          <div id="art-paper">
+            <canvas id="drawing" width="720" height="420" aria-label="用手指画画"></canvas>
+            <div class="art-tools">
         <div class="drawing-buttons" id="drawing-colors" role="group" aria-label="毛笔颜色">
           <button type="button" data-color="#273244" aria-label="墨黑" aria-pressed="true">⚫</button>
           <button type="button" data-color="#bf5573" aria-label="粉色" aria-pressed="false">🌸</button>
           <button type="button" data-color="#3578ad" aria-label="蓝色" aria-pressed="false">💧</button>
           <button type="button" data-color="#4c8951" aria-label="绿色" aria-pressed="false">🌿</button>
-          <button type="button" id="erase-drawing">擦掉</button>
+          <button type="button" data-color="#e28748" aria-label="橙色" aria-pressed="false">🍊</button>
+          <button type="button" data-color="#e5b728" aria-label="黄色" aria-pressed="false">⭐</button>
+          <button type="button" data-color="#8861b2" aria-label="紫色" aria-pressed="false">🍇</button>
+          <button type="button" data-color="#a35432" aria-label="棕色" aria-pressed="false">🌰</button>
+        </div>
+        <div class="drawing-buttons" id="drawing-brushes" role="group" aria-label="画笔粗细">
+          <button type="button" data-width="0.65" aria-pressed="false">细笔</button>
+          <button type="button" data-width="1" aria-pressed="true">毛笔</button>
+          <button type="button" data-width="2" aria-pressed="false">粗笔</button>
+          <button type="button" id="erase-drawing">清空</button>
+        </div>
+            </div>
+          </div>
         </div>
         <div class="drawing-buttons">
           <button type="button" id="draw-prompt">🎲 抽题</button>
           <button type="button" id="draw-reveal" disabled>👀 看答案</button>
         </div>
         <p id="draw-message" role="status"></p>
+      </section>
+      <section id="instruments-stage" hidden aria-label="乐器">
+        <div id="instrument-picker" class="instrument-picker" role="group" aria-label="选择乐器">
+          <button type="button" data-instrument="piano" aria-pressed="true">🎹 钢琴</button>
+          <button type="button" data-instrument="bells" aria-pressed="false">🎵 木琴</button>
+          <button type="button" data-instrument="drums" aria-pressed="false">🥁 小鼓</button>
+        </div>
+        <div id="keys" class="keys" role="group" aria-label="琴键"></div>
+        <button id="listen-melody" type="button">♫ 听一小段</button>
+        <p id="instrument-status" role="status"></p>
       </section>
       <div id="cover" class="cover" hidden>
         <div class="rest-card">
@@ -607,6 +658,10 @@ dialog.grownups::backdrop{background:#17312775}
       <span id="announcement" class="sr-only" role="status"></span>
     </section>
 
+    <dialog id="art-room" aria-label="全屏画室">
+      <div class="art-room-bar"><strong>画画</strong><button type="button" id="art-exit">↙ 退出全屏</button></div>
+      <div id="art-room-paper"></div>
+    </dialog>
     <dialog id="grownups" class="grownups" aria-labelledby="parent-title">
       <header><h2 id="parent-title">家长设置</h2><button type="button" id="parent-close" aria-label="关闭家长设置">✕</button></header>
       <button type="button" id="music" aria-pressed="false">♫ 开背景音乐</button>
@@ -1044,7 +1099,8 @@ const modeCopy = {
   blocks: ["动物方块", "点棋盘移动，往下拖就落下"],
   balls: ["弹珠消除", "点相邻的小动物，单颗也能消"],
   candy: ["糖果岛", "点糖果收进罐里，整盘都能收完"],
-  draw: ["毛笔画板", "手指画一画，也可以和家人轮流猜"],
+  draw: ["毛笔画板", "选一种颜色，手指画一画"],
+  instruments: ["小小音乐家", "点琴键，也可以滑着弹"],
   rail: ["开高铁", "小司机，按「发车」出发"],
   radio: ["车站广播", "选一段广播，听听车站在说什么"]
 };
@@ -1100,7 +1156,7 @@ let talking = false;
 function refreshMusic() {
   musicButton.textContent = musicEnabled ? "♫ 关背景音乐" : "♫ 开背景音乐";
   musicButton.setAttribute("aria-pressed", String(musicEnabled));
-  if (!hasInteracted || !musicEnabled || !soundEnabled || roundState !== "playing" || document.hidden || parentPanel.open) {
+  if (!hasInteracted || !musicEnabled || !soundEnabled || roundState !== "playing" || document.hidden || parentPanel.open || mode === "instruments") {
     music.pause();
     return;
   }
@@ -1213,6 +1269,7 @@ soundButton.addEventListener("click", () => {
     playSound("select");
   } else {
     railway.silence();
+    stopInstrument();
     stopPractice();
     if (output) output.gain.value = 0;
   }
@@ -1303,6 +1360,7 @@ practice.addEventListener("reset", () => {
 });
 byId("parent-open").addEventListener("click", () => {
   railway.silence();
+  stopInstrument();
   parentPanel.showModal();
   refreshMusic();
 });
@@ -1356,6 +1414,65 @@ const drawing = byId("drawing");
 const ink = drawing.getContext("2d");
 let paintColor = "#273244";
 let brush = null;
+let brushWidth = 1;
+const artRoom = byId("art-room");
+const artPaper = byId("art-paper");
+const drawingHome = byId("drawing-home");
+const artOpen = byId("art-open");
+artOpen.addEventListener("click", () => {
+  if (roundState !== "playing" || artRoom.open) return;
+  artRoom.showModal();
+  byId("art-room-paper").append(artPaper);
+  byId("art-exit").focus({ preventScroll: true });
+});
+byId("art-exit").addEventListener("click", () => artRoom.close());
+artRoom.addEventListener("close", () => {
+  brush = null;
+  drawingHome.append(artPaper);
+  if (roundState === "playing") artOpen.focus({ preventScroll: true });
+});
+for (const type of ["touchstart", "gesturestart"]) {
+  artRoom.addEventListener(type, event => {
+    if (event.cancelable && (type === "gesturestart" || event.touches.length > 1)) {
+      brush = null;
+      event.preventDefault();
+    }
+  }, { passive: false });
+}
+let originalArt = null;
+let artDirty = false;
+const paperObserver = new ResizeObserver(() => {
+  const rect = drawing.getBoundingClientRect();
+  if (rect.width < 1 || rect.height < 1) return;
+  const density = Math.min(window.devicePixelRatio || 1, 2);
+  const width = Math.round(rect.width * density);
+  const height = Math.round(rect.height * density);
+  if (width === drawing.width && height === drawing.height) return;
+  brush = null;
+  if (artDirty) {
+    originalArt = document.createElement("canvas");
+    originalArt.width = drawing.width;
+    originalArt.height = drawing.height;
+    originalArt.getContext("2d").drawImage(drawing, 0, 0);
+    artDirty = false;
+  }
+  drawing.width = width;
+  drawing.height = height;
+  if (!originalArt) return;
+  const scale = Math.min(width / originalArt.width, height / originalArt.height);
+  const artWidth = originalArt.width * scale;
+  const artHeight = originalArt.height * scale;
+  ink.drawImage(originalArt, (width - artWidth) / 2, (height - artHeight) / 2, artWidth, artHeight);
+});
+paperObserver.observe(drawing);
+for (const option of byId("drawing-brushes").querySelectorAll("[data-width]")) {
+  option.addEventListener("click", () => {
+    brushWidth = Number(option.dataset.width);
+    for (const button of byId("drawing-brushes").querySelectorAll("[data-width]")) {
+      button.setAttribute("aria-pressed", String(button === option));
+    }
+  });
+}
 for (const color of byId("drawing-colors").querySelectorAll("[data-color]")) {
   color.addEventListener("click", () => {
     paintColor = color.dataset.color;
@@ -1376,7 +1493,8 @@ drawing.addEventListener("pointerdown", event => {
   brush = { ...point, id: event.pointerId };
   ink.fillStyle = paintColor;
   ink.beginPath();
-  ink.arc(point.x, point.y, 5, 0, Math.PI * 2);
+  artDirty = true;
+  ink.arc(point.x, point.y, 5 * brushWidth, 0, Math.PI * 2);
   ink.fill();
 });
 drawing.addEventListener("pointermove", event => {
@@ -1385,8 +1503,8 @@ drawing.addEventListener("pointermove", event => {
   const speed = Math.hypot(point.x - brush.x, point.y - brush.y);
   ink.strokeStyle = paintColor;
   ink.lineCap = "round";
-  ink.lineWidth = event.pointerType === "pen" && event.pressure
-    ? 4 + event.pressure * 16 : Math.max(4, 14 - speed * 0.17);
+  ink.lineWidth = brushWidth * (event.pointerType === "pen" && event.pressure
+    ? 4 + event.pressure * 16 : Math.max(4, 14 - speed * 0.17));
   ink.beginPath();
   ink.moveTo(brush.x, brush.y);
   ink.lineTo(point.x, point.y);
@@ -1395,7 +1513,11 @@ drawing.addEventListener("pointermove", event => {
 });
 drawing.addEventListener("lostpointercapture", () => { brush = null; });
 drawing.addEventListener("pointercancel", () => { brush = null; });
-byId("erase-drawing").addEventListener("click", () => ink.clearRect(0, 0, drawing.width, drawing.height));
+byId("erase-drawing").addEventListener("click", () => {
+  originalArt = null;
+  artDirty = false;
+  ink.clearRect(0, 0, drawing.width, drawing.height);
+});
 const drawingPrompts = ["🚄 高铁", "🎈 气球", "🍎 苹果", "🐱 小猫", "☀️ 太阳", "🚗 小汽车", "🐟 小鱼"];
 let drawingPrompt = -1;
 byId("draw-prompt").addEventListener("click", () => {
@@ -1413,6 +1535,113 @@ byId("draw-reveal").addEventListener("click", event => {
     message.textContent = "轮到另一位猜啦！";
     event.currentTarget.textContent = "👀 看答案";
   }
+});
+
+const keys = byId("keys");
+const pitches = [261.626,293.665,329.628,349.228,391.995,440,493.883,523.251];
+const keyNames = ["哆","来","咪","发","嗦","拉","西","高音哆"];
+const keyButtons = keyNames.map((name, index) => {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.dataset.note = String(index);
+  button.style.setProperty("--key-color", ["#f5c5bb","#f8d5a6","#f9e9a9","#cceab5","#bbe4df","#c5dafa","#ddcef5","#f4cade"][index]);
+  button.textContent = name;
+  keys.append(button);
+  return button;
+});
+const instrumentNames = { piano: "钢琴", bells: "木琴", drums: "小鼓" };
+let instrument = "piano";
+const liveNotes = new Set();
+const pressedPointers = new Map();
+let melodyTimers = [];
+let keyFeedback = new Map();
+function stopInstrument() {
+  for (const timer of melodyTimers) clearTimeout(timer);
+  melodyTimers = [];
+  for (const node of liveNotes) { try { node.stop(); } catch {} }
+  for (const [key, timer] of keyFeedback) {
+    clearTimeout(timer);
+    key.classList.remove("key-struck");
+  }
+  keyFeedback.clear();
+  pressedPointers.clear();
+}
+function playNote(index) {
+  if (mode !== "instruments" || roundState !== "playing") return;
+  const key = keyButtons[index];
+  clearTimeout(keyFeedback.get(key));
+  key.classList.add("key-struck");
+  keyFeedback.set(key, setTimeout(() => {
+    key.classList.remove("key-struck");
+    keyFeedback.delete(key);
+  }, 210));
+  unlockAudio();
+  if (!soundEnabled) {
+    byId("instrument-status").textContent = "声音已关";
+    return;
+  }
+  if (!audio || !output) {
+    byId("instrument-status").textContent = "这个浏览器暂时无法发声";
+    return;
+  }
+  byId("instrument-status").textContent = instrumentNames[instrument] + " · " + keyNames[index];
+  const now = audio.currentTime;
+  const harmonics = instrument === "piano" ? [1, 2, 3] : instrument === "bells" ? [1, 3.99] : [1];
+  for (const [part, ratio] of harmonics.entries()) {
+    if (liveNotes.size >= 18) { try { liveNotes.values().next().value.stop(); } catch {} break; }
+    const oscillator = audio.createOscillator();
+    const envelope = audio.createGain();
+    const length = instrument === "drums" ? .24 : instrument === "bells" ? .43 : .55;
+    oscillator.type = instrument === "drums" ? "triangle" : "sine";
+    const pitch = instrument === "drums" ? 95 + index * 17 : pitches[index] * ratio;
+    oscillator.frequency.setValueAtTime(pitch, now);
+    if (instrument === "drums") oscillator.frequency.exponentialRampToValueAtTime(pitch * .42, now + .14);
+    envelope.gain.setValueAtTime(.001, now);
+    envelope.gain.exponentialRampToValueAtTime(.29 / (part * 2 + 1), now + .012);
+    envelope.gain.exponentialRampToValueAtTime(.001, now + length);
+    oscillator.connect(envelope);
+    envelope.connect(output);
+    liveNotes.add(oscillator);
+    oscillator.onended = () => { liveNotes.delete(oscillator); oscillator.disconnect(); envelope.disconnect(); };
+    oscillator.start(now);
+    oscillator.stop(now + length + .015);
+  }
+}
+byId("instrument-picker").addEventListener("click", event => {
+  const option = event.target.closest("[data-instrument]");
+  if (!option) return;
+  stopInstrument();
+  instrument = option.dataset.instrument;
+  for (const button of byId("instrument-picker").querySelectorAll("button")) {
+    button.setAttribute("aria-pressed", String(button === option));
+  }
+  playNote(0);
+});
+keys.addEventListener("pointerdown", event => {
+  const note = event.target.closest("[data-note]");
+  if (!note || event.button !== 0) return;
+  keys.setPointerCapture(event.pointerId);
+  pressedPointers.set(event.pointerId, note);
+  playNote(Number(note.dataset.note));
+});
+keys.addEventListener("pointermove", event => {
+  if (!pressedPointers.has(event.pointerId)) return;
+  const note = document.elementFromPoint(event.clientX, event.clientY)?.closest("[data-note]");
+  if (note === pressedPointers.get(event.pointerId)) return;
+  pressedPointers.set(event.pointerId, note);
+  if (note) playNote(Number(note.dataset.note));
+});
+for (const type of ["lostpointercapture", "pointercancel"]) {
+  keys.addEventListener(type, event => pressedPointers.delete(event.pointerId));
+}
+keys.addEventListener("click", event => {
+  const note = event.target.closest("[data-note]");
+  if (event.detail === 0 && note) playNote(Number(note.dataset.note));
+});
+byId("listen-melody").addEventListener("click", () => {
+  stopInstrument();
+  playNote(0);
+  melodyTimers = [2, 4, 2, 1, 0].map((note, index) => setTimeout(() => playNote(note), 260 * (index + 1)));
 });
 
 const recordStart = byId("record-start");
@@ -1770,6 +1999,7 @@ function showMode(next, withSound = true) {
   gesture = null;
   if (next !== mode) {
     if (isMatch(mode)) savedBoards[mode] = { board: marbleBoard, level: layoutIndex };
+    if (mode === "instruments") stopInstrument();
     mode = next;
     if (isMatch(mode)) {
       const saved = savedBoards[mode];
@@ -1792,6 +2022,7 @@ function showMode(next, withSound = true) {
   blockStage.hidden = controls.hidden = mode !== "blocks";
   ballStage.hidden = byId("ball-hint").hidden = !isMatch(mode);
   byId("draw-stage").hidden = mode !== "draw";
+  byId("instruments-stage").hidden = mode !== "instruments";
   byId("railway").hidden = mode !== "rail";
   byId("radio-stage").hidden = mode !== "radio";
   score.hidden = mode !== "blocks" && !isMatch(mode);
@@ -1805,6 +2036,8 @@ function showMode(next, withSound = true) {
 for (const key of Object.keys(modeCopy)) byId(key).addEventListener("click", () => showMode(key));
 
 function showRest(ended) {
+  if (artRoom.open) artRoom.close();
+  stopInstrument();
   previousFocus = document.activeElement;
   roundState = ended ? "ended" : "paused";
   railway.setPaused(true);
@@ -1813,7 +2046,7 @@ function showRest(ended) {
   byId("rest-title").textContent = ended ? "玩得真棒！" : "休息一下";
   byId("rest-note").textContent = ended ? "和小动物一起休息一下吧。" : "等你回来继续玩。";
   byId("resume").textContent = ended ? "再玩一轮" : "继续玩";
-  for (const element of [blockStage, ballStage, controls, byId("railway"), byId("radio-stage"), byId("draw-stage")]) element.inert = true;
+  for (const element of [blockStage, ballStage, controls, byId("railway"), byId("radio-stage"), byId("draw-stage"), byId("instruments-stage")]) element.inert = true;
   for (const id of [...Object.keys(modeCopy), "pause"]) byId(id).disabled = true;
   cover.hidden = false;
   byId("resume").focus({ preventScroll: true });
@@ -1828,7 +2061,7 @@ byId("resume").addEventListener("click", () => {
   roundState = "playing";
   frameTime = null;
   cover.hidden = true;
-  for (const element of [blockStage, ballStage, controls, byId("railway"), byId("radio-stage"), byId("draw-stage")]) element.inert = false;
+  for (const element of [blockStage, ballStage, controls, byId("railway"), byId("radio-stage"), byId("draw-stage"), byId("instruments-stage")]) element.inert = false;
   railway.setPaused(false);
   refreshMusic();
   for (const id of [...Object.keys(modeCopy), "pause"]) byId(id).disabled = false;
@@ -1900,7 +2133,7 @@ async function prepareOffline() {
 refreshSoundButton();
 resetBlocks();
 resetMarbles();
-showMode(({ "#radio": "radio", "#rail": "rail", "#candy": "candy", "#draw": "draw" })[location.hash] || "blocks", false);
+showMode(({ "#radio": "radio", "#rail": "rail", "#candy": "candy", "#draw": "draw", "#instruments": "instruments" })[location.hash] || "blocks", false);
 byId("preview-help").hidden = true;
 requestAnimationFrame(tick);
 prepareOffline();

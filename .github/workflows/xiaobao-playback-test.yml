@@ -70,7 +70,7 @@ jobs:
                   def first_screen():
                       size = page.viewport_size
                       page.set_viewport_size({"width": 320, "height": 568})
-                      for name, control in [('blocks','[data-action=drop]'),('balls','#launcher'),('rail','[data-rail=horn]'),('radio','[data-clip=welcome]'),('candy','#launcher'),('draw','#draw-prompt')]:
+                      for name, control in [('blocks','[data-action=drop]'),('balls','#launcher'),('rail','[data-rail=horn]'),('radio','[data-clip=welcome]'),('candy','#launcher'),('draw','#art-open'),('instruments','#listen-melody')]:
                           page.locator('#'+name).tap()
                           page.evaluate("window.scrollTo(0, 0)")
                           rect = page.locator(control).bounding_box()
@@ -189,6 +189,27 @@ jobs:
                   assert '轮到' in page.locator('#draw-message').inner_text()
                   page.locator('#draw-reveal').tap()
                   assert '答案' in page.locator('#draw-message').inner_text()
+                  page.locator('#art-open').tap()
+                  assert page.locator('#art-room').evaluate("room => room.open && room.getBoundingClientRect().top < 1")
+                  assert page.locator('#art-room [data-color]').count() == 8
+                  page.locator('#art-room [data-width="2"]').tap()
+                  assert page.locator('#art-room [data-width="2"]').get_attribute('aria-pressed') == 'true'
+                  page.wait_for_function("drawing.width > 0 && ink.getImageData(0,0,drawing.width,drawing.height).data.some((v,i) => i%4===3 && v>0)")
+                  page.locator('#art-exit').tap()
+                  page.wait_for_function("drawing.closest('#drawing-home') !== null && ink.getImageData(0,0,drawing.width,drawing.height).data.some((v,i) => i%4===3 && v>0)")
+                  page.locator('#instruments').tap()
+                  assert page.evaluate('music.paused')
+                  page.locator('[data-note="0"]').tap()
+                  assert '钢琴' in page.locator('#instrument-status').inner_text()
+                  assert page.evaluate('liveNotes.size > 0')
+                  page.locator('[data-instrument=bells]').tap()
+                  assert '木琴' in page.locator('#instrument-status').inner_text()
+                  page.locator('[data-instrument=drums]').tap()
+                  assert '小鼓' in page.locator('#instrument-status').inner_text()
+                  page.locator('#listen-melody').tap()
+                  page.wait_for_function("melodyTimers.length > 0")
+                  page.locator('#draw').tap()
+                  assert page.evaluate('melodyTimers.length === 0')
                   page.locator('#parent-open').tap()
                   page.locator('#voice-style').select_option('bright')
                   page.locator('#voice-preview').tap()
@@ -260,14 +281,14 @@ jobs:
         run: |
           set -eu
           for attempt in $(seq 1 20); do
-            if curl -fsSL "https://xingtu1996.github.io/xiaobao/?verify=${GITHUB_SHA}&attempt=$attempt" -o /tmp/xiaobao-live.html && grep -q 'application-version" content="1.6.0"' /tmp/xiaobao-live.html; then
+            if curl -fsSL "https://xingtu1996.github.io/xiaobao/?verify=${GITHUB_SHA}&attempt=$attempt" -o /tmp/xiaobao-live.html && grep -q 'application-version" content="1.7.0"' /tmp/xiaobao-live.html; then
               curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/horn.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-horn.mp3
               cmp /tmp/xiaobao-live-horn.mp3 xiaobao/voice/horn.mp3
               curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/pickDad.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-dad.mp3
               cmp /tmp/xiaobao-live-dad.mp3 xiaobao/voice/pickDad.mp3
               curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/softHello.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-hello.mp3
               cmp /tmp/xiaobao-live-hello.mp3 xiaobao/voice/softHello.mp3
-              echo "GitHub Pages 1.6.0 and live horn MP3 verified"
+              echo "GitHub Pages 1.7.0 and live horn MP3 verified"
               exit 0
             fi
             sleep 10
