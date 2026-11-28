@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="application-version" content="1.5.0">
+  <meta name="application-version" content="1.6.0">
   <meta name="theme-color" content="#e2f5df">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="小宝乐园">
@@ -392,6 +392,42 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
   .trip-settings summary{min-height:44px}
 }
 
+
+.hero{min-height:58px;padding-right:150px}.hero-copy{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.utilities{display:flex;gap:4px;right:5px;top:5px}.utility{width:44px;height:44px}
+.modes{grid-template-columns:repeat(6,minmax(0,1fr))}
+.mode{font-size:clamp(12px,3vw,17px);padding:4px 1px}
+.mode-icon{flex:0 0 auto}
+#candy .mode-icon,#draw .mode-icon{font-size:20px}
+.game[data-mode="blocks"]{display:block;--cell:clamp(23px,min(calc((100vw - 68px)/6),calc((100svh - 363px)/8)),56px)}
+.game[data-mode="blocks"] #controls{grid-template-columns:repeat(4,minmax(0,1fr));margin:7px auto 0;width:min(100%, 560px)}
+.game[data-mode="blocks"] .controls button{min-height:52px}
+.trip-settings h3{font-size:16px;margin:7px 0 3px}
+#trip-plan button{touch-action:none}
+.route-signs{display:flex;grid-column:1/-1;justify-content:space-between;color:#426858;font-size:12px}
+#route[data-phase="waiting"] .route-signs span:first-child,#route[data-phase="moving"] .route-signs span:nth-child(2),#route[data-phase="arrived"] .route-signs span:last-child{background:#cae8b9;border-radius:10px;padding:0 5px}
+.journey.drop-ready{outline:3px dashed #32895e;border-radius:8px}
+#radio-stage.speaking .radio-display img{animation:radio-nod .65s ease-in-out infinite alternate}
+@keyframes radio-nod{to{transform:translateY(-4px) rotate(6deg)}}
+.marble.match-hint{outline:2px dashed #916127;outline-offset:-3px}
+.candy-tile{display:grid;place-items:center;background:#ffe0e8;border-radius:14px;font-size:clamp(21px,6vw,34px)}
+.candy-1{background:#fff1af}.candy-2{background:#e8d9fa}.candy-3{background:#cfeec8}.candy-4{background:#f0daca}
+.projectile.candy-tile{font-size:17px}
+#drawing{display:block;box-sizing:border-box;width:100%;max-height:48svh;aspect-ratio:12/7;border:1px solid #d2dbc9;border-radius:16px;background:#fffdf8;touch-action:none}
+.drawing-buttons{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:7px}
+.drawing-buttons button{min-width:46px;padding:0 9px;border:1px solid #bad1bc;border-radius:12px;background:#f3f9eb}
+.drawing-buttons button[aria-pressed="true"]{outline:2px solid #307052;outline-offset:1px}
+#draw-message{margin:6px 0;text-align:center;font-weight:750}
+dialog.grownups{margin:auto;width:min(92vw,540px);max-height:88svh;overflow:auto;border:2px solid #fbfff8;padding:12px}
+dialog.grownups::backdrop{background:#17312775}
+.grownups>header{display:flex;align-items:center;justify-content:space-between}
+.grownups>header h2{margin:0;font-size:20px}.grownups>header button{min-width:44px}
+.local-recording{margin-top:12px;border-top:1px solid #bfd4be}.local-recording h3{margin:8px 0 2px}
+.local-recording audio{display:block;width:100%;margin:8px 0}
+.playgarden:has(dialog[open]) .rail-scene :is(.rail-hills,.rail-trees,.rail-track){animation-play-state:paused}
+@media (max-width:699px){.hero{padding-right:140px}.hero h1{font-size:clamp(18px,5vw,24px)}.mode{gap:2px}.modes{gap:3px}.mode-icon{scale:.85}.round-setting{margin:0}}
+@media (min-width:700px) and (orientation:landscape){.mascots{right:150px}.game[data-mode="blocks"]{--cell:clamp(22px,calc((100svh - 340px)/8),64px)}}
+@media (prefers-reduced-motion:reduce){#radio-stage.speaking .radio-display img{animation:none}}
 </style>
   <title>小宝乐园</title>
 </head>
@@ -409,6 +445,7 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
       </div>
       <div class="utilities">
         <button id="sound" class="utility" type="button" aria-label="声音" aria-pressed="true"><span aria-hidden="true">♫</span></button>
+        <button type="button" class="utility" id="parent-open" aria-label="打开家长设置"><span aria-hidden="true">⚙</span></button>
         <button id="pause" class="utility" type="button" aria-label="休息"><span aria-hidden="true">Ⅱ</span></button>
       </div>
     </header>
@@ -419,6 +456,8 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
       <button id="balls" type="button" class="mode" aria-pressed="false"><span class="mode-icon marble-icon" aria-hidden="true"><i></i><i></i><i></i></span>弹珠</button>
       <button id="rail" type="button" class="mode" aria-pressed="false"><span class="mode-symbol" aria-hidden="true">🚄</span>高铁</button>
       <button id="radio" type="button" class="mode" aria-pressed="false"><span class="mode-symbol" aria-hidden="true">🎙</span>广播</button>
+      <button type="button" id="candy" class="mode" aria-pressed="false"><span class="mode-icon" aria-hidden="true">🍬</span>糖果</button>
+      <button type="button" id="draw" class="mode" aria-pressed="false"><span class="mode-icon" aria-hidden="true">🖌️</span>画画</button>
     </nav>
 
     <section class="game" aria-labelledby="game-title">
@@ -438,8 +477,8 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
       </div>
       <div id="controls" class="controls" role="group" aria-label="移动方块">
         <button type="button" data-action="left" aria-label="左移"><span aria-hidden="true">←</span>左移</button>
-        <button type="button" data-action="rotate" aria-label="转一转"><span aria-hidden="true">↻</span>转一转</button>
         <button type="button" data-action="right" aria-label="右移"><span aria-hidden="true">→</span>右移</button>
+        <button type="button" data-action="rotate" aria-label="转一转"><span aria-hidden="true">↻</span>转一转</button>
         <button type="button" data-action="drop" aria-label="落下"><span aria-hidden="true">↓</span>落下</button>
       </div>
       <div id="ball-hint" class="ball-hint" hidden><span aria-hidden="true">☝</span> 点一颗，旁边相同的动物一起消除</div>
@@ -457,9 +496,10 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
             <span class="train-cab"></span>
           </div>
         </div>
-        <div class="journey">
+        <div class="journey" id="route">
           <span id="rail-state" role="status">列车已停稳</span>
           <span id="trip-destination">彩虹车站</span>
+          <div class="route-signs" aria-hidden="true"><span>● 出发</span><span>◆ 途中</span><span>⚑ 到站</span></div>
           <progress id="rail-progress" max="1" value="0" aria-label="到站进度"></progress>
         </div>
         <p id="rail-announcement" class="rail-announcement" role="status" hidden></p>
@@ -475,8 +515,8 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
           <button type="button" data-rail="signal"><span class="signal-light" aria-hidden="true"></span><b>绿灯通行</b></button>
           <button type="button" data-rail="ticket"><span aria-hidden="true">🎫</span><b>检票</b></button>
         </div>
-        <details id="station-trip" class="trip-settings">
-          <summary>🚉 接站和送站</summary>
+        <section id="station-trip" class="trip-settings" aria-label="接站和送站">
+          <h3>🚉 接送</h3>
           <div id="trip-plan">
             <p>开往哪里？</p>
             <div class="trip-choices" role="group" aria-label="选择目的地">
@@ -490,7 +530,7 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
               <button data-family="parents">👨‍👩‍👦 和爸妈坐</button><button data-family="grands">👵 和爷奶坐</button><button data-family="team">👋 一起接爸爸</button><button data-family="grandpa">👴 接爷爷</button><button data-family="outbound">🎟️ 出门旅行</button><button data-family="baby">🎒 宝宝乘车</button><button data-family="together">👩‍👦 和妈妈坐</button>
             </div>
           </div>
-        </details>
+        </section>
       </div>
 
       <div id="radio-stage" hidden>
@@ -512,29 +552,40 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
           <button type="button" data-clip="doors"><span aria-hidden="true">▣</span>关闭车门</button>
         </div>
         <button type="button" id="radio-horn" class="answer-horn" hidden>📯 我来鸣笛</button>
-        <details id="dialogue" class="trip-settings">
-          <summary>👋 一起打招呼</summary>
+        <section id="dialogue" class="trip-settings" aria-label="一起打招呼">
+          <h3>👋 一起打招呼</h3>
           <div id="conversation-buttons" class="trip-choices">
             <button type="button" data-line="Turn">🙋 轮到你</button>
             <button type="button" data-line="Thanks">💛 谢谢你</button>
             <button type="button" data-line="Again">🌱 再试一次</button>
             <button type="button" data-line="Bye">👋 下次见</button>
           </div>
-        </details>
-        <details id="station-recordings" class="trip-settings">
-          <summary>🎧 听真实车站</summary>
+        </section>
+        <section id="station-recordings" class="trip-settings" aria-label="真实车站录音">
+          <h3>🎧 真实车站</h3>
           <div class="trip-choices" id="field-controls">
             <button data-clip="trainReal">🚄 北京西站</button><button data-clip="metro">🚇 上海地铁</button>
             <button data-clip="bus">🚌 延吉公交</button><button data-clip="pass">🛤️ 列车经过</button>
           </div>
-          <details class="sound-credit"><summary>录音来源</summary>
-            <p>北京西站 G80 到站广播由 N509FZ 录制，游戏版调整音量并转码，沿用 CC BY-SA 4.0。</p>
-            <p>列车鸣笛与经过由 theplax 录制，延吉公交由 Lenguaverde 录制，采用 CC BY 4.0。开关门由 Yoyodaman234 录制，上海地铁由 erosax 录制，采用 CC0。游戏版经过裁剪或音量调整。家庭故事使用普通话合成配音。</p>
-            <a href="./sound-sources.html">录音原作和许可</a>
-          </details>
-        </details>
+          <a class="sound-credit" href="./sound-sources.html">录音来源</a>
+        </section>
       </div>
 
+      <section id="draw-stage" hidden aria-label="毛笔画板">
+        <canvas id="drawing" width="720" height="420" aria-label="用手指画画"></canvas>
+        <div class="drawing-buttons" id="drawing-colors" role="group" aria-label="毛笔颜色">
+          <button type="button" data-color="#273244" aria-label="墨黑" aria-pressed="true">⚫</button>
+          <button type="button" data-color="#bf5573" aria-label="粉色" aria-pressed="false">🌸</button>
+          <button type="button" data-color="#3578ad" aria-label="蓝色" aria-pressed="false">💧</button>
+          <button type="button" data-color="#4c8951" aria-label="绿色" aria-pressed="false">🌿</button>
+          <button type="button" id="erase-drawing">擦掉</button>
+        </div>
+        <div class="drawing-buttons">
+          <button type="button" id="draw-prompt">🎲 抽题</button>
+          <button type="button" id="draw-reveal" disabled>👀 看答案</button>
+        </div>
+        <p id="draw-message" role="status"></p>
+      </section>
       <div id="cover" class="cover" hidden>
         <div class="rest-card">
           <img src="data:image/png;base64,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" alt="">
@@ -554,11 +605,9 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
       <span id="announcement" class="sr-only" role="status"></span>
     </section>
 
-    <div class="audio-settings">
+    <dialog id="grownups" class="grownups" aria-labelledby="parent-title">
+      <header><h2 id="parent-title">家长设置</h2><button type="button" id="parent-close" aria-label="关闭家长设置">✕</button></header>
       <button type="button" id="music" aria-pressed="false">♫ 开背景音乐</button>
-    </div>
-    <details id="grownups" class="grownups">
-      <summary>家长设置</summary>
       <div class="voice-preference">
         <label for="voice-style">问候音色</label>
         <select id="voice-style">
@@ -582,7 +631,15 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
         <button type="reset">清除输入</button>
         <p id="practice-status" role="status"></p>
       </form>
-    </details>
+      <section class="local-recording" aria-labelledby="record-caption">
+        <h3 id="record-caption">本机小广播</h3>
+        <p>最多录 20 秒。关闭设置就清除，录音只在这个页面回放。</p>
+        <button type="button" id="record-start">● 开始录音</button>
+        <button type="button" id="record-stop" disabled>■ 停止</button>
+        <audio id="record-play" controls hidden></audio>
+        <p id="record-status" role="status"></p>
+      </section>
+    </dialog>
     <footer class="footer">
       <span>无广告 · 无内购</span>
       <span id="offline-status" role="status">正在准备离线游玩…</span>
@@ -678,6 +735,9 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
   const destinationLabel = document.getElementById("trip-destination");
   const replyHorn = document.getElementById("radio-horn");
   const fieldControls = document.getElementById("field-controls");
+  const route = document.getElementById("route");
+  const radioStage = document.getElementById("radio-stage");
+  let cardDrag = null;
   let destination = "";
   let family = "";
   for (const button of trip.querySelectorAll("[data-family]")) button.setAttribute("aria-pressed","false");
@@ -687,8 +747,10 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
   function silence() {
     playId++;
     player.onended = null;
+    player.onplaying = null;
     player.onerror = null;
     player.pause();
+    radioStage.classList.remove("speaking");
     onBroadcast(false);
   }
 
@@ -723,15 +785,22 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
     onBroadcast(true);
     const reportFailure = () => {
       if (id !== playId) return;
+      radioStage.classList.remove("speaking");
       onBroadcast(false);
       showHint("广播暂时没响，请再点一次。");
     };
     player.onended = () => {
       if (id !== playId) return;
       if (following && !paused && soundOn()) broadcast(following);
-      else onBroadcast(false);
+      else {
+        radioStage.classList.remove("speaking");
+        onBroadcast(false);
+      }
     };
     player.onerror = reportFailure;
+    player.onplaying = () => {
+      if (id === playId && activeMode === "radio") radioStage.classList.add("speaking");
+    };
     player.play().catch(reportFailure);
   }
 
@@ -752,6 +821,7 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
     drivingButtons.door.disabled = speed > 0;
     if (!speed && destination) destinationLabel.textContent = place();
     for (const choice of trip.querySelectorAll("button")) choice.disabled = speed > 0;
+    route.dataset.phase = distance === 1 ? "arrived" : speed ? "moving" : "waiting";
     progress.value = distance;
     status.textContent = doorsOpen ? "车门已打开" : speed
       ? distance >= 0.67 ? "前方到站" : ["", "慢速行驶", "中速行驶", "快速行驶"][speed]
@@ -828,8 +898,7 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
   replyHorn.addEventListener("click", () => {
     if (activeMode === "radio" && !paused) { unlock(); broadcast("horn"); }
   });
-  trip.addEventListener("click", event => {
-    const button = event.target.closest("button");
+  function chooseTrip(button) {
     if (!button || button.disabled || paused) return;
     unlock();
     if (button.dataset.dest) destination = button.dataset.dest;
@@ -841,6 +910,43 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
     if (button.dataset.dest) broadcast(destination + "Trip");
     else if (distance === 1 && doorsOpen && isPickup()) broadcast(family);
     else broadcast("pick" + family[0].toUpperCase() + family.slice(1));
+  }
+
+  let suppressedClick = null;
+  trip.addEventListener("click", event => {
+    const button = event.target.closest("button");
+    if (suppressedClick?.button === button && performance.now() < suppressedClick.until) {
+      suppressedClick = null;
+      return;
+    }
+    chooseTrip(button);
+  });
+  trip.addEventListener("pointerdown", event => {
+    const button = event.target.closest("button");
+    if (!event.isPrimary || !button || button.disabled || event.button !== 0) return;
+    cardDrag = { button, id: event.pointerId, x: event.clientX, y: event.clientY };
+    button.setPointerCapture?.(event.pointerId);
+  });
+  trip.addEventListener("pointermove", event => {
+    if (cardDrag?.id !== event.pointerId) return;
+    if (Math.hypot(event.clientX - cardDrag.x, event.clientY - cardDrag.y) > 14) {
+      cardDrag.dragged = true;
+      route.classList.add("drop-ready");
+    }
+  });
+  trip.addEventListener("pointerup", event => {
+    if (cardDrag?.id !== event.pointerId) return;
+    const { button, dragged } = cardDrag;
+    cardDrag = null;
+    route.classList.remove("drop-ready");
+    if (!dragged) return;
+    const dropped = document.elementFromPoint(event.clientX, event.clientY)?.closest("#route,#rail-scene");
+    suppressedClick = { button, until: performance.now() + 400 };
+    if (dropped) chooseTrip(button);
+  });
+  trip.addEventListener("pointercancel", () => {
+    cardDrag = null;
+    route.classList.remove("drop-ready");
   });
 
   return {
@@ -876,7 +982,8 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
       if (activeMode !== "rail" || paused || !speed) return;
       const approaching = distance < 0.67;
       distance = Math.min(1, distance + elapsed * speed / 28_000);
-      progress.value = distance;
+      route.dataset.phase = distance === 1 ? "arrived" : speed ? "moving" : "waiting";
+    progress.value = distance;
       if (distance === 1) {
         stop(true);
         render();
@@ -913,11 +1020,7 @@ const shapes = [
   [[0, 0], [1, 0]],
   [[0, 0], [1, 0], [2, 0], [1, 1]]
 ];
-const layouts = [
-  ["001122", "001122", "334400", "334400"],
-  ["110033", "210333", "224441", "224411"],
-  ["443311", "443311", "002244", "002244"]
-];
+const firstMarbles = "001122001122334400334400";
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const blockStage = byId("blocks-stage");
 const ballStage = byId("balls-stage");
@@ -932,8 +1035,10 @@ const scoreValue = score.querySelector("b");
 const announcement = byId("announcement");
 const soundButton = byId("sound");
 const modeCopy = {
-  blocks: ["动物方块", "点「落下」，让小动物坐到亮格子里"],
-  balls: ["弹珠消除", "点一颗小动物弹珠"],
+  blocks: ["动物方块", "点棋盘移动，往下拖就落下"],
+  balls: ["弹珠消除", "点相邻的小动物，单颗也能消"],
+  candy: ["糖果岛", "点糖果收进罐里，整盘都能收完"],
+  draw: ["毛笔画板", "手指画一画，也可以和家人轮流猜"],
   rail: ["开高铁", "小司机，按「发车」出发"],
   radio: ["车站广播", "选一段广播，听听车站在说什么"]
 };
@@ -966,8 +1071,15 @@ let blockStars = 0;
 let ballStars = 0;
 let marbleBoard;
 let layoutIndex = 0;
+let candyStars = 0;
+const savedBoards = { balls: null, candy: null };
+const candyIcons = ["🍓", "🍋", "🍇", "🍬", "🍫"];
+const candyNames = ["草莓", "柠檬", "葡萄", "水果糖", "巧克力"];
+const isMatch = value => value === "balls" || value === "candy";
 let flying = null;
 let gesture = null;
+let fallElapsed = 0;
+const fallEvery = 3100;
 let soundEnabled = true;
 let audio;
 let output;
@@ -982,7 +1094,7 @@ let talking = false;
 function refreshMusic() {
   musicButton.textContent = musicEnabled ? "♫ 关背景音乐" : "♫ 开背景音乐";
   musicButton.setAttribute("aria-pressed", String(musicEnabled));
-  if (!hasInteracted || !musicEnabled || !soundEnabled || roundState !== "playing" || document.hidden) {
+  if (!hasInteracted || !musicEnabled || !soundEnabled || roundState !== "playing" || document.hidden || parentPanel.open) {
     music.pause();
     return;
   }
@@ -1183,7 +1295,18 @@ practice.addEventListener("reset", () => {
   stopPractice();
   practiceStatus.textContent = "";
 });
-parentPanel.addEventListener("toggle", () => { if (!parentPanel.open) practice.reset(); });
+byId("parent-open").addEventListener("click", () => {
+  railway.silence();
+  parentPanel.showModal();
+  refreshMusic();
+});
+byId("parent-close").addEventListener("click", () => parentPanel.close());
+parentPanel.addEventListener("close", () => {
+  practice.reset();
+  railway.setPaused(roundState !== "playing");
+  frameTime = null;
+  refreshMusic();
+});
 window.addEventListener("pagehide", () => practice.reset());
 document.addEventListener("visibilitychange", () => { if (document.hidden) stopPractice(); });
 practice.addEventListener("click", event => {
@@ -1223,13 +1346,160 @@ practice.addEventListener("click", event => {
   synth.speak(speech);
 });
 
+const drawing = byId("drawing");
+const ink = drawing.getContext("2d");
+let paintColor = "#273244";
+let brush = null;
+for (const color of byId("drawing-colors").querySelectorAll("[data-color]")) {
+  color.addEventListener("click", () => {
+    paintColor = color.dataset.color;
+    for (const button of byId("drawing-colors").querySelectorAll("[data-color]")) {
+      button.setAttribute("aria-pressed", String(button === color));
+    }
+  });
+}
+function inkPoint(event) {
+  const rect = drawing.getBoundingClientRect();
+  return { x: (event.clientX - rect.left) * drawing.width / rect.width,
+    y: (event.clientY - rect.top) * drawing.height / rect.height };
+}
+drawing.addEventListener("pointerdown", event => {
+  if (mode !== "draw" || roundState !== "playing" || event.button !== 0 || !event.isPrimary) return;
+  drawing.setPointerCapture(event.pointerId);
+  const point = inkPoint(event);
+  brush = { ...point, id: event.pointerId };
+  ink.fillStyle = paintColor;
+  ink.beginPath();
+  ink.arc(point.x, point.y, 5, 0, Math.PI * 2);
+  ink.fill();
+});
+drawing.addEventListener("pointermove", event => {
+  if (brush?.id !== event.pointerId) return;
+  const point = inkPoint(event);
+  const speed = Math.hypot(point.x - brush.x, point.y - brush.y);
+  ink.strokeStyle = paintColor;
+  ink.lineCap = "round";
+  ink.lineWidth = event.pointerType === "pen" && event.pressure
+    ? 4 + event.pressure * 16 : Math.max(4, 14 - speed * 0.17);
+  ink.beginPath();
+  ink.moveTo(brush.x, brush.y);
+  ink.lineTo(point.x, point.y);
+  ink.stroke();
+  brush = { ...point, id: event.pointerId };
+});
+drawing.addEventListener("lostpointercapture", () => { brush = null; });
+drawing.addEventListener("pointercancel", () => { brush = null; });
+byId("erase-drawing").addEventListener("click", () => ink.clearRect(0, 0, drawing.width, drawing.height));
+const drawingPrompts = ["🚄 高铁", "🎈 气球", "🍎 苹果", "🐱 小猫", "☀️ 太阳", "🚗 小汽车", "🐟 小鱼"];
+let drawingPrompt = -1;
+byId("draw-prompt").addEventListener("click", () => {
+  drawingPrompt = (drawingPrompt + 1) % drawingPrompts.length;
+  byId("draw-message").textContent = "画的人先看题：" + drawingPrompts[drawingPrompt];
+  byId("draw-reveal").textContent = "🙈 藏起题目";
+  byId("draw-reveal").disabled = false;
+});
+byId("draw-reveal").addEventListener("click", event => {
+  const message = byId("draw-message");
+  if (message.textContent.startsWith("轮到")) {
+    message.textContent = "答案：" + drawingPrompts[drawingPrompt];
+    event.currentTarget.textContent = "🙈 藏起题目";
+  } else {
+    message.textContent = "轮到另一位猜啦！";
+    event.currentTarget.textContent = "👀 看答案";
+  }
+});
+
+const recordStart = byId("record-start");
+const recordStop = byId("record-stop");
+const recordPlay = byId("record-play");
+const recordStatus = byId("record-status");
+let recording = null;
+let recordingStream = null;
+let recordingUrl = "";
+let recordingTimer;
+let recordingSession = 0;
+function stopRecording() {
+  clearTimeout(recordingTimer);
+  if (recording?.state === "recording") recording.stop();
+  recordingStream?.getTracks().forEach(track => track.stop());
+  recordingStream = null;
+  recordStop.disabled = true;
+}
+function clearRecording() {
+  recordingSession++;
+  stopRecording();
+  recording = null;
+  recordStart.disabled = false;
+  recordPlay.pause();
+  recordPlay.removeAttribute("src");
+  recordPlay.load();
+  recordPlay.hidden = true;
+  if (recordingUrl) URL.revokeObjectURL(recordingUrl);
+  recordingUrl = "";
+  recordStatus.textContent = "";
+}
+recordStart.addEventListener("click", async () => {
+  clearRecording();
+  railway.silence();
+  stopPractice();
+  const session = recordingSession;
+  recordStart.disabled = true;
+  if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder !== "function") {
+    recordStatus.textContent = "此浏览器暂不支持录音，可以用 Safari 或 Chrome 打开。";
+    recordStart.disabled = false;
+    return;
+  }
+  recordStatus.textContent = "等待麦克风授权…";
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    if (session !== recordingSession || !parentPanel.open || document.hidden) {
+      stream.getTracks().forEach(track => track.stop());
+      return;
+    }
+    recordingStream = stream;
+    const recorder = new MediaRecorder(stream);
+    recording = recorder;
+    const chunks = [];
+    recorder.ondataavailable = event => { if (event.data.size) chunks.push(event.data); };
+    recorder.onerror = () => {
+      if (session !== recordingSession) return;
+      clearRecording();
+      recordStatus.textContent = "录音中断，请再试一次。";
+    };
+    recorder.onstop = () => {
+      if (session !== recordingSession) return;
+      stopRecording();
+      recording = null;
+      recordStart.disabled = false;
+      if (!chunks.length) { recordStatus.textContent = "没有录到声音，请再试。"; return; }
+      recordingUrl = URL.createObjectURL(new Blob(chunks, { type: recorder.mimeType || chunks[0].type }));
+      recordPlay.src = recordingUrl;
+      recordPlay.hidden = false;
+      recordStatus.textContent = "可以播放这段小广播了。";
+    };
+    recorder.start();
+    recordStatus.textContent = "正在录音，最多 20 秒。";
+    recordStop.disabled = false;
+    recordingTimer = setTimeout(stopRecording, 20_000);
+  } catch {
+    if (session !== recordingSession) return;
+    clearRecording();
+    recordStatus.textContent = "麦克风未开启，或此浏览器无法录音。";
+  }
+});
+recordStop.addEventListener("click", stopRecording);
+parentPanel.addEventListener("close", clearRecording);
+window.addEventListener("pagehide", clearRecording);
+document.addEventListener("visibilitychange", () => { if (document.hidden) clearRecording(); });
+
 function updateStars() {
-  const stars = mode === "blocks" ? blockStars : ballStars;
+  const stars = mode === "blocks" ? blockStars : mode === "candy" ? candyStars : ballStars;
   scoreValue.textContent = stars;
   score.setAttribute("aria-label", `获得 ${stars} 颗星`);
 }
 function reward(message, count = 1) {
   if (mode === "blocks") blockStars += count;
+  else if (mode === "candy") candyStars += count;
   else ballStars += count;
   updateStars();
   announcement.textContent = message;
@@ -1261,6 +1531,7 @@ function resetBlocks() {
   blockBoard = Array.from({ length: blockRows }, emptyRow);
   blockBoard[blockRows - 1] = [4, 4, null, null, 2, 2];
   piece = spawnBlock(shapes[0], 0);
+  fallElapsed = 0;
   byId("block-message").textContent = "小熊准备好啦！";
 }
 function fits(test) {
@@ -1295,6 +1566,7 @@ function drawBlocks() {
   }
 }
 function lockPiece() {
+  fallElapsed = 0;
   for (const [dx, dy] of piece.shape) blockBoard[piece.y + dy][piece.x + dx] = piece.animal;
   const incomplete = blockBoard.filter(row => row.includes(null));
   const cleared = blockRows - incomplete.length;
@@ -1324,6 +1596,7 @@ function rotateBlock() {
 function performBlockAction(action) {
   if (mode !== "blocks" || roundState !== "playing") return;
   unlockAudio();
+  fallElapsed = 0;
   if (action === "drop") {
     piece = landingPosition();
     lockPiece();
@@ -1341,6 +1614,7 @@ controls.addEventListener("click", event => {
 });
 grid.addEventListener("pointerdown", event => {
   if (!event.isPrimary || event.button !== 0 || roundState !== "playing") return;
+  unlockAudio();
   gesture = { id: event.pointerId, x: event.clientX, y: event.clientY };
   grid.setPointerCapture(event.pointerId);
 });
@@ -1349,8 +1623,19 @@ grid.addEventListener("pointerup", event => {
   const dx = event.clientX - gesture.x;
   const dy = event.clientY - gesture.y;
   gesture = null;
-  if (Math.abs(dx) > 18 && Math.abs(dx) >= Math.abs(dy)) performBlockAction(dx < 0 ? "left" : "right");
-  else if (dy > 23) performBlockAction("drop");
+  if (dy > 25 && dy > Math.abs(dx)) {
+    performBlockAction("drop");
+  } else if (Math.abs(dy) < 22 || Math.abs(dx) >= Math.abs(dy)) {
+    const box = grid.getBoundingClientRect();
+    const width = Math.max(...piece.shape.map(([x]) => x)) + 1;
+    const column = Math.floor((event.clientX - box.left) * blockColumns / box.width);
+    const target = Math.max(0, Math.min(blockColumns - width, column - Math.floor((width - 1) / 2)));
+    const move = target < piece.x ? -1 : 1;
+    while (piece.x !== target && placeBlock({ ...piece, x: piece.x + move })) {}
+    fallElapsed = 0;
+    playSound("move");
+    drawBlocks();
+  }
 });
 grid.addEventListener("lostpointercapture", event => {
   if (gesture?.id === event.pointerId) gesture = null;
@@ -1358,33 +1643,52 @@ grid.addEventListener("lostpointercapture", event => {
 document.addEventListener("keydown", event => {
   const actions = { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "rotate", ArrowDown: "drop" };
   const action = actions[event.key];
+  if (parentPanel.open || event.target.closest?.("input,select,textarea")) return;
   if (!action || mode !== "blocks" || roundState !== "playing" || event.altKey || event.metaKey || event.ctrlKey) return;
   event.preventDefault();
   performBlockAction(action);
 });
 
 function resetMarbles() {
-  marbleBoard = layouts[layoutIndex].join("").split("").map(Number);
+  const level = Math.min(layoutIndex, 5);
+  if (layoutIndex === 0 && mode !== "candy") {
+    marbleBoard = firstMarbles.split("").map(Number);
+  } else {
+    const kinds = Math.min(3 + level, candyIcons.length);
+    marbleBoard = Array.from({ length: marbleRows * marbleColumns }, (_, position) => {
+      const row = Math.floor(position / marbleColumns);
+      const column = position % marbleColumns;
+      const cluster = level >= 3 ? column + (row % 2) : Math.floor(column / 2) + Math.floor(row / 2);
+      return (cluster + Math.floor(position / (8 - level)) + layoutIndex) % kinds;
+    });
+  }
   renderMarbles();
 }
 function renderMarbles() {
   const empty = marbleBoard.every(animal => animal === null);
-  launcher.querySelector("b").textContent = empty ? "再来一盘" : "小车帮帮忙";
-  byId("ball-hint").textContent = empty ? "动物都回家啦！" : "点小动物就能消除，也可以请小车帮忙。";
+  const candy = mode === "candy";
+  const hint = marbleBoard.reduce((best, animal, index) => {
+    if (animal === null) return best;
+    return best < 0 || matchingGroup(index).size > matchingGroup(best).size ? index : best;
+  }, -1);
+  launcher.querySelector("b").textContent = empty ? "下一关" : candy ? "糖罐帮帮忙" : "小车帮帮忙";
+  byId("ball-hint").textContent = empty ? "清空啦！点「下一关」。" : `第 ${layoutIndex + 1} 关 · 可以点亮边的${candy ? "糖果" : "弹珠"}`;
   for (const [index, animal] of marbleBoard.entries()) {
     const button = marbleButtons[index];
     button.disabled = animal === null;
-    button.className = animal === null ? "marble empty" : `marble animal ${animals[animal].key}`;
-    button.setAttribute("aria-label", animal === null ? "空位" : `${animals[animal].name}弹珠`);
+    button.className = animal === null ? "marble empty" :
+      candy ? `marble candy-tile candy-${animal}` : `marble animal ${animals[animal].key}`;
+    button.classList.toggle("match-hint", index === hint);
+    button.textContent = candy && animal !== null ? candyIcons[animal] : "";
+    button.setAttribute("aria-label", animal === null ? "空位" : `${candy ? candyNames[animal] : animals[animal].name + "弹珠"}`);
   }
 }
 launcher.addEventListener("click", () => {
-  if (mode !== "balls" || roundState !== "playing" || flying) return;
-  let target = marbleBoard.length - 1;
-  while (target >= 0 && marbleBoard[target] === null) target--;
+  if (!isMatch(mode) || roundState !== "playing" || flying) return;
+  const target = marbleButtons.findIndex(button => button.classList.contains("match-hint"));
   if (target >= 0) shoot(target);
   else {
-    layoutIndex = (layoutIndex + 1) % layouts.length;
+    layoutIndex++;
     resetMarbles();
     marbleButtons[0].focus({ preventScroll: true });
   }
@@ -1412,7 +1716,7 @@ function pointInStage(element) {
   };
 }
 function shoot(index) {
-  if (mode !== "balls" || roundState !== "playing" || flying || marbleBoard[index] === null) return;
+  if (!isMatch(mode) || roundState !== "playing" || flying || marbleBoard[index] === null) return;
   unlockAudio();
   playSound("launch");
   const group = matchingGroup(index);
@@ -1420,7 +1724,9 @@ function shoot(index) {
     finishShot(group, index);
     return;
   }
-  projectile.className = `projectile animal ${animals[marbleBoard[index]].key}`;
+  const animal = marbleBoard[index];
+  projectile.className = mode === "candy" ? `projectile candy-tile candy-${animal}` : `projectile animal ${animals[animal].key}`;
+  projectile.textContent = mode === "candy" ? candyIcons[animal] : "";
   projectile.hidden = false;
   const start = pointInStage(launcher);
   const end = pointInStage(marbleButtons[index]);
@@ -1446,7 +1752,7 @@ function finishShot(group, index) {
   const keepFocus = document.activeElement === marbleButtons[index];
   for (const position of group) marbleBoard[position] = null;
   const cleared = marbleBoard.every(animal => animal === null);
-  reward(cleared ? "清空啦！点小车再来一盘。" : `消掉了 ${group.size} 颗弹珠！`);
+  reward(cleared ? "清空啦！点下一关。" : `消掉了 ${group.size} 颗${mode === "candy" ? "糖果" : "弹珠"}！`);
   renderMarbles();
   if (cleared) launcher.focus({ preventScroll: true });
   if (keepFocus) marbleButtons.find(button => !button.disabled)?.focus({ preventScroll: true });
@@ -1456,7 +1762,17 @@ function showMode(next, withSound = true) {
   if (roundState !== "playing" || (next === mode && withSound)) return;
   clearFlight();
   gesture = null;
-  mode = next;
+  if (next !== mode) {
+    if (isMatch(mode)) savedBoards[mode] = { board: marbleBoard, level: layoutIndex };
+    mode = next;
+    if (isMatch(mode)) {
+      const saved = savedBoards[mode];
+      layoutIndex = saved?.level ?? 0;
+      if (saved) marbleBoard = saved.board;
+      else resetMarbles();
+    }
+    fallElapsed = 0;
+  }
   byId("game-title").closest(".game").dataset.mode = mode;
   if (withSound) {
     stopPractice();
@@ -1468,14 +1784,15 @@ function showMode(next, withSound = true) {
   byId("game-title").textContent = title;
   byId("tip").textContent = tip;
   blockStage.hidden = controls.hidden = mode !== "blocks";
-  ballStage.hidden = byId("ball-hint").hidden = mode !== "balls";
+  ballStage.hidden = byId("ball-hint").hidden = !isMatch(mode);
+  byId("draw-stage").hidden = mode !== "draw";
   byId("railway").hidden = mode !== "rail";
   byId("radio-stage").hidden = mode !== "radio";
-  score.hidden = mode !== "blocks" && mode !== "balls";
+  score.hidden = mode !== "blocks" && !isMatch(mode);
   railway.setMode(mode);
   refreshMusic();
   if (mode === "blocks") drawBlocks();
-  else if (mode === "balls") renderMarbles();
+  else if (isMatch(mode)) renderMarbles();
   announcement.textContent = "";
   updateStars();
 }
@@ -1490,7 +1807,7 @@ function showRest(ended) {
   byId("rest-title").textContent = ended ? "玩得真棒！" : "休息一下";
   byId("rest-note").textContent = ended ? "和小动物一起休息一下吧。" : "等你回来继续玩。";
   byId("resume").textContent = ended ? "再玩一轮" : "继续玩";
-  for (const element of [blockStage, ballStage, controls, byId("railway"), byId("radio-stage")]) element.inert = true;
+  for (const element of [blockStage, ballStage, controls, byId("railway"), byId("radio-stage"), byId("draw-stage")]) element.inert = true;
   for (const id of [...Object.keys(modeCopy), "pause"]) byId(id).disabled = true;
   cover.hidden = false;
   byId("resume").focus({ preventScroll: true });
@@ -1505,13 +1822,14 @@ byId("resume").addEventListener("click", () => {
   roundState = "playing";
   frameTime = null;
   cover.hidden = true;
-  for (const element of [blockStage, ballStage, controls, byId("railway"), byId("radio-stage")]) element.inert = false;
+  for (const element of [blockStage, ballStage, controls, byId("railway"), byId("radio-stage"), byId("draw-stage")]) element.inert = false;
   railway.setPaused(false);
   refreshMusic();
   for (const id of [...Object.keys(modeCopy), "pause"]) byId(id).disabled = false;
   if (ended) {
     remaining = roundMinutes * 60_000;
-    blockStars = ballStars = layoutIndex = 0;
+    blockStars = ballStars = candyStars = layoutIndex = 0;
+    savedBoards.balls = savedBoards.candy = null;
     resetBlocks();
     resetMarbles();
     railway.reset();
@@ -1529,9 +1847,17 @@ document.addEventListener("visibilitychange", () => {
 function tick(now) {
   if (roundState === "playing" && !document.hidden) {
     const elapsed = frameTime === null ? 0 : now - frameTime;
+    if (parentPanel.open) { frameTime = now; requestAnimationFrame(tick); return; }
     remaining -= elapsed;
     if (remaining <= 0) showRest(true);
-    else if (mode === "rail") {
+    else if (mode === "blocks" && hasInteracted && !gesture) {
+      fallElapsed += elapsed;
+      if (fallElapsed >= fallEvery) {
+        fallElapsed = 0;
+        if (!placeBlock({ ...piece, y: piece.y + 1 })) lockPiece();
+        drawBlocks();
+      }
+    } else if (mode === "rail") {
       railway.tick(elapsed);
     }
   }
@@ -1568,7 +1894,7 @@ async function prepareOffline() {
 refreshSoundButton();
 resetBlocks();
 resetMarbles();
-showMode(({ "#radio": "radio", "#rail": "rail" })[location.hash] || "blocks", false);
+showMode(({ "#radio": "radio", "#rail": "rail", "#candy": "candy", "#draw": "draw" })[location.hash] || "blocks", false);
 byId("preview-help").hidden = true;
 requestAnimationFrame(tick);
 prepareOffline();
