@@ -11,6 +11,19 @@ jobs:
   playback:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - engine: webkit
+            profile: iPhone 13
+          - engine: webkit
+            profile: iPad (gen 7)
+          - engine: chromium
+            profile: Pixel 7
+    env:
+      PLAY_BROWSER: ${{ matrix.engine }}
+      PLAY_DEVICE: ${{ matrix.profile }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,16 +31,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install 'playwright==1.55.0' && python -m playwright install --with-deps chromium webkit
+      - run: pip install 'playwright==1.55.0' && python -m playwright install --with-deps "$PLAY_BROWSER"
       - name: Mobile controls and offline audio
         run: |
           python - <<'PY'
           from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
           from threading import Thread
-          import socket
+          import socket, os
           from playwright.sync_api import sync_playwright
           with sync_playwright() as p:
-              for engine, profile in [('webkit','iPhone 13'), ('webkit','iPad (gen 7)'), ('chromium','Pixel 7')]:
+              for engine, profile in [(os.environ['PLAY_BROWSER'],os.environ['PLAY_DEVICE'])]:
                   server = ThreadingHTTPServer(('127.0.0.1', 0), SimpleHTTPRequestHandler)
                   Thread(target=server.serve_forever, daemon=True).start()
                   port = server.server_port
@@ -83,7 +96,10 @@ jobs:
                       hear('welcome')
                   page.wait_for_function("!music.paused && music.currentTime > 0.2 && musicGain.gain.value < 0.1")
                   page.wait_for_function("testPlayer.ended && musicGain.gain.value > 0.21")
+                  page.locator('#parent-open').tap()
                   page.locator('#music').tap()
+                  page.locator('#parent-close').tap()
+                  page.wait_for_function("!document.querySelector('#grownups').open")
                   assert page.evaluate('music.paused')
                   page.locator('#sound').tap()
                   page.locator('[data-clip=welcome]').tap()
