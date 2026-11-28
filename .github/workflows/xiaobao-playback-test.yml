@@ -47,13 +47,32 @@ jobs:
                   page.wait_for_function("navigator.serviceWorker.controller !== null")
                   assert page.title() == '小宝乐园'
                   page.locator('#hello').tap()
-                  page.wait_for_function("testPlayer.currentSrc.endsWith('/hello.mp3') && !testPlayer.paused && testPlayer.currentTime > 0.12")
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/softHello.mp3') && !testPlayer.paused && testPlayer.currentTime > 0.12")
                   assert page.evaluate("""() => {
                       const region = document.querySelector('.game');
                       const event = new Event('touchstart', {bubbles:true,cancelable:true});
                       Object.defineProperty(event, 'touches', {value:[{},{}]});
                       return getComputedStyle(region).touchAction === 'pan-y' && !region.dispatchEvent(event);
                   }""")
+                  def first_screen():
+                      size = page.viewport_size
+                      page.set_viewport_size({"width": 320, "height": 568})
+                      for name, control in [('blocks','[data-action=drop]'),('balls','#launcher'),('rail','[data-rail=horn]'),('radio','[data-clip=welcome]')]:
+                          page.locator('#'+name).tap()
+                          page.evaluate("window.scrollTo(0, 0)")
+                          rect = page.locator(control).bounding_box()
+                          assert rect and rect['y'] + rect['height'] <= 568 and rect['height'] >= 44, (profile,name,rect)
+                      page.set_viewport_size({"width": 1024, "height": 568})
+                      page.locator('#blocks').tap()
+                      page.evaluate("window.scrollTo(0, 0)")
+                      for selector in ['#grid','#block-message','[data-action=drop]']:
+                          rect = page.locator(selector).bounding_box()
+                          assert rect and rect['y'] + rect['height'] <= 568, (profile,'tablet landscape',selector,rect)
+                      page.set_viewport_size(size)
+                      page.locator('#radio').tap()
+                      page.evaluate("window.scrollTo(0,0)")
+                  first_screen()
+                  page.locator('#station-recordings > summary').tap()
                   def hear(key):
                       page.locator('[data-clip="'+key+'"]').tap()
                       page.wait_for_function("key => testPlayer.currentSrc.endsWith('/'+key+'.mp3') && !testPlayer.paused && testPlayer.currentTime > 0.2", arg=key, timeout=9000)
@@ -79,6 +98,7 @@ jobs:
                   page.locator('[data-rail=go]').tap()
                   page.wait_for_function("testPlayer.currentSrc.endsWith('/depart.mp3') && testPlayer.currentTime > 0.2 && !testPlayer.paused")
                   page.locator('[data-rail=stop]').tap()
+                  page.locator('#station-trip summary').tap()
                   page.locator('[data-dest=houma]').tap()
                   page.locator('[data-family=grandma]').tap()
                   page.wait_for_function("testPlayer.currentSrc.endsWith('/pickGrandma.mp3') && testPlayer.currentTime > 0.15")
@@ -118,6 +138,13 @@ jobs:
                   assert page.locator('.marble:not(.empty)').count() == 24
                   assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
                   page.locator('#grownups summary').tap()
+                  page.locator('#voice-style').select_option('bright')
+                  page.locator('#voice-preview').tap()
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/brightHello.mp3') && testPlayer.currentTime > 0.10")
+                  page.locator('#radio').tap()
+                  page.locator('#dialogue summary').tap()
+                  page.locator('[data-line=Thanks]').tap()
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/brightThanks.mp3') && testPlayer.currentTime > 0.10")
                   page.locator('#mother-number').fill('00000000000')
                   page.locator('[data-practice=mother]').tap()
                   assert '零、零' in page.locator('#practice-status').inner_text()
@@ -138,14 +165,16 @@ jobs:
                   page.add_init_script("const NativeAudio = window.Audio; window.Audio = function(...args) {return window.testPlayer=new NativeAudio(...args)}")
                   page.goto(url)
                   page.locator('#hello').tap()
-                  page.wait_for_function("testPlayer.currentSrc.endsWith('/hello.mp3') && testPlayer.currentTime > 0.12")
+                  page.wait_for_function("testPlayer.currentSrc.endsWith('/brightHello.mp3') && testPlayer.currentTime > 0.12")
                   hear('welcome')
                   assert '高铁来了' in page.locator('#radio-caption').inner_text()
                   assert page.locator('#music').get_attribute('aria-pressed') == 'false'
                   page.locator('#rail').tap()
+                  page.locator('#station-trip summary').tap()
                   page.locator('[data-family=dad]').tap()
                   page.wait_for_function("testPlayer.currentSrc.endsWith('/pickDad.mp3') && testPlayer.currentTime > 0.12")
                   page.locator('#radio').tap()
+                  page.locator('#station-recordings > summary').tap()
                   for key in ['depart','approach','arrive','doors','driver','trainReal','metro','bus','pass']:
                       hear(key)
                   bounds = page.evaluate("""async () => {const r=await fetch('./voice/welcome.mp3',{headers:{Range:'bytes=0-1'}});return [r.status,(await r.arrayBuffer()).byteLength]}""")
@@ -158,14 +187,14 @@ jobs:
         run: |
           set -eu
           for attempt in $(seq 1 20); do
-            if curl -fsSL "https://xingtu1996.github.io/xiaobao/?verify=${GITHUB_SHA}&attempt=$attempt" -o /tmp/xiaobao-live.html && grep -q 'application-version" content="1.4.2"' /tmp/xiaobao-live.html; then
+            if curl -fsSL "https://xingtu1996.github.io/xiaobao/?verify=${GITHUB_SHA}&attempt=$attempt" -o /tmp/xiaobao-live.html && grep -q 'application-version" content="1.5.0"' /tmp/xiaobao-live.html; then
               curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/horn.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-horn.mp3
               cmp /tmp/xiaobao-live-horn.mp3 xiaobao/voice/horn.mp3
               curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/pickDad.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-dad.mp3
               cmp /tmp/xiaobao-live-dad.mp3 xiaobao/voice/pickDad.mp3
-              curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/hello.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-hello.mp3
-              cmp /tmp/xiaobao-live-hello.mp3 xiaobao/voice/hello.mp3
-              echo "GitHub Pages 1.4.2 and live horn MP3 verified"
+              curl -fsSL "https://xingtu1996.github.io/xiaobao/voice/softHello.mp3?verify=${GITHUB_SHA}" -o /tmp/xiaobao-live-hello.mp3
+              cmp /tmp/xiaobao-live-hello.mp3 xiaobao/voice/softHello.mp3
+              echo "GitHub Pages 1.5.0 and live horn MP3 verified"
               exit 0
             fi
             sleep 10
