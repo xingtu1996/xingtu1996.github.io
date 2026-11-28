@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="application-version" content="1.4.2">
+  <meta name="application-version" content="1.5.0">
   <meta name="theme-color" content="#e2f5df">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="小宝乐园">
@@ -340,6 +340,38 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 .game :is(button:not(.marble),summary){min-height:48px}
 @media (max-width:400px){.playgarden{padding-inline:max(8px,env(safe-area-inset-left),env(safe-area-inset-right))}.hero{min-height:112px}.modes{gap:4px}.mode{min-height:54px}.marble-grid{gap:5px 2px}}
 @media (min-width:700px){.grownups form{grid-template-columns:repeat(2,minmax(0,1fr))}.grownups form p{grid-column:1/-1}}
+
+.voice-preference{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0}
+.voice-preference select{min-height:44px;padding:5px;border-radius:10px;border:1px solid #aac3ad;background:#fff;font:inherit;font-size:16px}
+#radio-controls [data-clip="welcome"],#rail-controls [data-rail="horn"]{background:#ffe8b6;color:#684814;border-color:#ead598}
+@media (max-width:699px) {
+  .playgarden{padding-top:max(7px,env(safe-area-inset-top))}
+  .hero{min-height:58px;padding:5px 105px 5px 8px;border-radius:19px;align-items:center}
+  .hero-copy{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:0}
+  .hero h1{font-size:clamp(18px,5vw,24px);white-space:nowrap}
+  .hero p{margin:0}.hello{min-width:0;padding-inline:5px;font-size:13px}
+  .utilities{top:5px;right:5px;display:flex;gap:4px}.utility{min-width:44px;width:44px;height:44px;border-radius:12px;font-size:19px}
+  .mascots{display:none}
+  .modes{margin:9px 0 8px;gap:5px}
+  .mode{min-height:53px;padding:3px 2px;line-height:1.05;font-size:13px;border-radius:13px;gap:3px}
+  .game{border-radius:23px;padding:8px}
+  .game-heading h2{font-size:18px}
+  .tip{margin:3px 0 5px;font-size:13px}
+  .stage{padding:6px;border-radius:15px}
+  .game[data-mode="blocks"]{--cell:clamp(23px,min(calc((100vw - 60px)/6),calc((100svh - 313px)/8)),54px)}
+  .controls{margin-top:6px}.controls button{min-height:53px}
+  .block-message,.ball-hint{min-height:18px;margin:3px 0 0;padding:0}
+  .launcher{margin-top:8px}
+  .rail-scene{height:clamp(104px,23svh,195px)}
+  .rail-controls,.station-controls{margin-top:7px;gap:6px}
+  .rail-controls button{min-height:48px}.station-controls button{min-height:44px}
+  #station-controls{margin-top:9px}
+  .radio-display{min-height:76px;padding:5px 9px;border-radius:15px}
+  .radio-display img{flex-basis:48px;width:48px;height:48px}
+  .radio-display strong{font-size:16px}.radio-display p{font-size:14px;margin-top:2px}
+  .trip-settings{margin:6px 0 0;padding:0 8px}
+  .trip-settings summary{line-height:1.15;display:flex;align-items:center;min-height:44px}
+}
 </style>
   <title>小宝乐园</title>
 </head>
@@ -353,7 +385,7 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
       </div>
       <div class="hero-copy">
         <h1>小宝乐园</h1>
-        <p><button type="button" id="hello" class="hello">▶ 小宝，开始玩</button></p>
+        <p><button type="button" id="hello" class="hello">▶ 打招呼</button></p>
       </div>
       <div class="utilities">
         <button id="sound" class="utility" type="button" aria-label="声音" aria-pressed="true"><span aria-hidden="true">♫</span></button>
@@ -363,10 +395,10 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 
     <p id="preview-help" class="preview-help">如果按钮点不动，请复制<a href="https://xingtu1996.github.io/xiaobao/">游戏链接</a>到 Safari 打开。</p>
     <nav class="modes" aria-label="选择游戏">
-      <button id="blocks" type="button" class="mode" aria-pressed="true"><span class="mode-icon block-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>动物方块</button>
-      <button id="balls" type="button" class="mode" aria-pressed="false"><span class="mode-icon marble-icon" aria-hidden="true"><i></i><i></i><i></i></span>弹珠消除</button>
-      <button id="rail" type="button" class="mode" aria-pressed="false"><span class="mode-symbol" aria-hidden="true">🚄</span>开高铁</button>
-      <button id="radio" type="button" class="mode" aria-pressed="false"><span class="mode-symbol" aria-hidden="true">🎙</span>车站广播</button>
+      <button id="blocks" type="button" class="mode" aria-pressed="true"><span class="mode-icon block-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>方块</button>
+      <button id="balls" type="button" class="mode" aria-pressed="false"><span class="mode-icon marble-icon" aria-hidden="true"><i></i><i></i><i></i></span>弹珠</button>
+      <button id="rail" type="button" class="mode" aria-pressed="false"><span class="mode-symbol" aria-hidden="true">🚄</span>高铁</button>
+      <button id="radio" type="button" class="mode" aria-pressed="false"><span class="mode-symbol" aria-hidden="true">🎙</span>广播</button>
     </nav>
 
     <section class="game" aria-labelledby="game-title">
@@ -411,10 +443,6 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
           <progress id="rail-progress" max="1" value="0" aria-label="到站进度"></progress>
         </div>
         <p id="rail-announcement" class="rail-announcement" role="status" hidden></p>
-        <div id="station-controls" class="station-controls" role="group" aria-label="车站操作">
-          <button type="button" data-rail="signal"><span class="signal-light" aria-hidden="true"></span><b>绿灯通行</b></button>
-          <button type="button" data-rail="ticket"><span aria-hidden="true">🎫</span><b>检票</b></button>
-        </div>
         <div id="rail-controls" class="rail-controls" role="group" aria-label="驾驶高铁">
           <button type="button" data-rail="go"><span aria-hidden="true">▶</span>发车</button>
           <button type="button" data-rail="fast"><span aria-hidden="true">＋</span>加速</button>
@@ -423,7 +451,11 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
           <button type="button" data-rail="door" id="rail-door"><span aria-hidden="true">▣</span><b>开车门</b></button>
           <button type="button" data-rail="horn"><span aria-hidden="true">♫</span>鸣笛</button>
         </div>
-        <details class="trip-settings" open>
+        <div id="station-controls" class="station-controls" role="group" aria-label="车站操作">
+          <button type="button" data-rail="signal"><span class="signal-light" aria-hidden="true"></span><b>绿灯通行</b></button>
+          <button type="button" data-rail="ticket"><span aria-hidden="true">🎫</span><b>检票</b></button>
+        </div>
+        <details id="station-trip" class="trip-settings">
           <summary>🚉 接站和送站</summary>
           <div id="trip-plan">
             <p>开往哪里？</p>
@@ -460,7 +492,16 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
           <button type="button" data-clip="doors"><span aria-hidden="true">▣</span>关闭车门</button>
         </div>
         <button type="button" id="radio-horn" class="answer-horn" hidden>📯 我来鸣笛</button>
-        <details class="trip-settings" open>
+        <details id="dialogue" class="trip-settings">
+          <summary>👋 一起打招呼</summary>
+          <div id="conversation-buttons" class="trip-choices">
+            <button type="button" data-line="Turn">🙋 轮到你</button>
+            <button type="button" data-line="Thanks">💛 谢谢你</button>
+            <button type="button" data-line="Again">🌱 再试一次</button>
+            <button type="button" data-line="Bye">👋 下次见</button>
+          </div>
+        </details>
+        <details id="station-recordings" class="trip-settings">
           <summary>🎧 听真实车站</summary>
           <div class="trip-choices" id="field-controls">
             <button data-clip="trainReal">🚄 北京西站</button><button data-clip="metro">🚇 上海地铁</button>
@@ -498,6 +539,15 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
     </div>
     <details id="grownups" class="grownups">
       <summary>家长设置</summary>
+      <div class="voice-preference">
+        <label for="voice-style">问候音色</label>
+        <select id="voice-style">
+          <option value="soft">温柔姐姐</option>
+          <option value="bright">活泼伙伴</option>
+          <option value="steady">沉稳哥哥</option>
+        </select>
+        <button type="button" id="voice-preview">试听问候</button>
+      </div>
       <label class="touch-choice"><input id="lock-touch" type="checkbox" checked> 防止游戏区误放大</label>
       <p>可以陪孩子练习说名字和记电话号码。输入只保留到收起本栏或离开页面。</p>
       <form id="family-practice" autocomplete="off" spellcheck="false">
@@ -538,6 +588,21 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
   const player = new Audio();
   player.preload = "auto";
   const clips = {
+    "softHello": "小宝，你好呀！来玩吧！",
+    "softTurn": "轮到你啦！",
+    "softThanks": "谢谢你！",
+    "softAgain": "没关系，再试一次吧！",
+    "softBye": "玩得开心！下次见。",
+    "brightHello": "小宝，你好呀！来玩吧！",
+    "brightTurn": "轮到你啦！",
+    "brightThanks": "谢谢你！",
+    "brightAgain": "没关系，再试一次吧！",
+    "brightBye": "玩得开心！下次见。",
+    "steadyHello": "小宝，你好呀！来玩吧！",
+    "steadyTurn": "轮到你啦！",
+    "steadyThanks": "谢谢你！",
+    "steadyAgain": "没关系，再试一次吧！",
+    "steadyBye": "玩得开心！下次见。",
     "hello": "小宝，欢迎来玩！",
     "welcome": "高铁来了！小司机，轮到你鸣笛啦！",
     "depart": "女士们，先生们，欢迎乘车。本次列车，开往彩虹车站。",
@@ -611,7 +676,7 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
     silence();
     const id = playId;
     const onTrain = activeMode === "rail";
-    const greeting = clip === "hello";
+    const greeting = clip.endsWith("Hello");
     const display = onTrain ? trainCaption : caption;
     replyHorn.hidden = onTrain || (clip !== "welcome" && clip !== "horn");
     if (!greeting) {
@@ -621,7 +686,7 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
     voiceStatus.hidden = true;
     function showHint(hint) {
       if (greeting) {
-        document.getElementById("hello").textContent = soundOn() ? "▶ 小宝，开始玩" : "声音已关";
+        document.getElementById("hello").textContent = soundOn() ? "▶ 打招呼" : "声音已关";
       } else if (onTrain) display.textContent = clips[clip] + " " + hint;
       else {
         voiceStatus.textContent = hint;
@@ -759,7 +824,7 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
   });
 
   return {
-    greet() { unlock(); broadcast("hello"); },
+    speak(clip) { unlock(); broadcast(clip); },
     setMode(next) {
       if (activeMode !== next) replyHorn.hidden = true;
       if (activeMode !== next) silence();
@@ -1056,8 +1121,31 @@ grid.addEventListener("pointerdown", event => {
 
 byId("hello").addEventListener("click", () => {
   if (roundState === "playing") {
-    byId("hello").textContent = "▶ 再听一次欢迎语";
-    railway.greet();
+    byId("hello").textContent = "▶ 打招呼";
+    railway.speak(voiceStyle.value + "Hello");
+  }
+});
+
+const voiceStyle = byId("voice-style");
+const presets = ["soft", "bright", "steady"];
+try {
+  const saved = localStorage.getItem("playgarden-voice-style");
+  if (presets.includes(saved)) voiceStyle.value = saved;
+} catch {}
+function sampleGreeting() {
+  stopPractice();
+  if (roundState === "playing") railway.speak(voiceStyle.value + "Hello");
+}
+voiceStyle.addEventListener("change", () => {
+  try { localStorage.setItem("playgarden-voice-style", voiceStyle.value); } catch {}
+  sampleGreeting();
+});
+byId("voice-preview").addEventListener("click", sampleGreeting);
+byId("conversation-buttons").addEventListener("click", event => {
+  const line = event.target.closest("[data-line]")?.dataset.line;
+  if (line && mode === "radio" && roundState === "playing") {
+    stopPractice();
+    railway.speak(voiceStyle.value + line);
   }
 });
 
