@@ -406,7 +406,8 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
 #trip-plan button{touch-action:none}
 .route-signs{display:flex;grid-column:1/-1;justify-content:space-between;color:#426858;font-size:12px}
 #route[data-phase="waiting"] .route-signs span:first-child,#route[data-phase="moving"] .route-signs span:nth-child(2),#route[data-phase="arrived"] .route-signs span:last-child{background:#cae8b9;border-radius:10px;padding:0 5px}
-.journey.drop-ready{outline:3px dashed #32895e;border-radius:8px}
+#trip-drop{padding:7px 8px;border:1px dashed #89b59b;border-radius:10px;font-size:13px;color:#325c48}
+.journey.drop-ready,#trip-drop.drop-ready{outline:3px dashed #32895e;border-radius:8px}
 #radio-stage.speaking .radio-display img{animation:radio-nod .65s ease-in-out infinite alternate}
 @keyframes radio-nod{to{transform:translateY(-4px) rotate(6deg)}}
 .marble.match-hint{outline:2px dashed #916127;outline-offset:-3px}
@@ -517,6 +518,7 @@ dialog.grownups::backdrop{background:#17312775}
         </div>
         <section id="station-trip" class="trip-settings" aria-label="接站和送站">
           <h3>🚉 接送</h3>
+          <div id="trip-drop" aria-hidden="true">🎫 拖卡片到这里，也可以直接点</div>
           <div id="trip-plan">
             <p>开往哪里？</p>
             <div class="trip-choices" role="group" aria-label="选择目的地">
@@ -736,6 +738,7 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
   const replyHorn = document.getElementById("radio-horn");
   const fieldControls = document.getElementById("field-controls");
   const route = document.getElementById("route");
+  const tripDrop = document.getElementById("trip-drop");
   const radioStage = document.getElementById("radio-stage");
   let cardDrag = null;
   let destination = "";
@@ -932,6 +935,7 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
     if (Math.hypot(event.clientX - cardDrag.x, event.clientY - cardDrag.y) > 14) {
       cardDrag.dragged = true;
       route.classList.add("drop-ready");
+      tripDrop.classList.add("drop-ready");
     }
   });
   trip.addEventListener("pointerup", event => {
@@ -939,14 +943,16 @@ function createRailway({ unlock, soundOn, checkChime, driveCue, onBroadcast }) {
     const { button, dragged } = cardDrag;
     cardDrag = null;
     route.classList.remove("drop-ready");
+    tripDrop.classList.remove("drop-ready");
     if (!dragged) return;
-    const dropped = document.elementFromPoint(event.clientX, event.clientY)?.closest("#route,#rail-scene");
+    const dropped = document.elementFromPoint(event.clientX, event.clientY)?.closest("#route,#rail-scene,#trip-drop");
     suppressedClick = { button, until: performance.now() + 400 };
     if (dropped) chooseTrip(button);
   });
   trip.addEventListener("pointercancel", () => {
     cardDrag = null;
     route.classList.remove("drop-ready");
+    tripDrop.classList.remove("drop-ready");
   });
 
   return {

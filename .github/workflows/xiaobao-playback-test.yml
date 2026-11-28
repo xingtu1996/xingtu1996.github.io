@@ -98,7 +98,16 @@ jobs:
                   page.wait_for_function("testPlayer.currentSrc.endsWith('/depart.mp3') && testPlayer.currentTime > 0.2 && !testPlayer.paused")
                   page.locator('[data-rail=stop]').tap()
                   page.locator('[data-dest=houma]').tap()
-                  page.locator('[data-family=grandma]').tap()
+                  card = page.locator('[data-family=grandma]')
+                  card.scroll_into_view_if_needed()
+                  start = card.bounding_box()
+                  end = page.locator('#trip-drop').bounding_box()
+                  page.mouse.move(start['x']+start['width']/2,start['y']+start['height']/2)
+                  page.mouse.down()
+                  page.mouse.move(end['x']+end['width']/2,end['y']+end['height']/2,steps=5)
+                  page.mouse.up()
+                  assert card.get_attribute('aria-pressed') == 'true'
+                  page.wait_for_timeout(410)
                   page.wait_for_function("testPlayer.currentSrc.endsWith('/pickGrandma.mp3') && testPlayer.currentTime > 0.15")
                   for key in ['nana','dad','grandpa','team','send','parents','grands','outbound','baby','together','grandma']:
                       page.locator('[data-family="'+key+'"]').tap()
